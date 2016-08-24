@@ -1,0 +1,284 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Another.cpp" />
+    <ClCompile Include="src\BackGround.cpp" />
+    <ClCompile Include="src\BaseScene.cpp" />
+    <ClCompile Include="src\Bezier.cpp" />
+    <ClCompile Include="src\Bomb.cpp" />
+    <ClCompile Include="src\BossA.cpp" />
+    <ClCompile Include="src\BossChara.cpp" />
+    <ClCompile Include="src\Bullet.cpp" />
+    <ClCompile Include="src\Character.cpp" />
+    <ClCompile Include="src\ChargeEffect.cpp" />
+    <ClCompile Include="src\Config.cpp" />
+    <ClCompile Include="src\Counter.cpp" />
+    <ClCompile Include="src\Counter2.cpp" />
+    <ClCompile Include="src\DebugMode.cpp" />
+    <ClCompile Include="src\Effect.cpp" />
+    <ClCompile Include="src\Effector.cpp" />
+    <ClCompile Include="src\Enemy.cpp" />
+    <ClCompile Include="src\EnemyMng.cpp" />
+    <ClCompile Include="src\Eshot.cpp" />
+    <ClCompile Include="src\EShot00.cpp" />
+    <ClCompile Include="src\EShot01.cpp" />
+    <ClCompile Include="src\EShot02.cpp" />
+    <ClCompile Include="src\EShot03.cpp" />
+    <ClCompile Include="src\EShot04.cpp" />
+    <ClCompile Include="src\EshotMng.cpp" />
+    <ClCompile Include="src\Explosion.cpp" />
+    <ClCompile Include="src\ExplosionEffect.cpp" />
+    <ClCompile Include="src\ExplosionS.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\GameOver.cpp" />
+    <ClCompile Include="src\Graphic.cpp" />
+    <ClCompile Include="src\Graphics2D.cpp" />
+    <ClCompile Include="src\HitEffect.cpp" />
+    <ClCompile Include="src\ISceneChanger.cpp" />
+    <ClCompile Include="src\ItemMng.cpp" />
+    <ClCompile Include="src\Keyboard.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Menu.cpp" />
+    <ClCompile Include="src\Particle.cpp" />
+    <ClCompile Include="src\Pbullet.cpp" />
+    <ClCompile Include="src\Piece.cpp" />
+    <ClCompile Include="src\PieceEffect.cpp" />
+    <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\PlayerBullet.cpp" />
+    <ClCompile Include="src\Pshot.cpp" />
+    <ClCompile Include="src\SceneMng.cpp" />
+    <ClCompile Include="src\Score.cpp" />
+    <ClCompile Include="src\Shot.cpp" />
+    <ClCompile Include="src\Stage.cpp" />
+    <ClCompile Include="src\StageDate.cpp" />
+    <ClCompile Include="src\StatusBoard.cpp" />
+    <ClCompile Include="src\Test.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\Timer.cpp" />
+    <ClCompile Include="src\TimeValue.cpp" />
+    <ClCompile Include="src\Title.cpp" />
+    <ClCompile Include="src\Tutorial.cpp" />
+    <ClCompile Include="src\Vector2D.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Another.hpp" />
+    <ClInclude Include="src\BackGround.hpp" />
+    <ClInclude Include="src\BaseScene.hpp" />
+    <ClInclude Include="src\Bezier.hpp" />
+    <ClInclude Include="src\Bomb.hpp" />
+    <ClInclude Include="src\BossA.hpp" />
+    <ClInclude Include="src\BossChara.hpp" />
+    <ClInclude Include="src\BossTask.hpp" />
+    <ClInclude Include="src\Bullet.hpp" />
+    <ClInclude Include="src\Character.hpp" />
+    <ClInclude Include="src\ChargeEffect.hpp" />
+    <ClInclude Include="src\Config.hpp" />
+    <ClInclude Include="src\Counter.hpp" />
+    <ClInclude Include="src\Counter2.hpp" />
+    <ClInclude Include="src\DebugMode.hpp" />
+    <ClInclude Include="src\Effect.hpp" />
+    <ClInclude Include="src\Effector.hpp" />
+    <ClInclude Include="src\EffectTask.hpp" />
+    <ClInclude Include="src\Enemy.hpp" />
+    <ClInclude Include="src\EnemyMng.hpp" />
+    <ClInclude Include="src\Eshot.hpp" />
+    <ClInclude Include="src\EShot00.hpp" />
+    <ClInclude Include="src\EShot01.hpp" />
+    <ClInclude Include="src\EShot02.hpp" />
+    <ClInclude Include="src\EShot03.hpp" />
+    <ClInclude Include="src\EShot04.hpp" />
+    <ClInclude Include="src\EshotMng.hpp" />
+    <ClInclude Include="src\Explosion.hpp" />
+    <ClInclude Include="src\ExplosionEffect.hpp" />
+    <ClInclude Include="src\ExplosionS.hpp" />
+    <ClInclude Include="src\Game.hpp" />
+    <ClInclude Include="src\GameOver.hpp" />
+    <ClInclude Include="src\Graphic.hpp" />
+    <ClInclude Include="src\Graphics2D.hpp" />
+    <ClInclude Include="src\HitEffect.hpp" />
+    <ClInclude Include="src\ISceneChanger.hpp" />
+    <ClInclude Include="src\ItemMng.hpp" />
+    <ClInclude Include="src\Keyboard.hpp" />
+    <ClInclude Include="src\Main.hpp" />
+    <ClInclude Include="src\Menu.hpp" />
+    <ClInclude Include="src\NullBoss.hpp" />
+    <ClInclude Include="src\NullTask.hpp" />
+    <ClInclude Include="src\Particle.hpp" />
+    <ClInclude Include="src\Pbullet.hpp" />
+    <ClInclude Include="src\Piece.hpp" />
+    <ClInclude Include="src\PieceEffect.hpp" />
+    <ClInclude Include="src\Player.hpp" />
+    <ClInclude Include="src\PlayerBullet.hpp" />
+    <ClInclude Include="src\Pshot.hpp" />
+    <ClInclude Include="src\Range.hpp" />
+    <ClInclude Include="src\SceneMng.hpp" />
+    <ClInclude Include="src\Score.hpp" />
+    <ClInclude Include="src\Shot.hpp" />
+    <ClInclude Include="src\ShotTask.hpp" />
+    <ClInclude Include="src\Stage.hpp" />
+    <ClInclude Include="src\StageDate.hpp" />
+    <ClInclude Include="src\StatusBoard.hpp" />
+    <ClInclude Include="src\Task.hpp" />
+    <ClInclude Include="src\Test.hpp" />
+    <ClInclude Include="src\Texture.hpp" />
+    <ClInclude Include="src\Timer.hpp" />
+    <ClInclude Include="src\TimeValue.hpp" />
+    <ClInclude Include="src\Title.hpp" />
+    <ClInclude Include="src\Tutorial.hpp" />
+    <ClInclude Include="src\Vector2D.hpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{3CA41C6D-6EB7-4187-B131-D12DFA6DB4FB}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>GekiRenShaG</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\Users\SHOHEI\Downloads\DxLib_VC\プロジェクトに追加すべきファイル_VC用;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\SHOHEI\Downloads\DxLib_VC\プロジェクトに追加すべきファイル_VC用;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\Users\SHOHEI\Downloads\DxLib_VC\プロジェクトに追加すべきファイル_VC用;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>C:\Users\SHOHEI\Downloads\DxLib_VC\プロジェクトに追加すべきファイル_VC用;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

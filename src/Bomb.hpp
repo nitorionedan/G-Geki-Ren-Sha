@@ -30,6 +30,8 @@ private:
 	void PlayEffect();
 	void MoveEffect();
 
+	static Vector2D pos;
+
 //	std::array<BombEffect, 10>	effect;
 	static BombEffect effect[];
 

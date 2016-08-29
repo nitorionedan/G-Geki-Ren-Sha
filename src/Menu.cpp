@@ -2,7 +2,6 @@
 #include "Main.hpp"
 #include "Keyboard.hpp"
 #include "DebugMode.hpp"
-
 #include <iterator>
 #include <algorithm>
 
@@ -27,7 +26,8 @@ Menu::Menu(ISceneChanger* changer)
 	ano_tri		= 0;
 
 	// メニューセレクトの並び座標
-	for (int i = 0; i != y.size(); ++i)		y.at(i) = 270 + (i * 30);
+	for (int i = 0; i != y.size(); ++i)
+		y.at(i) = 270 + (i * 30);
 }
 
 
@@ -42,29 +42,29 @@ Menu::~Menu()
 
 void Menu::Update()
 {
-	title->Update();													// タイトルロゴ
-	if (!title->isStop)	return;											// 止まっていなければここはスルー
+	title->Update();			// タイトルロゴ
+	if (!title->isStop)	return;	// 止まっていなければここはスルー
 
-	const bool INPUT_VERTICAL = ( Keyboard_Get(KEY_INPUT_DOWN) == 1 || Keyboard_Get(KEY_INPUT_UP)     == 1 );
-	const bool INPUT_OK       = ( Keyboard_Get(KEY_INPUT_Z)    == 1 || Keyboard_Get(KEY_INPUT_RETURN) == 1 );
-	const bool PUSH_KEY_UP    = ( Keyboard_Get(KEY_INPUT_UP)   == 1 );
-	const bool PUSH_KEY_DOWN  = ( Keyboard_Get(KEY_INPUT_DOWN) == 1 );
-	const bool STATE_START    = selectNum == 0;
-	const bool STATE_QUIT     = selectNum == 3;
+	const bool& INPUT_VERTICAL = ( Keyboard_Get(KEY_INPUT_DOWN) == 1 || Keyboard_Get(KEY_INPUT_UP)     == 1 );
+	const bool& INPUT_OK       = ( Keyboard_Get(KEY_INPUT_Z)    == 1 || Keyboard_Get(KEY_INPUT_RETURN) == 1 );
+	const bool& PUSH_KEY_UP    = ( Keyboard_Get(KEY_INPUT_UP)   == 1 );
+	const bool& PUSH_KEY_DOWN  = ( Keyboard_Get(KEY_INPUT_DOWN) == 1 );
+	const bool& STATE_START    = selectNum == 0;
+	const bool& STATE_QUIT     = selectNum == 3;
 
 	y_cur = y[selectNum] - 2;											// カーソルの位置
 	if (INPUT_VERTICAL)	PlaySoundMem(hs_move, DX_PLAYTYPE_BACK);		// ♪カーソル音
 	if (PUSH_KEY_UP)	selectNum = (selectNum + 3) % ALL_SELECT_NUM;	// カーソルの移動と選択項目
 	if (PUSH_KEY_DOWN)	selectNum = (selectNum + 1) % ALL_SELECT_NUM;
 
-	if(INPUT_OK)														// 決定キーを押したなら
+	if(INPUT_OK)	// 決定キーを押したなら
 	{
 		if (STATE_START)
 		{
-			PlaySoundMem(hs_choice, DX_PLAYTYPE_BACK);				// ♪決定音
+			PlaySoundMem(hs_choice, DX_PLAYTYPE_BACK);	// ♪決定音
 			isGame = true;
 		}
-		if (STATE_QUIT)		QuitGame();									// ゲームをやめる
+		if (STATE_QUIT)		QuitGame();	// ゲームをやめる
 	}
 
 	if(isGame)
@@ -82,8 +82,8 @@ void Menu::Update()
 
 void Menu::Draw()
 {
-	title->Draw();													// タイトル
-	if ( !title->isStop )	return;									// タイトルが止まってないならスルー	
+	title->Draw();					// タイトル
+	if ( !title->isStop )	return;	// タイトルが止まってないならスルー	
 
 	graphic->DrawMyString2(X, y[0], "START",    SPACE, true,  2.0);
 	graphic->DrawMyString2(X, y[1], "CONTINUE", SPACE, true,  2.0);
@@ -112,10 +112,10 @@ void Menu::Draw()
 
 void Menu::AnotherUpdate() 
 {
-	const bool KEY_PUSH_RIGHT	= ( Keyboard_Get(KEY_INPUT_RIGHT) == 1 );
-	const bool KEY_PUSH_UP		= ( Keyboard_Get(KEY_INPUT_UP)    == 1 );
-	const bool KEY_PUSH_DOWN	= ( Keyboard_Get(KEY_INPUT_DOWN)  == 1 );
-	const bool KEY_PUSH_LEFT	= ( Keyboard_Get(KEY_INPUT_LEFT)  == 1 );
+	const bool& KEY_PUSH_RIGHT	= ( Keyboard_Get(KEY_INPUT_RIGHT) == 1 );
+	const bool& KEY_PUSH_UP		= ( Keyboard_Get(KEY_INPUT_UP)    == 1 );
+	const bool& KEY_PUSH_DOWN	= ( Keyboard_Get(KEY_INPUT_DOWN)  == 1 );
+	const bool& KEY_PUSH_LEFT	= ( Keyboard_Get(KEY_INPUT_LEFT)  == 1 );
 
 
 	if (KEY_PUSH_RIGHT && ano_tri < 4)						ano_tri++;

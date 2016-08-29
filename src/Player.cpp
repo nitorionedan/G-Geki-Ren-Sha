@@ -101,15 +101,6 @@ void Player::Update()
 
 	// TEST------------------------------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
-
-	/*
-	if (Keyboard_Get(KEY_INPUT_P) == 1)	{
-		Shift(true);		// シフトアップ
-	}
-	if (Keyboard_Get(KEY_INPUT_O) == 1) {
-		Shift(false);
-	}
-	*/
 }
 
 

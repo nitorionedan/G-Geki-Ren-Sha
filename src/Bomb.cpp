@@ -11,6 +11,7 @@
 static const int EFFECT_NUM = 10;
 
 BombEffect Bomb::effect[EFFECT_NUM];
+Vector2D Bomb::pos;
 
 
 Bomb::Bomb()
@@ -19,6 +20,7 @@ Bomb::Bomb()
 {
 	sh = LoadSoundMem("SOUND/SE/danmatu.wav");
 
+	pos.SetVecor2D(0., 0.);
 	for (int i = 0; i < EFFECT_NUM; i++)
 	{
 		effect[i].rad = 0;
@@ -58,8 +60,6 @@ void Bomb::Update()
 void Bomb::Draw()
 {
 	DrawEffect();
-
-	if (!isBomb)	return;
 }
 
 
@@ -71,6 +71,7 @@ void Bomb::Fire(int shiftLevel)
 	isBomb = true;
 	Game::DownBombNum();
 	Game::ShiftReset();
+	pos.SetVecor2D(Game::GetPlayerPos().x, Game::GetPlayerPos().y);
 
 	switch (shiftLevel)
 	{
@@ -106,7 +107,7 @@ bool Bomb::IsHit(const int & ColCircle, const double & ColX, const double & ColY
 	{
 		if (!effect[i].isExist)	continue;
 
-		isHit = Vector2D::CirclesCollision(ColCircle, effect[i].rad, ColX, ColY, 320., 240.);
+		isHit = Vector2D::CirclesCollision(ColCircle, effect[i].rad, ColX, ColY, pos.x, pos.y);
 		
 		if (isHit)	Score::AddScore(50);
 		if (isHit)	return isHit;
@@ -118,25 +119,23 @@ bool Bomb::IsHit(const int & ColCircle, const double & ColX, const double & ColY
 
 void Bomb::DrawEffect()
 {
-	for (auto& ary : effect)
+	for (const auto& ary : effect)
 	{
 		if (ary.isExist == false) continue;
-
-		DrawCircle(320, 240, ary.rad, GetColor(255, 255, 255), false);
+		DrawCircle(pos.x, pos.y, ary.rad, GetColor(255, 255, 255), false);
 	}
 
 	for (int i = 0; i < EFFECT_NUM; i++)
 	{
 		if (!effect[i].isExist)	continue;
-
-		DrawCircle(320, 240, effect[i].rad, GetColor(255, 255, 255), false);
+		DrawCircle(pos.x, pos.y, effect[i].rad, GetColor(255, 255, 255), false);
 	}
 }
 
 
 void Bomb::PlayEffect()
 {
-	for (int i = 0; i < EFFECT_NUM; i++)
+	for (int i = 0; i < _countof(effect); i++)
 	{
 		if (effect[i].isExist)	continue;
 
@@ -155,13 +154,11 @@ void Bomb::MoveEffect()
 
 		effect[i].rad += 5;
 
-		EnemyMng::IsHit(effect[i].rad, 320., 240., 100);
+		EnemyMng::IsHit(effect[i].rad, pos.x, pos.y, 100);
 
 		// ƒŠƒZƒbƒg
 		if (effect[i].rad > 400)
-		{
 			effect[i].isExist = false;
-		}
 	}
 }
 

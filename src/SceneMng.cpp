@@ -1,4 +1,4 @@
-#include "DxLib.h"
+#include <DxLib.h>
 
 #include "Config.hpp"
 #include "Game.hpp"
@@ -11,7 +11,7 @@
 
 
 SceneMng::SceneMng() :	mNextScene(eScene_None){
-	mScene = static_cast<BaseScene*> (new Menu(this));	// 最初のシーン
+	mScene = static_cast<BaseScene*> (new Game(this));	// 最初のシーン
 }
 
 

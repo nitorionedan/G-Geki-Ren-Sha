@@ -412,18 +412,14 @@ void BossA::Damage(const int& point)
 	// スタート中ならここで返す
 	if (state == eBossA_Start)	return;
 
-
 	const bool& IS_ALIVE = (hp > 0);
 	const bool& IS_FINE = (hp > MAX_HP / 3);
 	const bool& IS_WEAK = (!isWeak && !IS_FINE);
 	const bool& IS_DEAD = (hp <= 0);
 
-
 	// 生きていれば
 	if (IS_ALIVE)
-	{
 		hp -= point;
-	}
 	
 	// 弱っていれば
 	if (IS_WEAK)
@@ -431,6 +427,7 @@ void BossA::Damage(const int& point)
 		Game::PlayAnime(pos.x + 40, pos.y + 40, eExplosion_small);
 		Game::PlayAnime(pos.x + 20, pos.y - 10, eExplosion_small);
 		Game::PlayAnime(pos.x - 20, pos.y + 20, eExplosion_small);
+
 		Game::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_SmallBlue);
 		PlaySoundMem(hs_break, DX_PLAYTYPE_BACK);
 	}

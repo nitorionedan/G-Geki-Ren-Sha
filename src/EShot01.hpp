@@ -11,7 +11,7 @@ class EShot01 : public ShotTask
 public:
 	EShot01();
 	~EShot01();
-	virtual void Update(const double& PosX, const double& PosY) override;
+	virtual void Update(const double& PosX, const double& PosY, const Player& player) override;
 	virtual void Draw() override;
 
 	// @brief					発射（1発）
@@ -36,6 +36,7 @@ private:
 	const int HIT_RANGE;		// 当たり範囲
 	static const int ALL_NUM = 30;
 
+	Vector2D playerPos;
 	int gh[24];
 	std::array<int, ALL_NUM> time;			// 経過時間
 	std::array<Vector2D, ALL_NUM> pos;		// 座標

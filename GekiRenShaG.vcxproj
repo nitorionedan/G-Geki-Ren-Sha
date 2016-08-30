@@ -27,7 +27,7 @@
     <ClCompile Include="src\BossA.cpp" />
     <ClCompile Include="src\BossChara.cpp" />
     <ClCompile Include="src\Bullet.cpp" />
-    <ClCompile Include="src\Character.cpp" />
+    <ClCompile Include="src\BossShotMgr.cpp" />
     <ClCompile Include="src\ChargeEffect.cpp" />
     <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\Counter.cpp" />
@@ -73,7 +73,6 @@
     <ClCompile Include="src\Test.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Timer.cpp" />
-    <ClCompile Include="src\TimeValue.cpp" />
     <ClCompile Include="src\Title.cpp" />
     <ClCompile Include="src\Tutorial.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
@@ -88,7 +87,7 @@
     <ClInclude Include="src\BossChara.hpp" />
     <ClInclude Include="src\BossTask.hpp" />
     <ClInclude Include="src\Bullet.hpp" />
-    <ClInclude Include="src\Character.hpp" />
+    <ClInclude Include="src\BossShotMgr.hpp" />
     <ClInclude Include="src\ChargeEffect.hpp" />
     <ClInclude Include="src\Config.hpp" />
     <ClInclude Include="src\Counter.hpp" />
@@ -99,6 +98,7 @@
     <ClInclude Include="src\EffectTask.hpp" />
     <ClInclude Include="src\Enemy.hpp" />
     <ClInclude Include="src\EnemyMng.hpp" />
+    <ClInclude Include="src\EnemyShot.hpp" />
     <ClInclude Include="src\Eshot.hpp" />
     <ClInclude Include="src\EShot00.hpp" />
     <ClInclude Include="src\EShot01.hpp" />
@@ -120,7 +120,7 @@
     <ClInclude Include="src\Main.hpp" />
     <ClInclude Include="src\Menu.hpp" />
     <ClInclude Include="src\NullBoss.hpp" />
-    <ClInclude Include="src\NullTask.hpp" />
+    <ClInclude Include="src\NullEnemyShot.hpp" />
     <ClInclude Include="src\Particle.hpp" />
     <ClInclude Include="src\Pbullet.hpp" />
     <ClInclude Include="src\Piece.hpp" />
@@ -140,7 +140,6 @@
     <ClInclude Include="src\Test.hpp" />
     <ClInclude Include="src\Texture.hpp" />
     <ClInclude Include="src\Timer.hpp" />
-    <ClInclude Include="src\TimeValue.hpp" />
     <ClInclude Include="src\Title.hpp" />
     <ClInclude Include="src\Tutorial.hpp" />
     <ClInclude Include="src\Vector2D.hpp" />

@@ -20,7 +20,7 @@ Bomb::Bomb()
 {
 	sh = LoadSoundMem("SOUND/SE/danmatu.wav");
 
-	pos.SetVecor2D(0., 0.);
+	pos.SetVec(0., 0.);
 	for (int i = 0; i < EFFECT_NUM; i++)
 	{
 		effect[i].rad = 0;
@@ -29,17 +29,15 @@ Bomb::Bomb()
 }
 
 
-Bomb::~Bomb()
+void Bomb::Update(const Player& player)
 {
-}
+	bombNum = player.GetBombNum();
+	playerPos = player.GetPos();
 
-
-void Bomb::Update()
-{
 	// ”g–ä‚Ì“®‚«
 	MoveEffect();
 
-	if (!isBomb)	return;
+	if (!isBomb) return;
 
 	if (time % 10 == 0)
 	{
@@ -66,12 +64,12 @@ void Bomb::Draw()
 void Bomb::Fire(int shiftLevel)
 {
 	if (isBomb) return;
-	if (Game::GetPlayerBomb() == 0)	return;
+	if (bombNum == 0)	return;
 
 	isBomb = true;
-	Game::DownBombNum();
-	Game::ShiftReset();
-	pos.SetVecor2D(Game::GetPlayerPos().x, Game::GetPlayerPos().y);
+	// Game::DownBombNum();
+	// Game::ShiftReset();
+	pos.SetVec(playerPos.x, playerPos.y);
 
 	switch (shiftLevel)
 	{

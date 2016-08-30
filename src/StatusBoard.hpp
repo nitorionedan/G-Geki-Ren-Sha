@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Task.hpp"
+#include "Player.hpp"
 #include "Graphics2D.hpp"
 
 #include <array>
@@ -8,15 +8,13 @@
 
 
 /// ƒQ[ƒW‚Ìƒƒ‚ƒŠ”‚Í40‚ ‚è‚Ü‚·
-class StatusBoard
-	: public Task
-	, Graphics2D
+class StatusBoard : public Graphics2D
 {
 public:
 	StatusBoard();
 	~StatusBoard();
-	virtual void Update() override;
-	virtual void Draw()	override;
+	void Update(const Player& player);
+	void Draw(const Player& player);
 
 private:
 	const int POS_BOARD_X,

@@ -12,6 +12,7 @@
 #pragma once
 
 #include "BossTask.hpp"
+#include "Player.hpp"
 
 
 enum eBoss_num
@@ -33,8 +34,12 @@ class BossChara
 public:
 	BossChara(BossTask* mBoss_);
 	~BossChara();
-	void Update();
-	void Draw();
+	void Update(const Player& player) {
+		mBoss->Update(player);
+	}
+	void Draw() {
+		mBoss->Draw();
+	}
 
 	// @brief		w’èÀ•W‚Æ‚Ì“–‚½‚è”»’è
 	// @param[in]	ColX, ColY	Õ“Ë‚·‚é•¨‘Ì‚ÌÀ•W

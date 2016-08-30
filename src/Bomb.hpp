@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Vector2D.hpp"
-
+#include "Player.hpp"
 #include <array>
+#include <memory>
 
 
 class BombEffect
@@ -19,8 +20,8 @@ class Bomb
 {
 public:
 	Bomb();
-	~Bomb();
-	void Update();
+	~Bomb(){}
+	void Update(const Player& player);
 	void Draw();
 	void Fire(int shiftLevel);
 	static bool IsHit(const int& ColCircle, const double& ColX, const double& ColY);
@@ -35,7 +36,9 @@ private:
 //	std::array<BombEffect, 10>	effect;
 	static BombEffect effect[];
 
+	Vector2D playerPos;
 	int time;
+	int bombNum;
 
 	// ‰æ‘œ
 	int gh;

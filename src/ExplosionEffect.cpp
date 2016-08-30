@@ -85,7 +85,7 @@ void ExplosionEffect::PlayAnime(const double & PlayX, const double & PlayY)
 	{
 		if (isPlay[i] == true) continue;
 		isPlay[i] = true;
-		pos[i].SetVecor2D(PlayX, PlayY);
+		pos[i].SetVec(PlayX, PlayY);
 		break;
 	}
 }

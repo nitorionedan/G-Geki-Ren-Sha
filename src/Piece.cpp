@@ -126,7 +126,7 @@ void Piece::Play(const double& PosX, const double& PosY, const double& V_ANGLE, 
 	{
 		if (isPlay[i] == true) continue;
 		isPlay[i]	= true;
-		pos[i].SetVecor2D(PosX, PosY);
+		pos[i].SetVec(PosX, PosY);
 		vangle[i]	= V_ANGLE;
 		vec[i]		= VEC;
 		fspeed[i]	= FSPEED;

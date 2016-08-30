@@ -165,12 +165,12 @@ out:
 }
 
 
-void EnemyMng::Update()
+void EnemyMng::Update(const Player& player)
 {
 	if (enemy == nullptr)	return;
 
 	for (int i = 0; i < e_num; i++)
-		enemy[i]->Update();
+		enemy[i]->Update(player);
 }
 
 

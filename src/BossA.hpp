@@ -1,12 +1,10 @@
 #pragma once
 
-#include "DxLib.h"
-
+#include <DxLib.h>
 #include "BossTask.hpp"
 #include "Counter.hpp"
 #include "Task.hpp"
 #include "EShot03.hpp"
-
 #include <memory>
 
 
@@ -26,8 +24,8 @@ public:
 	BossA();
 	~BossA();
 
-	void Update() override;
-	void Draw() override;
+	virtual void Update(const Player& player) override;
+	virtual void Draw() override;
 
 	// @brief		当たり判定
 	// @param[in]	ColX, ColY	当たるモノの座標
@@ -63,8 +61,8 @@ private:
 	// @out			画面外ならtrue、画面内ならfalseを返す
 	bool isOverLimit();	// 出てますかー！？
 	
-	static const float	SC_LIMIT_XL, SC_LIMIT_XR;	// 画面内ボーダー
-	static const float	SC_LIMIT_YT, SC_LIMIT_YB;
+	static const float SC_LIMIT_XL, SC_LIMIT_XR;	// 画面内ボーダー
+	static const float SC_LIMIT_YT, SC_LIMIT_YB;
 	static const int MAX_HP;
 	const float SPEED;
 
@@ -73,6 +71,7 @@ private:
 	std::unique_ptr<Counter>	c_atk1;
 	std::unique_ptr<EShot03>	shot3;
 
+	Vector2D playerPos;
 	VECTOR	mPos;							// モデルのワールド座標
 	VECTOR	rota;							// モデルの回転値
 	VECTOR	startPos;						// スクリーンとワールド座標の線分

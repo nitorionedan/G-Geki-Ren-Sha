@@ -67,7 +67,7 @@ Enemy::Enemy(int type, int stype, int m_pattern, int s_pattern, int in_time, int
 	this->s_speed = s_speed;
 	this->hp = hp;
 	this->item = item;
-	pos.SetVecor2D(static_cast<double>(x_pos), static_cast<double>(y_pos));
+	pos.SetVec(static_cast<double>(x_pos), static_cast<double>(y_pos));
 
 	// タイプに合わせた
 	switch (type)
@@ -81,7 +81,7 @@ Enemy::Enemy(int type, int stype, int m_pattern, int s_pattern, int in_time, int
 	case 2:
 		LoadDivGraph("GRAPH/GAME/ENEMY/ene02.png", 4, 4, 1, 31, 16, gh_ene02);
 		hitRange = 20.;
-		hitSRange.SetVecor2D(40., 40.);
+		hitSRange.SetVec(40., 40.);
 		break;
 	case 3:
 		break;
@@ -185,7 +185,7 @@ Enemy::~Enemy()
 }
 
 
-void Enemy::Update()
+void Enemy::Update(const Player& player)
 {
 	// 登場時間が来たら出てくる
 	if (Stage::GetTime() == in_time)
@@ -205,18 +205,18 @@ void Enemy::Update()
 		// 攻撃されたら起こる
 		if (Keyboard_Get(KEY_INPUT_Z) == 1)	isUngry = true;
 
-		Move();
+		Move(player);
 	}
 
-	shot->Update(pos.x, pos.y);
+	shot->Update(pos.x, pos.y, player);
 	
-	if (shot2 != nullptr)	shot2->Update(pos.x, pos.y);
+	if (shot2 != nullptr)	shot2->Update(pos.x, pos.y, player);
 	
-	if (shot3 != nullptr)	shot3->Update(pos.x, pos.y);
+	if (shot3 != nullptr)	shot3->Update(pos.x, pos.y, player);
 
 	if (!isExist)	return;
 	
-	Fire();
+	Fire(player);
 }
 
 
@@ -337,26 +337,27 @@ void Enemy::AngleTarget(const double Target_x, const double Target_y){
 }
 
 
-void Enemy::Move()
+void Enemy::Move(const Player& player)
 {
 	switch (m_pattern)
 	{
-	case 0:	Move_0();	break;
-	case 1:	Move_1();	break;
-	case 2:	Move_2();	break;
-	case 3:	Move_3();	break;
-	case 4:	Move_4();	break;
-	case 5:	Move_5();	break;
-	case 6:	Move_6();	break;
-	case 7:	Move_7();	break;
+	case 0:	Move_0(player);	break;
+	case 1:	Move_1(player);	break;
+	case 2:	Move_2(player);	break;
+	case 3:	Move_3(player);	break;
+	case 4:	Move_4(player);	break;
+	case 5:	Move_5(player);	break;
+	case 6:	Move_6(player);	break;
+	case 7:	Move_7(player);	break;
 	}
 
-	const bool& IS_HIT = Game::IsHitPlayer(hitRange, Player::HIT_RANGE, pos.x, pos.y, Game::GetPlayerPos().x, Game::GetPlayerPos().y);
+	const bool& IS_HIT = Vector2D::CirclesCollision(hitRange, Player::HIT_RANGE,
+						pos.x, pos.y, player.GetPos().x, player.GetPos().y);
 	if (IS_HIT)	Damage(1);
 }
 
 
-void Enemy::Move_0()
+void Enemy::Move_0(const Player& player)
 {
 	const bool& IS_IN = (elapsedTime >= 0 && elapsedTime <= stop_time);
 	const bool& IS_OUT = (elapsedTime >= out_time);
@@ -366,25 +367,25 @@ void Enemy::Move_0()
 	if (IS_IN)
 	{
 		// プレイヤーの前か画面の上半分なら
-		if (Game::GetPlayerPos().y - 60.0 > pos.y || pos.y >= 320.)
+		if (player.GetPos().y - 60.0 > pos.y || pos.y >= 320.)
 		{
 			// 減速
 //			vspeed_y -= 0.02;
-			vspeed_y = (Game::GetPlayerPos().y - 60. - pos.y) * BRAKE;
+			vspeed_y = (player.GetPos().y - 60. - pos.y) * BRAKE;
 		}
 
 		// 降りる
 		if (isMove)	pos.y += vspeed_y;
 
 		// 横移動：左から右
-		if (pos.x < Game::GetPlayerPos().x - 10. && isMove)
+		if (pos.x < player.GetPos().x - 10. && isMove)
 		{
-			vspeed_x = (Game::GetPlayerPos().x - 20. - pos.x) * BRAKE;
+			vspeed_x = (player.GetPos().x - 20. - pos.x) * BRAKE;
 			pos.x += vspeed_x;
 		}
 
 		// 横移動２：右から左
-		if (pos.x > Game::GetPlayerPos().x + 10. && isMove)
+		if (pos.x > player.GetPos().x + 10. && isMove)
 		{
 			pos.x -= vspeed_x;
 			vspeed_x *= 0.99999999;
@@ -401,7 +402,7 @@ void Enemy::Move_0()
 	}
 
 	// 自機に向く
-	if (elapsedTime < out_time)	AngleTarget(Game::GetPlayerPos().x, Game::GetPlayerPos().y);
+	if (elapsedTime < out_time)	AngleTarget(player.GetPos().x, player.GetPos().y);
 
 	// スピード変更
 	if (elapsedTime == out_time)	vspeed_y = 0.;
@@ -432,7 +433,7 @@ void Enemy::Move_0()
 }
 
 
-void Enemy::Move_1()
+void Enemy::Move_1(const Player& player)
 {
 	vspeed_x = std::cos(elapsedTime / 30.) * 8. * std::sin(elapsedTime / 10.) * std::cos(elapsedTime / 10.);
 
@@ -440,7 +441,7 @@ void Enemy::Move_1()
 	pos.y += vspeed_y;
 
 	// 自機に向く
-	AngleTarget(Game::GetPlayerPos().x, Game::GetPlayerPos().y);
+	AngleTarget(player.GetPos().x, player.GetPos().y);
 
 	if (pos.y > 490.)
 	{
@@ -450,7 +451,7 @@ void Enemy::Move_1()
 }
 
 
-void Enemy::Move_2()
+void Enemy::Move_2(const Player& player)
 {
 	vspeed_x = 0.;
 	vspeed_y = 2.;
@@ -465,12 +466,12 @@ void Enemy::Move_2()
 }
 
 
-void Enemy::Move_3()
+void Enemy::Move_3(const Player& player)
 {
 }
 
 
-void Enemy::Move_4()
+void Enemy::Move_4(const Player& player)
 {
 	static float c_move = 0.f;
 	c_move += 0.01f;
@@ -494,40 +495,40 @@ void Enemy::Move_4()
 }
 
 
-void Enemy::Move_5()
+void Enemy::Move_5(const Player& player)
 {
 }
 
 
-void Enemy::Move_6()
+void Enemy::Move_6(const Player& player)
 {
 }
 
 
-void Enemy::Move_7()
+void Enemy::Move_7(const Player& player)
 {
 }
 
 
-void Enemy::Fire()
+void Enemy::Fire(const Player& player)
 {
 	switch (type)
 	{
-	case 0: Fire_0();	break;
-	case 1: Fire_1();	break;
-	case 2:	Fire_2();	break;
-	case 3:	Fire_3();	break;
-	case 4:	Fire_4();	break;
-	case 5:	Fire_5();	break;
-	case 6:	Fire_6();	break;
-	case 7:	Fire_7();	break;
+	case 0: Fire_0(player);	break;
+	case 1: Fire_1(player);	break;
+	case 2:	Fire_2(player);	break;
+	case 3:	Fire_3(player);	break;
+	case 4:	Fire_4(player);	break;
+	case 5:	Fire_5(player);	break;
+	case 6:	Fire_6(player);	break;
+	case 7:	Fire_7(player);	break;
 	}
 }
 
 
-void Enemy::Fire_0()
+void Enemy::Fire_0(const Player& player)
 {
-	const double& ANGLE = atan2(Game::GetPlayerPos().y - pos.y, Game::GetPlayerPos().x - pos.x);
+	const double& ANGLE = atan2(player.GetPos().y - pos.y, player.GetPos().x - pos.x);
 
 	if (elapsedTime == 20)
 	{
@@ -572,9 +573,9 @@ void Enemy::Fire_0()
 }
 
 
-void Enemy::Fire_1()
+void Enemy::Fire_1(const Player& player)
 {
-	const double& ANGLE = atan2(Game::GetPlayerPos().y - pos.y, Game::GetPlayerPos().x - pos.x);
+	const double& ANGLE = atan2(player.GetPos().y - pos.y, player.GetPos().x - pos.x);
 
 	if (elapsedTime >= stop_time)
 	{
@@ -584,22 +585,22 @@ void Enemy::Fire_1()
 }
 
 
-void Enemy::Fire_2()
+void Enemy::Fire_2(const Player& player)
 {
 }
 
 
-void Enemy::Fire_3()
+void Enemy::Fire_3(const Player& player)
 {
 }
 
 
-void Enemy::Fire_4()
+void Enemy::Fire_4(const Player& player)
 {
 	// 自機狙い方向決め
 	if (s_time == stop_time - 30)
 	{
-		vangle = atan2(Game::GetPlayerPos().y - pos.y, Game::GetPlayerPos().x - pos.x);
+		vangle = atan2(player.GetPos().y - pos.y, player.GetPos().x - pos.x);
 	}
 
 	// 4WAY x 2
@@ -634,17 +635,17 @@ void Enemy::Fire_4()
 }
 
 
-void Enemy::Fire_5()
+void Enemy::Fire_5(const Player& player)
 {
 }
 
 
-void Enemy::Fire_6()
+void Enemy::Fire_6(const Player& player)
 {
 }
 
 
-void Enemy::Fire_7()
+void Enemy::Fire_7(const Player& player)
 {
 }
 

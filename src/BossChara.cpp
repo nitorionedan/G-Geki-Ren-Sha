@@ -12,7 +12,7 @@
 #include "BossChara.hpp"
 #include "NullBoss.hpp"
 #include "BossA.hpp"
-
+#include <cassert>
 
 
 BossChara::BossChara(BossTask* mBoss_)
@@ -23,16 +23,6 @@ BossChara::BossChara(BossTask* mBoss_)
 
 BossChara::~BossChara(){
 	delete mBoss;
-}
-
-
-void BossChara::Update(){
-	mBoss->Update();
-}
-
-
-void BossChara::Draw(){
-	mBoss->Draw();
 }
 
 
@@ -56,6 +46,6 @@ void BossChara::Start(eBoss_num num)
 	case eBoss_F:		break;
 	case eBoss_G:		break;
 	case eBoss_None:	mBoss = new NullBoss;	break;
-	default:			mBoss = new NullBoss;	break;
+	default:			assert("BossChara::Start()");
 	}
 }

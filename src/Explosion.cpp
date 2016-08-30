@@ -46,7 +46,7 @@ void Explosion::Update()
 
 		c_play[i]->Update();
 
-		pos[i].AddVec(speed[i]);
+		pos[i] += speed[i];
 		
 		const double BRAKE = 0.2; // ブレーキ…
 
@@ -128,8 +128,8 @@ void Explosion::PlayAnime(const double & PlayX, const double & PlayY, const doub
 	{
 		if (isPlay[i] == true) continue;
 		isPlay[i] = true;
-		pos[i].SetVecor2D(PlayX, PlayY);
-		speed[i].SetVecor2D(SpeedX, SpeedY);
+		pos[i].SetVec(PlayX, PlayY);
+		speed[i].SetVec(SpeedX, SpeedY);
 
 		// ランダムに角度を決める
 		int rand = GetRand(3);

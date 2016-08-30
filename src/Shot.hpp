@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ShotTask.hpp"
+#include "Player.hpp"
 
 
 class Shot
@@ -13,11 +14,21 @@ public:
 
 	Shot(ShotTask* shot);
 	~Shot();
-	void Update(const double& PosX, const double& PosY);
-	void Draw();
-	void Fire(const double& SPEED, const double& ANGLE);
-	void Fire(const double& PosX, const double& PosY, const double& SPEED, const double& ANGLE);
-	bool IsHit(const double & ColX, const double & ColY, const double & ColR);
+	void Update(const double& PosX, const double& PosY, const Player& player) {
+		mShot->Update(PosX, PosY, player);
+	}
+	void Draw() {
+		mShot->Draw();
+	}
+	void Fire(const double& SPEED, const double& ANGLE) {
+		mShot->Fire(SPEED, ANGLE);
+	}
+	void Fire(const double& PosX, const double& PosY, const double& SPEED, const double& ANGLE) {
+		mShot->Fire(PosX, PosY, SPEED, ANGLE);
+	}
+	bool IsHit(const double & ColX, const double & ColY, const double & ColR) {
+		return mShot->IsHit(ColX, ColY, ColR);
+	}
 
 private:
 	Shot::Shot() {}

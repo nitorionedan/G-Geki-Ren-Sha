@@ -14,6 +14,7 @@ const double Eshot::SC_LIMIT_XL = -10.;
 const double Eshot::SC_LIMIT_XR = 650.;
 const double Eshot::SC_LIMIT_YT = -10.;
 const double Eshot::SC_LIMIT_YB = 490.;
+const double Eshot::HIT_RANGE = 4.;
 
 bool Eshot::s_isFire1;
 bool Eshot::s_isFire2;
@@ -29,7 +30,7 @@ Eshot::Eshot()
 	, c_atk2(new Counter(60))
 	, c_fire1(new Counter(A_INTERVAL * A_FIRE_NUM))
 	, c_fire2(new Counter(100))
-	, atkState(eAtk1)
+	, atkState(eAttackState::Atk1)
 	, loopCount(0)
 	, speed(0.0)
 {
@@ -54,11 +55,11 @@ Eshot::~Eshot()
 }
 
 
-void Eshot::Update()
+void Eshot::Update(const Player& player)
 {	
 	SetFirePos();							// 発射位置を設定
 	Fire();									// 発射処理
-	Move();									// 弾の動きを計算
+	Move(player);									// 弾の動きを計算
 
 	if (s_isFire1)	c_fire1->Update();		// 攻撃開始からカウントダウン
 	if (s_isFire2)	c_fire2->Update();
@@ -141,7 +142,7 @@ void Eshot::Fire()
 
 
 	// --------------------------------------------------------------------------------------------------------
-	if (atkState == eAtk1)
+	if (atkState == eAttackState::Atk1)
 	{
 		// ショットAを発射するタイミングが来てないならここで返す
 		if (c_fire1->Remainder(A_INTERVAL) != 0)	return;
@@ -188,13 +189,13 @@ void Eshot::Fire()
 		}		
 	}
 	// --------------------------------------------------------------------------------------------------------
-	if (atkState == eAtk2)
+	if (atkState == eAttackState::Atk2)
 	{
 	}
 }
 
 
-void Eshot::Move()
+void Eshot::Move(const Player& player)
 {
 	for(auto &shot : shotA)
 	{
@@ -204,11 +205,10 @@ void Eshot::Move()
 		shot->x_pos += std::cos(shot->angle) * A_SPEED;
 		shot->y_pos += std::sin(shot->angle) * A_SPEED;
 
-
-		const bool& IS_HIT = Game::IsHitPlayer(4, Player::HIT_RANGE, shot->x_pos, shot->y_pos, Game::GetPlayerPos().x, Game::GetPlayerPos().y);
+		const bool& IS_HIT = Vector2D::CirclesCollision(HIT_RANGE, Player::HIT_RANGE,
+							shot->x_pos, shot->y_pos, player.GetPos().x, player.GetPos().y);
 		const bool& IS_HIT2 = Bomb::IsHit(4, shot->x_pos, shot->y_pos);
 		const bool& IS_OUT = isOverLimit(shot->x_pos, shot->y_pos);
-
 
 		if (IS_HIT || IS_HIT2)
 		{
@@ -222,25 +222,6 @@ void Eshot::Move()
 }
 
 
-
-void Eshot::GoFire1(){
-	s_isFire1 = true;
-}
-
-
-
-void Eshot::Reset()
-{
-}
-
-
-
-void Eshot::SetAttackState(AttackState state) {
-	atkState = state;
-}
-
-
-
 bool Eshot::isOverLimit(const double X_POS, const double Y_POS)
 {
 	if (X_POS < SC_LIMIT_XL || SC_LIMIT_XR < X_POS || Y_POS < SC_LIMIT_YT || SC_LIMIT_YB < Y_POS) {
@@ -248,4 +229,9 @@ bool Eshot::isOverLimit(const double X_POS, const double Y_POS)
 	}
 	return false;
 }
-// EOF
+
+
+bool Eshot::IsHit(const double & otherRange, const Vector2D other)
+{
+	return false;
+}

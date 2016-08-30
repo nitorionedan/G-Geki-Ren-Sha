@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vector2D.hpp"
+#include "Player.hpp"
 #include <array>
 
 
@@ -17,7 +18,7 @@ class ItemMng
 public:
 	ItemMng();
 	~ItemMng();
-	void Update();
+	void Update(std::shared_ptr<Player> player);
 	void Draw();
 
 	// @brief	アイテムランダムドロップ
@@ -30,7 +31,7 @@ public:
 
 private:
 	void Move(const int& id);
-	void HitCheck(const int& id);
+	void HitCheck(const int& id, std::shared_ptr<Player> player);
 	void Reset(double PosX, double PosY, int id);
 
 	const double LIMIT_L;

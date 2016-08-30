@@ -3,7 +3,6 @@
 #include "ShotTask.hpp"
 #include "Vector2D.hpp"
 #include "Effect.hpp"
-
 #include <array>
 #include <memory>
 
@@ -13,25 +12,15 @@ class EShot04 : public ShotTask
 public:
 	EShot04();
 	~EShot04();
-	void Update(const double& PosX, const double& PosY) override;
-	void Draw() override;
-
-	// @brief					発射（1発）
-	// @param[in]	vec_speed	進む速度
-	// @param[in]	vec_angle	進む角度
-	void Fire(const double& SPEED, const double& ANGLE) override;
-	void Fire(const double& PosX, const double& PosY, const double& SPEED, const double& ANGLE) override;
-
-
-	// @brief					当たり判定
-	// @param[in]	ColX, ColY	衝突する物体の座標
-	// @param[in]	ColR		衝突する物体の当たり変形
-	// @out						当たったかどうか
-	bool IsHit(const double& ColX, const double& ColY, const double& ColR) override;
+	virtual void Update(const double& PosX, const double& PosY, const Player& player) override;
+	virtual void Draw() override;
+	virtual void Fire(const double& SPEED, const double& ANGLE) override;
+	virtual void Fire(const double& PosX, const double& PosY, const double& SPEED, const double& ANGLE) override;
+	virtual bool IsHit(const double& ColX, const double& ColY, const double& ColR) override;
 
 private:
 	// @param[in]	id	添え字番号
-	void Move(const int& id);
+	void Move(const int& id, const Player& player);
 
 	const int ALL_FRAME_NUM;	// アニメーションの総枚数
 	const int FRAME_TIME;		// １コマの表示時間（フレーム数）

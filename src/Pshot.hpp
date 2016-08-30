@@ -3,7 +3,6 @@
 #include "Bullet.hpp"
 #include "Player.hpp"
 #include "Counter.hpp"
-#include "Task.hpp"
 #include "Vector2D.hpp"
 #include "HitEffect.hpp"
 #include "Effect.hpp"
@@ -21,13 +20,13 @@ enum eShot_Color
 };
 
 
-class Pshot : public Task
+class Pshot
 {
 public:
 	Pshot::Pshot();
 	Pshot::~Pshot();
-	virtual void Update() override;
-	virtual void Draw() override;
+	void Update(const Player& player);
+	void Draw();
 	void ShiftReset();
 
 private:

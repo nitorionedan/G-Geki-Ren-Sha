@@ -11,7 +11,7 @@ class EShot02: public ShotTask
 public:
 	EShot02::EShot02(int colorNum);
 	~EShot02();
-	virtual void Update(const double& PosX, const double& PosY) override;
+	virtual void Update(const double& PosX, const double& PosY, const Player& player) override;
 	virtual void Draw() override;
 
 	// @brief					発射（1発）
@@ -38,6 +38,7 @@ private:
 
 	int gh;
 
+	Vector2D playerPos;
 	std::array<Vector2D, ALL_NUM> pos;		// 座標
 	std::array<int, ALL_NUM> time;			// 経過時間
 	std::array<double, ALL_NUM> vspeed;		// 弾の速さ

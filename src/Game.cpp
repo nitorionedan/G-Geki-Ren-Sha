@@ -1,8 +1,7 @@
-#include "DxLib.h"
-
+#include <DxLib.h>
 #include "Game.hpp"
 #include "DebugMode.hpp"
-#include "NullTask.hpp"
+#include "NullEnemyShot.hpp"
 #include "NullBoss.hpp"
 
 
@@ -13,12 +12,11 @@ Effect*			Game::bomber;
 Effect**		Game::effect;
 Score*			Game::score;
 Stage*			Game::stage;
-Player*			Game::player;
 Pshot*			Game::pshot;
 BossChara*		Game::boss;
 EnemyMng*		Game::enemyMng;
 ItemMng*		Game::itemMng;
-Character*		Game::bossShot;
+BossShotMgr*		Game::bossShot;
 bool			Game::f_pause;
 bool			Game::isMsg;
 bool			Game::isDead;
@@ -27,8 +25,9 @@ bool			Game::isDead;
 Game::Game(ISceneChanger* changer)
 	: BaseScene(changer)
 	, graphic(new Graphic)
-	, board(new Character(new StatusBoard))
+	, board(new StatusBoard)
 	, c_msg(new Counter(100))
+	, player(new Player)
 {
 	// static-----------------------------------------------------------------
 	{
@@ -46,14 +45,13 @@ Game::Game(ISceneChanger* changer)
 		effect[2] = new Effect(new ExplosionEffect(eExplosion_big));
 		effect[3] = new Effect(new ExplosionEffect(eExplosion_long));
 
-		player = new Player;
 		pshot = new Pshot;
 		score = new Score;
 		boss = new BossChara(new NullBoss);
 		enemyMng = new EnemyMng;
 		stage = new Stage;
 		itemMng = new ItemMng;
-		bossShot = new Character(new NullTask);
+		bossShot = new BossShotMgr(new NullEnemyShot);
 	}
 	// TEST
 	gh_test = LoadGraph("GRAPH/GAME/Eshot/eshot03.png");
@@ -64,7 +62,6 @@ Game::Game(ISceneChanger* changer)
 
 Game::~Game()
 {
-	delete player;
 	delete score;
 	delete stage;
 	delete pshot;
@@ -87,22 +84,23 @@ Game::~Game()
 //更新
 void Game::Update()
 {	 
-	// ポーズ---------------------------------------------	
-	if (Keyboard_Get(KEY_INPUT_Q) == 1)	Pause();
+	/* ポーズ */
+	if (Keyboard_Get(KEY_INPUT_Q) == 1)	
+		Pause();
 
 	if(f_pause)
 	{
-		if(Keyboard_Get(KEY_INPUT_P) == 1)	mSceneChanger->ChangeScene(eScene_Menu);
+		if(Keyboard_Get(KEY_INPUT_P) == 1)
+			mSceneChanger->ChangeScene(eScene_Menu);
 		return;
 	}
 
-	// Updates--------------------------------------------
 	score->Update();
 	stage->Update();
 
 	// Chara
-	boss->Update();
-	enemyMng->Update();
+	boss->Update(*player);
+	enemyMng->Update(*player);
 	player->Update();
 
 	// Effect
@@ -111,12 +109,12 @@ void Game::Update()
 	for (int i = 0; i < EX_NUM; i++)	effect[i]->Update();
 	
 	// Shot
-	pshot->Update();
-	bossShot->Update();
+	pshot->Update(*player);
+	bossShot->Update(*player);
 	
 	// その他の情報
-	board->Update();
-	itemMng->Update();
+	board->Update(*player);
+	itemMng->Update(player);
 	
 	if (isMsg)	c_msg->Update();
 	if(c_msg->isLast())
@@ -133,13 +131,13 @@ void Game::Update()
 	if (Keyboard_Get(KEY_INPUT_B) == 1)
 	{
 		boss->Start(eBoss_A);
-		bossShot->ChangeShot(eChara_ShotA);
+		bossShot->ChangeShot(eEnemyShot::ShotA);
 	}
 
 	if(Keyboard_Get(KEY_INPUT_R) == 1)
 	{
 		boss->Start(eBoss_None);
-		bossShot->ChangeShot(eChara_None);
+		bossShot->ChangeShot(eEnemyShot::None);
 	}
 
 	if (Keyboard_Get(KEY_INPUT_U) == 1)	mSceneChanger->ChangeScene(eScene_GameOver);
@@ -179,7 +177,7 @@ void Game::Draw()
 	bossShot->Draw();
 
 	// ステータスボード
-	board->Draw();
+	board->Draw(*player);
 
 	// 一番上に描画するその他の情報
 	Draw_StageMsg();
@@ -195,11 +193,6 @@ void Game::Draw()
 
 void Game::AddScore(const int & point){
 	score->AddScore(point);
-}
-
-
-void Game::AddBomb(){
-	player->AddBomb();
 }
 
 
@@ -245,11 +238,6 @@ void Game::Pause(){
 }
 
 
-void Game::ShiftReset(){
-	player->ShiftReset();
-}
-
-
 void Game::ItemDrop(double PosX, double PosY){
 	itemMng->Create(PosX, PosY);
 }
@@ -257,11 +245,6 @@ void Game::ItemDrop(double PosX, double PosY){
 
 void Game::ItemDrop(double PosX, double PosY, eItem_type type){
 	itemMng->Create(PosX, PosY, type);
-}
-
-
-void Game::Shift(bool isUp){
-	player->Shift(isUp);
 }
 
 
@@ -276,19 +259,10 @@ void Game::GameOver()
 }
 
 
-void Game::DownBombNum(){
-	player->DownBombNum();
-}
-
 void Game::StartBoss()
 {
 	boss->Start(eBoss_A);
-	bossShot->ChangeShot(eChara_ShotA);
-}
-
-
-int Game::GetPlayerBomb(){
-	return player->GetBombNum();
+	bossShot->ChangeShot(eEnemyShot::ShotA);
 }
 
 
@@ -317,11 +291,6 @@ bool Game::IsHitBoss(const double& myX, const double& myY, int & dmgPoint)
 {
 	const bool& IS_HIT = boss->HitCheck(myX, myY, dmgPoint);
 	return IS_HIT;
-}
-
-
-Vector2D& Game::GetPlayerPos(){
-	return player->GetPos();
 }
 
 

@@ -8,7 +8,6 @@
 #include "Stage.hpp"
 #include "Game.hpp"
 #include "Graphics2D.hpp"
-
 #include <algorithm>
 #include <cassert>
 
@@ -19,23 +18,6 @@ const int Player::MaxPowLevel = 4;
 const int Player::MAX_RENSHA = 40;
 const int Player::MIN_RENSHA = 0;
 const int Player::HIT_RANGE = 8;
-
-ePlayerState Player::state;
-Vector2D Player::s_pos;
-Vector2D Player::vec;
-int Player::s_powlv;
-int Player::s_bombNum;
-int Player::s_life;
-int Player::s_rensha;
-int Player::hs_shiftUp;
-int Player::hs_shiftDown;
-int Player::hs_dead;
-int Player::bombNum;
-bool Player::s_isDead;
-bool Player::s_isMuteki;
-bool Player::s_isStart;
-bool Player::isHit;
-bool Player::isArm;
 
 
 Player::Player()
@@ -49,7 +31,7 @@ Player::Player()
 	, c_start(new Counter(150))
 	, c_dead(new Counter(90))
 	, elapsedTime(0)
-	, keydir(InputDir::Neutral)
+	, keydir(eInputDir::Neutral)
 	, dead_ef(eSpread_SmallGrey)
 	, isDead(false)
 	, life(3)
@@ -61,14 +43,15 @@ Player::Player()
 	hs_shiftDown = LoadSoundMem("SOUND/SE/shiftdown.wav");
 	hs_dead = LoadSoundMem("SOUND/SE/explosion02.wav");
 
-	pos.SetVecor2D(320.0, 520.0);
+	pos.SetVec(320.0, 520.0);
+	vec = Vector2D::ZERO;
 	bombNum = 3;
-	s_powlv		= 0;
-	s_isStart	= false;
+	powlv = 0;
+	isStart = false;
 	isHit = false;
-	s_isMuteki = true;
+	isMuteki = true;
 	isArm = false;
-	state = ePlayerState_Start;
+	state = ePlayerState::Start;
 }
 
 
@@ -88,19 +71,21 @@ void Player::Update()
 
 	switch (state)
 	{
-	case ePlayerState_Start: Update_Start();	break;
-	case ePlayerState_Game: Update_Game();		break;
-	case ePlayerState_Dead: Update_Dead();		break;
+	case ePlayerState::Start: Update_Start();	break;
+	case ePlayerState::Game: Update_Game();		break;
+	case ePlayerState::Dead: Update_Dead();		break;
 	default:	printfDx("Player.cpp:ERROR\n");	break;
 	}
-
-	// staticメンバ変数に値をコピー（アホ）
-	CopyStaticMem();
 
 	isHit = false;
 
 	// TEST------------------------------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
+
+	if (Keyboard_Get(KEY_INPUT_O) == 1)
+		Shift(false);
+	if (Keyboard_Get(KEY_INPUT_P) == 1)
+		Shift(true);
 }
 
 
@@ -117,9 +102,9 @@ void Player::Draw()
 	// 自機
 	switch (state)
 	{
-	case ePlayerState_Start: Draw_Start();	break;
-	case ePlayerState_Game: Draw_Game();	break;
-	case ePlayerState_Dead: Draw_Dead();	break;
+	case ePlayerState::Start: Draw_Start();	break;
+	case ePlayerState::Game: Draw_Game();	break;
+	case ePlayerState::Dead: Draw_Dead();	break;
 	default:	printfDx("Player.cpp:ERROR\n");	break;
 	}
 
@@ -152,8 +137,8 @@ void Player::Update_Start()
 
 	if (c_start->isLast())
 	{
-		s_isMuteki = false;
-		state = ePlayerState_Game;	// スタート地点ならスタートする
+		isMuteki = false;
+		state = ePlayerState::Game;	// スタート地点ならスタートする
 	}
 }
 
@@ -198,12 +183,12 @@ void Player::Update_Dead()
 		}
 
 		// スタート状態にする
-		state = ePlayerState_Start;
+		state = ePlayerState::Start;
 
 		// スタート地点に戻す
-		pos.SetVecor2D(320.0, 520.0);
+		pos.SetVec(320.0, 520.0);
 
-		keydir = InputDir::Neutral;
+		keydir = eInputDir::Neutral;
 
 		// 再充填
 		bombNum = 3;
@@ -222,9 +207,9 @@ void Player::Draw_Start()
 		//Draw関数
 		switch (keydir)
 		{
-		case InputDir::Left:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[0], true);	break;
-		case InputDir::Neutral:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[1], true);	break;
-		case InputDir::Right:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[2], true);	break;
+		case eInputDir::Left:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[0], true);	break;
+		case eInputDir::Neutral:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[1], true);	break;
+		case eInputDir::Right:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[2], true);	break;
 		}
 		
 		SetDrawBlendMode(DX_BLENDMODE_ADD, 200); //加算合成
@@ -232,9 +217,9 @@ void Player::Draw_Start()
 		//Draw関数で上と同じ物を重ねる
 		switch (keydir)
 		{
-		case InputDir::Left:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[0], true);	break;
-		case InputDir::Neutral:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[1], true);	break;
-		case InputDir::Right:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[2], true);	break;
+		case eInputDir::Left:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[0], true);	break;
+		case eInputDir::Neutral:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[1], true);	break;
+		case eInputDir::Right:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[2], true);	break;
 		}
 		
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
@@ -243,9 +228,9 @@ void Player::Draw_Start()
 	{
 		switch (keydir)
 		{
-		case InputDir::Left:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[0], true);	break;
-		case InputDir::Neutral:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[1], true);	break;
-		case InputDir::Right:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[2], true);	break;
+		case eInputDir::Left:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[0], true);	break;
+		case eInputDir::Neutral:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[1], true);	break;
+		case eInputDir::Right:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[2], true);	break;
 		}
 	}
 }
@@ -255,18 +240,17 @@ void Player::Draw_Game()
 {
 	switch (keydir)
 	{
-	case InputDir::Left:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[0], true);	break;
-	case InputDir::Neutral:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[1], true);	break;
-	case InputDir::Right:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[2], true);	break;
+	case eInputDir::Left:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[0], true);	break;
+	case eInputDir::Neutral:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[1], true);	break;
+	case eInputDir::Right:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[2], true);	break;
 	}
-
-	/// ←ここにシールドアニメ
 }
 
 
 void Player::Draw_Dead()
 {
-	if (elapsedTime % 4 >= 2)						// 2fps毎に元の色に戻す
+	const bool& isRed = ( elapsedTime % 4 >= 2 );
+	if (isRed)	// 2fps毎に元の色に戻す
 	{
 		//SetDrawBlendMode(DX_BLENDMODE_INVSRC, 100);	// On-Damage-Effect
 		//SetDrawBright(255, 0, 0);
@@ -278,9 +262,9 @@ void Player::Draw_Dead()
 
 	switch (keydir)
 	{
-	case InputDir::Left:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[0], true);	break;
-	case InputDir::Neutral:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[1], true);	break;
-	case InputDir::Right:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[2], true);	break;
+	case eInputDir::Left:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[0], true);	break;
+	case eInputDir::Neutral:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[1], true);	break;
+	case eInputDir::Right:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[2], true);	break;
 	}
 
 	SetDrawBright(255, 255, 255);	// 元の色合い
@@ -289,45 +273,45 @@ void Player::Draw_Dead()
 
 void Player::SetStart()
 {
-	if (s_isStart)	return;
+	if (isStart)	return;
 
-	const bool isStartPosition = (pos.y == Y_START);
+	const bool& isStartPosition = (pos.y == Y_START);
 
 	c_start->Update();
 	pos.y -= 2.0;								// 上に上昇
 	pos.y = std::max(pos.y, Y_START);			// スタート地点まで
 
-	if (isStartPosition)	s_isStart = true;	// スタート地点ならスタートする
+	if (isStartPosition)
+		isStart = true;	// スタート地点ならスタートする
 }
 
 
 void Player::InputMng()
 {
-	const bool KEY_STAY_RIGHT = ( Keyboard_Get(KEY_INPUT_RIGHT) >= 30 );
-	const bool KEY_STAY_LEFT  = ( Keyboard_Get(KEY_INPUT_LEFT) >= 30 );
-	const bool PUSH_Z_KEY     = ( Keyboard_Get(KEY_INPUT_Z) == 1 );
+	const bool& KEY_STAY_RIGHT = ( Keyboard_Get(KEY_INPUT_RIGHT) >= 30 );
+	const bool& KEY_STAY_LEFT  = ( Keyboard_Get(KEY_INPUT_LEFT) >= 30 );
+	const bool& PUSH_Z_KEY     = ( Keyboard_Get(KEY_INPUT_Z) == 1 );
 
-	keydir = InputDir::Neutral;						// キーをニュートラルにする
+	keydir = eInputDir::Neutral;						// キーをニュートラルにする
 	
-	if (KEY_STAY_RIGHT)	keydir = InputDir::Right;
+	if (KEY_STAY_RIGHT)	keydir = eInputDir::Right;
 
-	if (KEY_STAY_LEFT)	keydir = InputDir::Left;
+	if (KEY_STAY_LEFT)	keydir = eInputDir::Left;
 
-	if (PUSH_Z_KEY && s_powlv == 0)	Shift(true);	// 無の状態で押すと無条件で１段階アップ
+	if (PUSH_Z_KEY && powlv == 0)	Shift(true);	// 無の状態で押すと無条件で１段階アップ
 }
 
 
 void Player::Move()
 {
-	const bool INPUT_HORIZONTAL  = Keyboard_Get(KEY_INPUT_RIGHT) >= 1 || Keyboard_Get(KEY_INPUT_LEFT) >= 1;
-	const bool INPUT_VERTICAL    = Keyboard_Get(KEY_INPUT_UP)    >= 1 || Keyboard_Get(KEY_INPUT_DOWN) >= 1;
-	const bool KEY_STAY_RIGHT    = Keyboard_Get(KEY_INPUT_RIGHT) >= 1;
-	const bool KEY_STAY_LEFT     = Keyboard_Get(KEY_INPUT_LEFT)  >= 1;
-	const bool KEY_STAY_UP       = Keyboard_Get(KEY_INPUT_UP)    >= 1;
-	const bool KEY_STAY_DOWN     = Keyboard_Get(KEY_INPUT_DOWN)  >= 1;
+	const bool& INPUT_HORIZONTAL  = Keyboard_Get(KEY_INPUT_RIGHT) >= 1 || Keyboard_Get(KEY_INPUT_LEFT) >= 1;
+	const bool& INPUT_VERTICAL    = Keyboard_Get(KEY_INPUT_UP)    >= 1 || Keyboard_Get(KEY_INPUT_DOWN) >= 1;
+	const bool& KEY_STAY_RIGHT    = Keyboard_Get(KEY_INPUT_RIGHT) >= 1;
+	const bool& KEY_STAY_LEFT     = Keyboard_Get(KEY_INPUT_LEFT)  >= 1;
+	const bool& KEY_STAY_UP       = Keyboard_Get(KEY_INPUT_UP)    >= 1;
+	const bool& KEY_STAY_DOWN     = Keyboard_Get(KEY_INPUT_DOWN)  >= 1;
+	
 	double speed;
-
-
 	// スピード設定
 	if(INPUT_HORIZONTAL)
 	{
@@ -348,42 +332,38 @@ void Player::Move()
 }
 
 
-void Player::CopyStaticMem()
-{
-	s_pos		= pos;
-	s_bombNum	= bombNum;
-	s_life		= life;
-	s_isDead	= isDead;
-	s_isMuteki	= isMuteki;
-}
-
-
 void Player::Rensha_Update()
 {
-	// 連射ゲージ加算-----------------------------------------------------
-	if(Keyboard_Get(KEY_INPUT_Z) == 1 || Keyboard_Get(KEY_INPUT_A) == 1){
-		if(s_rensha < 41)	s_rensha++;
+	/* 連射ゲージ加算 */
+	const bool& isRensha = (Keyboard_Get(KEY_INPUT_Z) == 1 ||
+							Keyboard_Get(KEY_INPUT_A) == 1);
+	if(isRensha)
+	{
+		if(rensha < 41)
+			rensha++;
 	}
 
-	// -------------------------------------------------------------------
-	switch (s_powlv)
+	/* 連射ゲージの減少速度計算 */
+	switch (powlv)
 	{
-	case 0:	s_rensha = 0;	break;
-	case 1:	if (Stage::GetTime() % 17 == 0)	s_rensha--;	break;
-	case 2:	if (Stage::GetTime() % 12 == 0)	s_rensha--;	break;
-	case 3: if (Stage::GetTime() % 11 == 0)	s_rensha--;	break;
-	case 4: if (Stage::GetTime() % 10 == 0)	s_rensha--;	break;
-
-	default: assert(!"不正な状態"); break;
+	case 0:	rensha = 0;	break;
+	case 1:	if (Stage::GetTime() % 17 == 0)	rensha--;	break;
+	case 2:	if (Stage::GetTime() % 12 == 0)	rensha--;	break;
+	case 3: if (Stage::GetTime() % 11 == 0)	rensha--;	break;
+	case 4: if (Stage::GetTime() % 10 == 0)	rensha--;	break;
+	default: assert("Player::Rensha_Update()");
 	}
 
-	// -------------------------------------------------------------------
-	switch (s_rensha)
+	/* シフトチェンジ判定 */
+	switch (rensha)
 	{
-	case 0:		
-		if(s_powlv != 0) Shift(false);
+	case 0:	// 最低値
+		if(powlv != 0)
+			Shift(false);
 		break;
-	case 40:	if (s_powlv != 4)	Shift(true);
+	case 40: // 最大値
+		if (powlv != 4)
+			Shift(true);
 		break;
 	}
 }
@@ -396,7 +376,6 @@ void Player::SetArm()
 		Score::AddScore(10000);
 		return;
 	}
-
 	isArm = true;
 }
 
@@ -404,34 +383,22 @@ void Player::SetArm()
 void Player::Shift(const bool isUP)
 {
 	if (isUP) {
-		s_powlv++;											// 弾レベルを１段階パワーアップ
-		if (s_powlv != 1)
+		powlv++;	// 弾レベルを１段階パワーアップ
+		if (powlv != 1)
 		{
-			s_rensha = 1 + (2 * s_powlv);	// シフトアップボーナス４メモリ
+			rensha = 1 + (2 * powlv);	// シフトアップボーナス４メモリ
 			PlaySoundMem(hs_shiftUp, DX_PLAYTYPE_BACK);
 		}
+	} else {
+		powlv--;
+		rensha = MAX_RENSHA - 4;
+		if (powlv == 0)	rensha = 0;
+		if (powlv != 0)	PlaySoundMem(hs_shiftDown, DX_PLAYTYPE_BACK);
 	}
-	else {
-		s_powlv--;
-		s_rensha = MAX_RENSHA - 4;
-		if (s_powlv == 0)	s_rensha = 0;
-		if(s_powlv != 0)	PlaySoundMem(hs_shiftDown, DX_PLAYTYPE_BACK);
-	}
 
-	s_powlv = std::min(MaxPowLevel, std::max(0, s_powlv));	// レベルを基底の範囲内にする
-
-//	effector->Shift(isUP, s_powlv);							// シフトレベルに応じた演出を開始
+	powlv = std::min(MaxPowLevel, std::max(0, powlv));	// レベルを基底の範囲内にする
 }
 
-void Player::AddBomb(){
-	bombNum++;
-}
-
-
-void Player::ShiftReset()
-{
-	s_powlv = 0;
-}
 
 void Player::DownBombNum()
 {
@@ -440,69 +407,21 @@ void Player::DownBombNum()
 }
 
 
-void Player::GetPos(double* x, double* y)
-{
-	*x = this->pos.x;
-	*y = this->pos.y;
-}
-
-
-Vector2D& Player::GetPos(){
-	return pos;
-}
-
-// Static Methods ---------------------------------------------------------------------------------
-
-
-int Player::GetShiftLevel(){
-	return s_powlv;
-}
-
-
-int Player::GetBombNum(){
-	return s_bombNum;
-}
-
-
-int Player::GetLife(){
-	return s_life;
-}
-
-
-int Player::GetRensha(){
-	return s_rensha;
-}
-
-
-bool Player::IsDead(){
-	return s_isDead;
-}
-
-
-bool Player::IsMuteki(){
-	return s_isMuteki;
-}
-
-
-bool Player::IsStart(){
-	return s_isStart;
-}
-
-
 bool Player::HitCheckCircle(const double& ColX, const double& ColY)
 {
-	if (state == ePlayerState_Dead)	return false;
+	if (state == ePlayerState::Dead)
+		return false;
 
-	const bool& IS_HIT = (Vector2D::CirclePointCollision(s_pos.x, s_pos.y + 9.0, ColX, ColY, HIT_RANGE));
+	const bool& IS_HIT = (Vector2D::CirclePointCollision(pos.x, pos.y + 9.0, ColX, ColY, HIT_RANGE));
 
-	if(IS_HIT && state == ePlayerState_Game)
+	if(IS_HIT && state == ePlayerState::Game)
 	{
-		s_powlv = 0;
-		state = ePlayerState_Dead;
+		powlv = 0;
+		state = ePlayerState::Dead;
 		isHit = true;
-		s_isMuteki = true;
-		vec.SetVecor2D(std::cos(1.5 * GetRand(100)), 1.5 * std::cos(GetRand(100)));
-		Game::PlaySpread(s_pos.x, s_pos.y, GetRand(100), dead_ef);
+		isMuteki = true;
+		vec.SetVec(std::cos(1.5 * GetRand(100)), 1.5 * std::cos(GetRand(100)));
+		Game::PlaySpread(pos.x, pos.y, GetRand(100), dead_ef);
 		PlaySoundMem(hs_dead, DX_PLAYTYPE_BACK);
 	}
 
@@ -512,21 +431,22 @@ bool Player::HitCheckCircle(const double& ColX, const double& ColY)
 
 bool Player::HitCheckCircle(const double & Range1, const double & Range2, const double & X1, const double & Y1, const double & X2, const double & Y2)
 {
-	if (state == ePlayerState_Dead)	return false;
+	if (state == ePlayerState::Dead)
+		return false;
 
 	const bool& IS_HIT = (Vector2D::CirclesCollision(Range1, Range2, X1, Y1, X2, Y2));
 
 	// アームを剥がす
 	if (IS_HIT)	isArm = false;
 
-	if(IS_HIT && state == ePlayerState_Game)
+	if(IS_HIT && state == ePlayerState::Game)
 	{
-		s_powlv = 0;
-		state = ePlayerState_Dead;
+		powlv = 0;
+		state = ePlayerState::Dead;
 		isHit = true;
-		s_isMuteki = true;
-		vec.SetVecor2D(std::cos(1.5 * GetRand(100)), 1.5 * std::cos(GetRand(100)));
-		Game::PlaySpread(s_pos.x, s_pos.y, GetRand(100), dead_ef);
+		isMuteki = true;
+		vec.SetVec(std::cos(1.5 * GetRand(100)), 1.5 * std::cos(GetRand(100)));
+		Game::PlaySpread(pos.x, pos.y, GetRand(100), dead_ef);
 		Game::PlayQuake();
 		PlaySoundMem(hs_dead, DX_PLAYTYPE_BACK);
 	}

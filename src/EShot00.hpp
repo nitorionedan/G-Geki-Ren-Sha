@@ -13,7 +13,7 @@ class EShot00 : public ShotTask
 public:
 	EShot00();
 	~EShot00();
-	void Update(const double& PosX, const double& PosY) override;
+	void Update(const double& PosX, const double& PosY, const Player& player) override;
 	void Draw() override;
 
 	// @brief					発射（1発）
@@ -47,6 +47,7 @@ private:
 	static const int ALL_NUM = 9;
 
 	int gh[12];
+	Vector2D playerPos;
 	std::unique_ptr<Effect>	effect;
 	std::array<int, ALL_NUM> time;			// 経過時間
 	std::array<Vector2D, ALL_NUM> pos;		// 座標

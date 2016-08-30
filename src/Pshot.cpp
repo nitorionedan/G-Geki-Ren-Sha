@@ -125,19 +125,18 @@ Pshot::~Pshot()
 }
 
 
-void Pshot::Update()
+void Pshot::Update(const Player& player)
 {
-	shiftLevel = Player::GetShiftLevel();						// シフトレベルを手に入れる
-
-	bomb->Update();
-	SetFirePosition(Game::GetPlayerPos().x, Game::GetPlayerPos().y);	// 発射位置を設定
-	Input();													// 入力管理
-	Move();														// 動き計算
-	HitCheck();													// 当たり判定
-	effect->Update();											// エフェクト更新
-	Reset();													// 弾をリセット
-	ShotCount();												// 発射準備のカウント管理
-	CopyStaticMem();											// staticメンバに値をコピー
+	shiftLevel = player.GetShiftLevel();					// シフトレベルを手に入れる
+	bomb->Update(player);
+	SetFirePosition(player.GetPos().x, player.GetPos().y);	// 発射位置を設定
+	Input();												// 入力管理
+	Move();													// 動き計算
+	HitCheck();												// 当たり判定
+	effect->Update();										// エフェクト更新
+	Reset();												// 弾をリセット
+	ShotCount();											// 発射準備のカウント管理
+	CopyStaticMem();										// staticメンバに値をコピー
 }
 
 

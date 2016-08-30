@@ -36,25 +36,20 @@ StatusBoard::~StatusBoard()
 }
 
 
-void StatusBoard::Update()
+void StatusBoard::Update(const Player& player)
 {
 	// TEST------------------------------------------
 	if (!DebugMode::isTest)	return;
-
-	if(Keyboard_Get(KEY_INPUT_P) == 1)
-		Player::Shift(true);
-	if (Keyboard_Get(KEY_INPUT_O) == 1)
-		Player::Shift(false);
 }
 
 
-void StatusBoard::Draw()
+void StatusBoard::Draw(const Player& player)
 {
 	DrawRotaGraph(POS_BOARD_X, POS_BOARD_Y, 2.0, 0.0, gh_board, true);
-	DrawRotaGraph(POS_KANJI_X, POS_KANJI_Y, 2.0, 0.0, gh_kanji[Player::GetShiftLevel()], true);
+	DrawRotaGraph(POS_KANJI_X, POS_KANJI_Y, 2.0, 0.0, gh_kanji[player.GetShiftLevel()], true);
 
 	// -----------------------------------------------------------------------------------------
-	switch (Player::GetShiftLevel())
+	switch (player.GetShiftLevel())
 	{
 	case 0:	break;
 	case 1: break;
@@ -72,30 +67,29 @@ void StatusBoard::Draw()
 		break;
 	}
 
-	switch (Player::GetShiftLevel())
+	switch (player.GetShiftLevel())
 	{
 	case 0: break;
 	case 1:
-		for (int i = 0; i < Player::GetRensha(); i++)				// 連射ゲージ
+		for (int i = 0; i < player.GetRensha(); i++)				// 連射ゲージ
 			DrawRotaGraph(POS_RENSHA_X + (i * 4), POS_RENSHA_Y, 2.0, 0.0, gh_rensha, true);
 		break;
 	case 2:
-		for (int i = 0; i < Player::GetRensha(); i++)
+		for (int i = 0; i < player.GetRensha(); i++)
 			DrawColorGraph(POS_RENSHA_X + (i * 4), POS_RENSHA_Y, 2.0, gh_rensha, 0, 150, 255);
 		break;
 	case 3:
-		for (int i = 0; i < Player::GetRensha(); i++)
+		for (int i = 0; i < player.GetRensha(); i++)
 			DrawColorGraph(POS_RENSHA_X + (i * 4), POS_RENSHA_Y, 2.0, gh_rensha, 0, 255, 0);
 		break;
 	case 4:
-		for (int i = 0; i < Player::GetRensha(); i++)
+		for (int i = 0; i < player.GetRensha(); i++)
 			DrawColorGraph(POS_RENSHA_X + (i * 4), POS_RENSHA_Y, 2.0, gh_rensha, 255, 0, 0);
 		break;
 	}
 
-	// -----------------------------------------------------------------------------------------
-	for (int i = 0; i < Player::GetLife() - 1; i++)
+	for (int i = 0; i < player.GetLife() - 1; i++)
 		DrawRotaGraph(POS_LIFE_X + (i * 18), POS_LIFE_Y, 2.0, 0.0, gh_life, true);
-	for (int i = 0; i < Player::GetBombNum(); i++)
+	for (int i = 0; i < player.GetBombNum(); i++)
 		DrawRotaGraph(POS_BOMB_X + (i * 18), POS_BOMB_Y, 2.0, 0.0, gh_bomb, true);
 }

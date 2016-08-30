@@ -1,10 +1,8 @@
-#include "DxLib.h"
-
+#include <DxLib.h>
 #include "ItemMng.hpp"
 #include "Graphics2D.hpp"
 #include "DebugMode.hpp"
 #include "Game.hpp"
-
 #include <cmath>
 
 
@@ -24,7 +22,8 @@ ItemMng::ItemMng()
 	time.fill(0);
 	isExist.fill(false);
 	isDeleting.fill(false);
-	for (auto vec : dir)	vec.SetVecor2D(1., 1.);
+	for (auto vec : dir)
+		vec.SetVec(1., 1.);
 }
 
 
@@ -37,7 +36,7 @@ ItemMng::~ItemMng()
 }
 
 
-void ItemMng::Update()
+void ItemMng::Update(std::shared_ptr<Player> player)
 {
 	for (int i = 0; i < NUM; i++)
 	{
@@ -49,7 +48,7 @@ void ItemMng::Update()
 		if (time[i] == DELETE_TIME)			isExist[i] = false;
 	
 		Move(i);
-		HitCheck(i);
+		HitCheck(i, player);
 	}
 }
 
@@ -134,24 +133,24 @@ void ItemMng::Move(const int & id)
 }
 
 
-void ItemMng::HitCheck(const int& id)
+void ItemMng::HitCheck(const int& id, std::shared_ptr<Player> player)
 {
-	const bool& IS_HIT = Vector2D::CirclesCollision(8, HIT_RANGE, Game::GetPlayerPos().x, Game::GetPlayerPos().y, pos[id].x, pos[id].y);
+	const bool& IS_HIT = Vector2D::CirclesCollision(8, HIT_RANGE, player->GetPos().x, player->GetPos().y, pos[id].x, pos[id].y);
 
 	if(IS_HIT)
 	{
 		switch (type[id])
 		{
 		case eItem_B:
-			Game::AddBomb();
+			player->AddBomb();
 			PlaySoundMem(sh_get, DX_PLAYTYPE_BACK);
 			break;
 		case eItem_P:
-			Game::Shift(true);
+			player->Shift(true);
 			PlaySoundMem(sh_get, DX_PLAYTYPE_BACK);
 			break;
 		case eItem_S:
-			Player::SetArm();
+			player->SetArm();
 			PlaySoundMem(sh_get, DX_PLAYTYPE_BACK);
 			break;
 
@@ -169,11 +168,9 @@ void ItemMng::Reset(double PosX, double PosY, int id)
 	isExist[id] = true;
 	isDeleting[id] = false;
 	time[id] = 0;
-	pos[id].SetVecor2D(PosX, PosY);
+	pos[id].SetVec(PosX, PosY);
 	vel[id].x = GetRand(1) + 2.;
 	vel[id].y = GetRand(1) + 2.;
 //	vang[id] = std::cos(GetRand(100));
 	vang[id] = GetRand(200) - 100;
 }
-
-// EOF

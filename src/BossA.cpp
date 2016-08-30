@@ -91,9 +91,12 @@ BossA::~BossA()
 }
 
 
-void BossA::Update()
+void BossA::Update(const Player& player)
 {
-	if(state != eBossA_Dead)	shot3->Update(pos.x, pos.y);
+	playerPos = player.GetPos();
+
+	if(state != eBossA_Dead)
+		shot3->Update(pos.x, pos.y, player);
 
 	if (!isExist)	return;
 
@@ -121,7 +124,8 @@ void BossA::Update()
 
 	if (state != eBossA_Start)
 	{
-		const bool& IS_HIT = Game::IsHitPlayer(HIT_RANGE, Player::HIT_RANGE, pos.x, pos.y, Game::GetPlayerPos().x, Game::GetPlayerPos().y);
+		const bool& IS_HIT = Vector2D::CirclesCollision(HIT_RANGE, Player::HIT_RANGE,
+			pos.x, pos.y, player.GetPos().x, player.GetPos().y);
 		if (IS_HIT)	Damage(10);
 	}
 
@@ -269,13 +273,12 @@ void BossA::Start_Update()
 
 void BossA::Normal_Update()
 {
-	if (isOverLimit())
-	{
-		const float& tarX = static_cast<float>(Game::GetPlayerPos().x);
-		const float& tarY = static_cast<float>(Game::GetPlayerPos().y);
+	const float& tarX = playerPos.x;
+	const float& tarY = playerPos.y;
 
-		angle = std::atan2(tarY - pos.y, tarX - pos.x);					// 自機の方向を計算
-	}
+	// 自機の方向を計算
+	if (isOverLimit())
+		angle = std::atan2(tarY - pos.y, tarX - pos.x);
 
 	// 弾に当たったときスピードを落とす
 	if(isHit)
@@ -297,14 +300,12 @@ void BossA::Weak_Update()
 {
 	big_time++;
 
-	if (isOverLimit())
-	{
-		const float& tarX = static_cast<float>(Game::GetPlayerPos().x);
-		const float& tarY = static_cast<float>(Game::GetPlayerPos().y);
+	const float& playerX = playerPos.x;
+	const float& playerY = playerPos.y;
 
-		// 自機の方向を計算
-		angle = std::atan2(tarY - pos.y, tarX - pos.x);
-	}
+	// 自機の方向を計算
+	if (isOverLimit())
+		angle = std::atan2(playerY - pos.y, playerX - pos.x);
 
 	// 弾に当たったときスピードを落とす
 	if (isHit)
@@ -328,14 +329,14 @@ void BossA::Weak_Update()
 	if (big_time == 500)
 	{
 		PlaySoundMem(hs_big, DX_PLAYTYPE_BACK);
-		shot3->Fire(10, std::atan2(Game::GetPlayerPos().y - pos.y, Game::GetPlayerPos().x - pos.x));
+		shot3->Fire(10, std::atan2(playerY - pos.y, playerX - pos.x));
 	}
 
 	// 大きい弾
 	if(big_time == 530)
 	{
 		PlaySoundMem(hs_big, DX_PLAYTYPE_BACK);
-		shot3->Fire(10, std::atan2(Game::GetPlayerPos().y - pos.y, Game::GetPlayerPos().x - pos.x));
+		shot3->Fire(10, std::atan2(playerY - pos.y, playerX - pos.x));
 	}
 
 	if(big_time == 530)	big_time = 0;

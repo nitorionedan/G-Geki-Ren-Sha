@@ -43,7 +43,7 @@ Effector::Effector()
 
 	// static
 	Vector2D temp;
-	temp.SetVecor2D(0.0, 0.0);
+	temp.SetVec(0.0, 0.0);
 	for (int i = 0; i < MAX_HIT_NUM; ++i)
 	{
 		s_hitPos[i] = temp;

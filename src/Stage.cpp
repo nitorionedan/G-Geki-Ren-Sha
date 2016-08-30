@@ -32,12 +32,12 @@ Stage::Stage()
 	hg.at(eBG_middle) = NULL;
 	hg.at(eBG_front) = NULL;
 
-	stage_back.at(0).SetVecor2D(320.0, 240.0);
-	stage_back.at(1).SetVecor2D(320.0, -400.0); // pixサイズが例外的に 320 x 320　なので
-	stage_mid.at(0).SetVecor2D(320.0, 240.0);
-	stage_mid.at(1).SetVecor2D(320.0, -240.0);
-	stage_fro.at(0).SetVecor2D(320.0, 240.0);
-	stage_fro.at(1).SetVecor2D(320.0, -240.0);
+	stage_back.at(0).SetVec(320.0, 240.0);
+	stage_back.at(1).SetVec(320.0, -400.0); // pixサイズが例外的に 320 x 320　なので
+	stage_mid.at(0).SetVec(320.0, 240.0);
+	stage_mid.at(1).SetVec(320.0, -240.0);
+	stage_fro.at(0).SetVec(320.0, 240.0);
+	stage_fro.at(1).SetVec(320.0, -240.0);
 	
 	// LoadStage(*.dat);		// こういう風にロードしたい 
 

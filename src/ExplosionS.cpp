@@ -79,19 +79,19 @@ void ExplosionS::Fire(const int& INDEX)
 		
 		// ”š•—‚Ì‘¬‚³‚ðŒˆ’è
 		if (c_play[INDEX]->isEach(9, 16))
-			V.SetVecor2D((GetRand(20) - 10.) / 10., (GetRand(20) - 10.) / 10.);
+			V.SetVec((GetRand(20) - 10.) / 10., (GetRand(20) - 10.) / 10.);
 		if (c_play[INDEX]->isEach(1, 8))
-			V.SetVecor2D((GetRand(16) - 8.) / 10., (GetRand(16) - 8.) / 10.);
+			V.SetVec((GetRand(16) - 8.) / 10., (GetRand(16) - 8.) / 10.);
 
 		// ”š”­‚·‚éˆÊ’u‚ðƒ‰ƒ“ƒ_ƒ€‚É‚¸‚ç‚·
-		cV.SetVecor2D(pos[INDEX].x + GetRand(40) - 20, pos[INDEX].y + GetRand(40) - 20);
+		cV.SetVec(pos[INDEX].x + GetRand(40) - 20, pos[INDEX].y + GetRand(40) - 20);
 		break;
 	case eEpl_normal:
 		if(c_play[INDEX]->isEach(16, 30))
-			V.SetVecor2D((GetRand(40) - 20.) / 10., (GetRand(40) - 20.) / 10.);
+			V.SetVec((GetRand(40) - 20.) / 10., (GetRand(40) - 20.) / 10.);
 		if(c_play[INDEX]->isEach(1, 15))
-			V.SetVecor2D((GetRand(20) - 10.) / 10., (GetRand(20) - 10.) / 10.);
-		cV.SetVecor2D(pos[INDEX].x + GetRand(40) - 20, pos[INDEX].y + GetRand(40) - 20);
+			V.SetVec((GetRand(20) - 10.) / 10., (GetRand(20) - 10.) / 10.);
+		cV.SetVec(pos[INDEX].x + GetRand(40) - 20, pos[INDEX].y + GetRand(40) - 20);
 		break;
 	case eEpl_long:
 
@@ -113,7 +113,7 @@ void ExplosionS::PlayAnime(const double & PlayX, const double & PlayY)
 		if (isPlay[i] == true) continue;
 
 		isPlay[i] = true;
-		pos[i].SetVecor2D(PlayX, PlayY);
+		pos[i].SetVec(PlayX, PlayY);
 		
 		color = GetRand(2);
 		if (color == 0) isRed[i] = false;

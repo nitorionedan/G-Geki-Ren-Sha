@@ -15,9 +15,9 @@ EshotMng::~EshotMng()
 }
 
 
-void EshotMng::Update()
+void EshotMng::Update(const Player& player)
 {
-	eshot->Update();
+	eshot->Update(player);
 }
 
 

@@ -29,13 +29,15 @@ EShot00::~EShot00()
 }
 
 
-void EShot00::Update(const double& PosX, const double& PosY)
+void EShot00::Update(const double& PosX, const double& PosY, const Player& player)
 {
+	playerPos = player.GetPos();
+
 	for (int i = 0; i < ALL_NUM; i++)
 	{
 		if (!isExist[i])
 		{
-			pos[i].SetVecor2D(PosX, PosY);	 continue;
+			pos[i].SetVec(PosX, PosY);	 continue;
 		}
 	
 		time[i]++;
@@ -80,7 +82,7 @@ void EShot00::Fire(const double & PosX, const double & PosY, const double & SPEE
 		if (isExist[i])	continue;
 
 		isExist[i] = true;
-		pos[i].SetVecor2D(PosX, PosY);	 continue;
+		pos[i].SetVec(PosX, PosY);	 continue;
 		vspeed[i] = SPEED;
 		vangle[i] = ANGLE;	break;
 	}
@@ -94,8 +96,8 @@ void EShot00::Move(const int & id)
 	pos[id].y += vspeed[id] * std::sin(vangle[id]);
 
 	// 当たり判定チェック
-	const bool& IS_HIT = Game::IsHitPlayer(Player::HIT_RANGE, HIT_RANGE,
-											Game::GetPlayerPos().x, Game::GetPlayerPos().y, pos[id].x, pos[id].y);
+	const bool& IS_HIT = Vector2D::CirclesCollision(HIT_RANGE, Player::HIT_RANGE,
+		pos[id].x, pos[id].y, playerPos.x, playerPos.y);
 	const bool& IS_HIT2 = Bomb::IsHit(HIT_RANGE, pos[id].x, pos[id].y);
 
 	// 当たったら消す

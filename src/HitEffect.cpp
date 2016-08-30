@@ -5,9 +5,12 @@
 
 HitEffect::HitEffect()
 {
-	for (auto &c : c_hit) c = new Counter(16);
-	for (int i = 0; i != pos.size(); ++i)	pos[i].SetVecor2D(0.0, 0.0);
-	for (bool &b : isHit)	b = false;
+	for (auto &c : c_hit)
+		c = new Counter(16);
+	for (int i = 0; i != pos.size(); ++i)
+		pos[i].SetVec(0.0, 0.0);
+	for (bool &b : isHit)
+		b = false;
 	LoadDivGraph("GRAPH/GAME/EFFECT/hit128x32.png", 4, 4, 1, 32, 32, gh_hit);
 
 	angle.fill(0.0);
@@ -85,7 +88,7 @@ void HitEffect::PlayAnime(const double & MyX, const double & MyY)
 	{
 		if (isHit[i] == true)	continue;
 		isHit[i] = true;
-		pos[i].SetVecor2D(MyX, MyY);
+		pos[i].SetVec(MyX, MyY);
 		angle[i] = GetRand(10) / 10.0;
 //		exrate[i] = (GetRand(10) / 10.0) + 1.0;
 		break;

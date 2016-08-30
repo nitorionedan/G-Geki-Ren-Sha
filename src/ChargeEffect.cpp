@@ -75,7 +75,7 @@ void ChargeEffect::Update()
 
 void ChargeEffect::Update(const double & PosX, const double & PosY)
 {
-	center.SetVecor2D(PosX, PosY);
+	center.SetVec(PosX, PosY);
 	Update();
 }
 
@@ -99,7 +99,7 @@ void ChargeEffect::PlayAnime(const double & PosX, const double & PosY)
 {
 	if (isPlay && !CheckFinish())	return;
 	isPlay = true;
-	center.SetVecor2D(PosX, PosY);
+	center.SetVec(PosX, PosY);
 	isSweeped.fill(false);
 	PlaySoundMem(sh, DX_PLAYTYPE_BACK);
 

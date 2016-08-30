@@ -1,16 +1,16 @@
-#pragma once
+#ifndef DEF_ENEMY_HPP
+#define DEF_ENEMY_HPP
 
-#include "Task.hpp"
 #include "Counter.hpp"
 #include "ShotTask.hpp"
 #include "Shot.hpp"
 #include "Vector2D.hpp"
 #include "ShotTask.hpp"
-
+#include "Player.hpp"
 #include <memory>
 
 
-class Enemy : public Task
+class Enemy
 {
 public:
 	// @param[in]	type	ìGéÌóﬁÅiÇOÅ`ÇRÇOÅj
@@ -29,8 +29,8 @@ public:
 		int hp,
 		int item);
 	~Enemy();
-	void Update()	override;
-	void Draw()		override;
+	void Update(const Player& player);
+	void Draw();
 	bool IsHit(const double& ColX, const double& ColY, const int& DAMAGE);
 	bool IsHit(const int & ColCircle, const double & ColX, const double & ColY, const int & Damage);
 
@@ -38,28 +38,28 @@ public:
 	void AngleTarget(double Target_x, double Target_y);
 
 private:
-	void Move();
-	void Move_0();
-	void Move_1();
-	void Move_2();
-	void Move_3();
-	void Move_4();
-	void Move_5();
-	void Move_6();
-	void Move_7();
-	void Move_8(){}
-	void Move_9(){}
-	void Fire();
-	void Fire_0();
-	void Fire_1();
-	void Fire_2();
-	void Fire_3();
-	void Fire_4();
-	void Fire_5();
-	void Fire_6();
-	void Fire_7();
-	void Fire_8(){}
-	void Fire_9(){}
+	void Move(const Player& player);
+	void Move_0(const Player& player);
+	void Move_1(const Player& player);
+	void Move_2(const Player& player);
+	void Move_3(const Player& player);
+	void Move_4(const Player& player);
+	void Move_5(const Player& player);
+	void Move_6(const Player& player);
+	void Move_7(const Player& player);
+	void Move_8(const Player& player){}
+	void Move_9(const Player& player){}
+	void Fire(const Player& player);
+	void Fire_0(const Player& player);
+	void Fire_1(const Player& player);
+	void Fire_2(const Player& player);
+	void Fire_3(const Player& player);
+	void Fire_4(const Player& player);
+	void Fire_5(const Player& player);
+	void Fire_6(const Player& player);
+	void Fire_7(const Player& player);
+	void Fire_8(const Player& player){}
+	void Fire_9(const Player& player){}
 	void Damage(int damage);
 	void ItemDrop();
 
@@ -123,4 +123,4 @@ private:
 	int item;
 };
 
-// EOF
+#endif

@@ -10,7 +10,7 @@
 #include "Graphic.hpp"
 #include "Stage.hpp"
 #include "Pshot.hpp"
-#include "Character.hpp"
+#include "BossShotMgr.hpp"
 #include "StatusBoard.hpp"
 #include "Vector2D.hpp"
 #include "ItemMng.hpp"
@@ -58,31 +58,25 @@ public:
 	void GetPlayerPosition(double* x, double* y){}
 	void GetEnemyPosition(int index, double *x, double *y){}
 
-	static Vector2D& GetPlayerPos();
 	static void AddScore(const int& point);
-	static void AddBomb();
 	static void PlayAnime(const double& PlayX, const double& PlayY, eExplosion_t type);
 	static void PlaySpread(const double& PosX, const double& PosY, const double& ANGLE, eSpread_t type);
 	static void PlayQuake();
 	static void PlayCharge(double PosX, double PosY);
 	static void LoadEnemy(eStage stage);
 	static void Pause();
-	static void ShiftReset();
 	static void ItemDrop(double PosX, double PosY);
 	static void ItemDrop(double PosX, double PosY, eItem_type type);
-	static void Shift(bool isUp);
 	static void StageCall();
 	static void GameOver();
-	static void DownBombNum();
 	static void StartBoss();
-	static int GetPlayerBomb();
 	static bool IsPause();
 
 	// @brief	Ž©‹@‚Ì‰~‚Æ‘¼‚Ì“_‚Ì“–‚½‚è”»’è
-	static bool IsHitPlayer(const double& myX, const double& myY);
+	bool IsHitPlayer(const double& myX, const double& myY);
 
 	// @brief	Ž©‹@‚Ì‰~‚Æ‘¼‚Ì‰~‚Ì“–‚½‚è”»’è
-	static bool IsHitPlayer(const double& Range1, const double& Range2,
+	bool IsHitPlayer(const double& Range1, const double& Range2,
 		const double & X1, const double& Y1, const double& X2, const double& Y2);
 
 	static bool IsHitBoss(const double& myX, const double& myY, int& dmgPoint);
@@ -95,10 +89,10 @@ private:
 	std::unique_ptr<Graphic> graphic;
 	std::unique_ptr<Counter> c_msg;
 
-	Character* board;		// Character‚É‚·‚é‚È
+	StatusBoard* board;		// Character‚É‚·‚é‚È
 
 	// static-------------------------------------------------
-	static Player* player;
+	//static Player* player;
 	static Pshot* pshot;
 	static Effect* bomber;
 	static PieceEffect* pieceef;
@@ -108,10 +102,12 @@ private:
 	static BossChara* boss;
 	static EnemyMng* enemyMng;
 	static ItemMng*	itemMng;
-	static Character* bossShot;	// Character‚É‚·‚é‚È
+	static BossShotMgr* bossShot;	// Character‚É‚·‚é‚È
 	static bool f_pause;
 	static bool isMsg;
 	static bool isDead;
+
+	std::shared_ptr<Player> player;
 
 	// TEST
 };

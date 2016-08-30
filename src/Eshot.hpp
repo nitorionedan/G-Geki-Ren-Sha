@@ -2,47 +2,56 @@
 
 #include "Bullet.hpp"
 #include "Counter.hpp"
-#include "Task.hpp"
+#include "EnemyShot.hpp"
 #include "Effect.hpp"
-
 #include <array>
 #include <memory>
 
 
-enum AttackState { eAtk1, eAtk2 };	// 攻撃の種類
+enum class eAttackState
+{
+	Atk1,
+	Atk2,
+};	// 攻撃の種類
 
 
 /// BossAから攻撃開始からの経過時間や、残りHPの情報を得て切り替えていく
-class Eshot : public Task
+class Eshot : public EnemyShot
 {
 public:
 	Eshot();
 	~Eshot();
-	virtual void Update() override;
+	virtual void Update(const Player& player) override;
 	virtual void Draw() override;
-	void SetAttackState(AttackState state);
+	void SetAttackState(eAttackState state) {
+		atkState = state;
+	}
 	void SetFirePos();
 	void Fire();
 
-	void Move();
+	void Move(const Player& player);
 
-	static void GoFire1();
+	static void GoFire1() {
+		s_isFire1 = true;
+	}
 
-	AttackState atkState;										// 攻撃状態
+	eAttackState atkState;										// 攻撃状態
 
 private:
 	static const double SC_LIMIT_XL;							// 画面内ボーダー
 	static const double SC_LIMIT_XR;
 	static const double SC_LIMIT_YT;
 	static const double SC_LIMIT_YB;
+	static double const HIT_RANGE;
 
 	const int		A_INTERVAL;									// ショットＡの攻撃間隔
 	const int		A_FIRE_NUM;									// ショットＡの発射数
 	const double	A_SPEED;									// ～の速さ
 	const double	A_BASE_ANGLE;								// ～の基準となる角度
 
-	void Reset();												// 弾が何かに当たったときに呼ばれる
+	void Reset() {}												// 弾が何かに当たったときに呼ばれる
 	bool isOverLimit(const double X_POS, const double Y_POS);	// 画面外へ出たか？
+	bool IsHit(const double & otherRange, const Vector2D other);
 
 	std::unique_ptr<Effect> effect;
 	std::unique_ptr<Counter> c_atk1, c_atk2;					// 次の攻撃をするまでの待機時間

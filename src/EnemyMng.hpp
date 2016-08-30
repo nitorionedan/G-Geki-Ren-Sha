@@ -31,7 +31,7 @@ public:
 
 	// @brief	そのステージの敵のデータをロード
 	void Load(eStage stage);
-	void Update();
+	void Update(const Player& player);
 	void Draw();
 	static void CountDownEneNum();
 	static bool IsHit(const double& ColX, const double& ColY, const int& DAMAGE);

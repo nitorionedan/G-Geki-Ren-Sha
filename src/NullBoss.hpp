@@ -4,7 +4,7 @@
 class NullBoss : public BossTask
 {
 public:
-	void Update() override {}
-	void Draw() override {}
-	bool HitCheck(const double& X, const double& Y, const int& point) override { return false; }
+	virtual void Update(const Player& player) override {}
+	virtual void Draw() override {}
+	virtual bool HitCheck(const double& X, const double& Y, const int& point) override { return false; }
 };

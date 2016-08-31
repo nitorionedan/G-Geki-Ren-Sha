@@ -36,16 +36,16 @@ Pbullet::~Pbullet()
 	DeleteGraph(hg_blue);
 	DeleteGraph(hg_orange);
 	// 	DeleteGraph(hg_red);
-	for (auto x : Abullet)	delete x;
-	for (auto x : Bbullet)	delete x;
-	for (auto x : Cbullet)	delete x;
-	for (auto x : Dbullet)	delete x;
+	for (auto& x : Abullet)	delete x;
+	for (auto& x : Bbullet)	delete x;
+	for (auto& x : Cbullet)	delete x;
+	for (auto& x : Dbullet)	delete x;
 }
 
 
 void Pbullet::Update()
 {
-	const bool PUSH_SHOT_KEY = (Keyboard_Get(KEY_INPUT_Z) == 1 || Keyboard_Get(KEY_INPUT_RETURN) == 1);
+	const bool& PUSH_SHOT_KEY = (Keyboard_Get(KEY_INPUT_Z) == 1 || Keyboard_Get(KEY_INPUT_RETURN) == 1);
 
 	// -> Player@‚ÌŽ€–S‚ÉŠÖ‚µ‚Ä‚ÌƒXƒ‹[ˆ—‚ð‘‚­
 

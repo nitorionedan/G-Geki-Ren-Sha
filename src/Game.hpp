@@ -1,41 +1,32 @@
 #pragma once
 
-
 #include "BaseScene.hpp"
 #include "ISceneChanger.hpp"
 
 #include "Score.hpp"
 #include "Graphic.hpp"
-#include "Player.hpp"
-#include "Graphic.hpp"
 #include "Stage.hpp"
-#include "Pshot.hpp"
-#include "BossShotMgr.hpp"
 #include "StatusBoard.hpp"
 #include "Vector2D.hpp"
 #include "ItemMng.hpp"
 
-// Enemy関連
+/* player */
+#include "Player.hpp"
+#include "Pshot.hpp"
+#include "Bomb.hpp"
+
+/* enemy */
 #include "BossA.hpp"
 #include "EshotMng.hpp"
 #include "EnemyMng.hpp"
 #include "BossChara.hpp"
 
-// エフェクト関連
-#include "Effect.hpp"
-#include "Explosion.hpp"
-#include "ExplosionEffect.hpp"
-#include "ExplosionS.hpp"
-#include "PieceEffect.hpp"
-#include "Piece.hpp"
-#include "ChargeEffect.hpp"
+/* other */
+#include "Effector.hpp"
+#include "Graphics2D.hpp"
 
 #include <memory>
 #include <array>
-
-#define EX_NUM 4
-
-#include "Graphics2D.hpp"
 
 
 enum eColKind
@@ -59,10 +50,7 @@ public:
 	void GetEnemyPosition(int index, double *x, double *y){}
 
 	static void AddScore(const int& point);
-	static void PlayAnime(const double& PlayX, const double& PlayY, eExplosion_t type);
-	static void PlaySpread(const double& PosX, const double& PosY, const double& ANGLE, eSpread_t type);
 	static void PlayQuake();
-	static void PlayCharge(double PosX, double PosY);
 	static void LoadEnemy(eStage stage);
 	static void Pause();
 	static void ItemDrop(double PosX, double PosY);
@@ -86,30 +74,22 @@ private:
 	void Draw_StageMsg();
 	void Draw_Status();
 
-	std::unique_ptr<Graphic> graphic;
-	std::unique_ptr<Counter> c_msg;
-
-	StatusBoard* board;		// Characterにするな
-
-	// static-------------------------------------------------
-	//static Player* player;
-	static Pshot* pshot;
-	static Effect* bomber;
-	static PieceEffect* pieceef;
-	static Effect** effect;
 	static Score* score;
 	static Stage* stage;
 	static BossChara* boss;
 	static EnemyMng* enemyMng;
 	static ItemMng*	itemMng;
-	static BossShotMgr* bossShot;	// Characterにするな
 	static bool f_pause;
 	static bool isMsg;
 	static bool isDead;
 
+	std::unique_ptr<Graphic> graphic;
+	std::unique_ptr<Counter> c_msg;
 	std::shared_ptr<Player> player;
+	std::shared_ptr<StatusBoard> board;
+	std::shared_ptr<Pshot> pshot;
+	std::shared_ptr<Effector> effector;
+	std::shared_ptr<Bomb> bomb;
 
 	// TEST
 };
-
-// EOF

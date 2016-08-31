@@ -1,9 +1,7 @@
-#include "DxLib.h"
+#include <DxLib.h>
 
 #include "Bomb.hpp"
-#include "Player.hpp"
 #include "Game.hpp"
-#include "Keyboard.hpp"
 #include "EnemyMng.hpp"
 #include "Score.hpp"
 
@@ -26,14 +24,12 @@ Bomb::Bomb()
 		effect[i].rad = 0;
 		effect[i].isExist = false;
 	}
+	shiftLevel = 0;
 }
 
 
-void Bomb::Update(const Player& player)
+void Bomb::Update()
 {
-	bombNum = player.GetBombNum();
-	playerPos = player.GetPos();
-
 	// ”g–ä‚Ì“®‚«
 	MoveEffect();
 
@@ -61,7 +57,15 @@ void Bomb::Draw()
 }
 
 
-void Bomb::Fire(int shiftLevel)
+void Bomb::SetParam(Vector2D& pos, int& shiftLevel, int& bombNum)
+{
+	playerPos = pos;
+	this->shiftLevel = shiftLevel;
+	this->bombNum = bombNum;
+}
+
+
+void Bomb::Fire()
 {
 	if (isBomb) return;
 	if (bombNum == 0)	return;

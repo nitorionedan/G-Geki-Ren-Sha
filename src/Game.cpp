@@ -4,19 +4,11 @@
 #include "NullEnemyShot.hpp"
 #include "NullBoss.hpp"
 
-
-static int gh_test;
-
-PieceEffect*	Game::pieceef;
-Effect*			Game::bomber;
-Effect**		Game::effect;
 Score*			Game::score;
 Stage*			Game::stage;
-Pshot*			Game::pshot;
 BossChara*		Game::boss;
 EnemyMng*		Game::enemyMng;
 ItemMng*		Game::itemMng;
-BossShotMgr*		Game::bossShot;
 bool			Game::f_pause;
 bool			Game::isMsg;
 bool			Game::isDead;
@@ -28,6 +20,9 @@ Game::Game(ISceneChanger* changer)
 	, board(new StatusBoard)
 	, c_msg(new Counter(100))
 	, player(new Player)
+	, pshot(new Pshot)
+	, effector(new Effector)
+	, bomb(new Bomb)
 {
 	// static-----------------------------------------------------------------
 	{
@@ -35,28 +30,15 @@ Game::Game(ISceneChanger* changer)
 		isMsg = false;
 		isDead = false;
 
-		pieceef = new PieceEffect;
-
-		// 200, 10, 70, 10
-		bomber = new Effect(new ChargeEffect(100, 10, 70, 10));
-		effect = new Effect*[EX_NUM];
-		effect[0] = new Effect(new ExplosionEffect(eExplosion_small));
-		effect[1] = new Effect(new ExplosionEffect(eExplosion_normal));
-		effect[2] = new Effect(new ExplosionEffect(eExplosion_big));
-		effect[3] = new Effect(new ExplosionEffect(eExplosion_long));
-
-		pshot = new Pshot;
 		score = new Score;
 		boss = new BossChara(new NullBoss);
 		enemyMng = new EnemyMng;
 		stage = new Stage;
 		itemMng = new ItemMng;
-		bossShot = new BossShotMgr(new NullEnemyShot);
 	}
-	// TEST
-	gh_test = LoadGraph("GRAPH/GAME/Eshot/eshot03.png");
 
-	// ~TEST
+	// these are must funcs
+	player->setup(bomb);
 }
 
 
@@ -64,20 +46,9 @@ Game::~Game()
 {
 	delete score;
 	delete stage;
-	delete pshot;
-	delete bossShot;
 	delete boss;
-	delete board;
-	delete pieceef;
-	delete bomber;
-	{
-		for (int i = 0; i < EX_NUM; i++)	delete effect[i];
-		delete[] effect;
-	}
-	delete enemyMng;
 
-	// TEST
-	DeleteGraph(gh_test);
+	delete enemyMng;
 }
 
 
@@ -85,12 +56,12 @@ Game::~Game()
 void Game::Update()
 {	 
 	/* ポーズ */
-	if (Keyboard_Get(KEY_INPUT_Q) == 1)	
+	if (Keyboard::Instance()->isPush(KEY_INPUT_Q))
 		Pause();
 
 	if(f_pause)
 	{
-		if(Keyboard_Get(KEY_INPUT_P) == 1)
+		if(Keyboard::Instance()->isPush(KEY_INPUT_P))
 			mSceneChanger->ChangeScene(eScene_Menu);
 		return;
 	}
@@ -104,14 +75,14 @@ void Game::Update()
 	player->Update();
 
 	// Effect
-	pieceef->Update();
-	bomber->Update(BossA::GetPos().x, BossA::GetPos().y);
-	for (int i = 0; i < EX_NUM; i++)	effect[i]->Update();
+	effector->Update();
 	
 	// Shot
 	pshot->Update(*player);
-	bossShot->Update(*player);
 	
+	// Bomber
+	bomb->Update();
+
 	// その他の情報
 	board->Update(*player);
 	itemMng->Update(player);
@@ -128,21 +99,21 @@ void Game::Update()
 	// TEST ----------------------------------------------
 	if (DebugMode::isTest == false)	return;
 
-	if (Keyboard_Get(KEY_INPUT_B) == 1)
+	if (Keyboard::Instance()->isPush(KEY_INPUT_B))
 	{
 		boss->Start(eBoss_A);
-		bossShot->ChangeShot(eEnemyShot::ShotA);
+		//bossShot->ChangeShot(eEnemyShot::ShotA);
 	}
 
-	if(Keyboard_Get(KEY_INPUT_R) == 1)
+	if(Keyboard::Instance()->isPush(KEY_INPUT_R))
 	{
 		boss->Start(eBoss_None);
-		bossShot->ChangeShot(eEnemyShot::None);
+		//bossShot->ChangeShot(eEnemyShot::None);
 	}
 
-	if (Keyboard_Get(KEY_INPUT_U) == 1)	mSceneChanger->ChangeScene(eScene_GameOver);
+	if (Keyboard::Instance()->isPush(KEY_INPUT_U))	mSceneChanger->ChangeScene(eScene_GameOver);
 
-	if(Keyboard_Get(KEY_INPUT_S) == 1)
+	if(Keyboard::Instance()->isPush(KEY_INPUT_S))
 	{
 	//	PlayAnime(320, 240, eExplosion_big);
 	//	bomber->PlayAnime(BossA::GetPos().x, BossA::GetPos().y);
@@ -158,23 +129,23 @@ void Game::Draw()
 	// Back Ground
 	stage->Draw();
 
-	pieceef->Draw();
-
 	boss->Draw();
+
+	// Effect
+	effector->Draw();
+
 	enemyMng->Draw();
 
 	itemMng->Draw();
-
-	// Effect
-	bomber->Draw();
-	for (int i = 0; i < EX_NUM; i++)	effect[i]->Draw();
 
 	// Character
 	player->Draw();
 
 	// Shot
 	pshot->Draw();
-	bossShot->Draw();
+
+	// Bomb
+	bomb->Draw();
 
 	// ステータスボード
 	board->Draw(*player);
@@ -196,35 +167,8 @@ void Game::AddScore(const int & point){
 }
 
 
-void Game::PlayAnime(const double& PlayX, const double& PlayY, eExplosion_t type)
-{
-	switch (type)
-	{
-	case eExplosion_small:
-		effect[0]->PlayAnime(PlayX, PlayY);	break;
-	case eExplosion_normal:
-		effect[1]->PlayAnime(PlayX, PlayY);	break;
-	case eExplosion_big:
-		effect[1]->PlayAnime(PlayX, PlayY);
-		effect[2]->PlayAnime(PlayX, PlayY);	break;
-	case eExplosion_long:
-		effect[3]->PlayAnime(PlayX, PlayY);	break;
-	}
-}
-
-
-void Game::PlaySpread(const double & PosX, const double & PosY, const double & ANGLE, eSpread_t type){
-	pieceef->PlayAnime(PosX, PosY, ANGLE, type);
-}
-
-
 void Game::PlayQuake(){
 	stage->PlayQuake();
-}
-
-
-void Game::PlayCharge(double PosX, double PosY){
-	bomber->PlayAnime(PosX, PosY);
 }
 
 
@@ -262,7 +206,7 @@ void Game::GameOver()
 void Game::StartBoss()
 {
 	boss->Start(eBoss_A);
-	bossShot->ChangeShot(eEnemyShot::ShotA);
+	//bossShot->ChangeShot(eEnemyShot::ShotA);
 }
 
 

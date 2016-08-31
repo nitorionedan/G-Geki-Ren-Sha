@@ -41,6 +41,7 @@ BossA::BossA()
 	, c_end(new Counter(18000))
 	, c_atk1(new Counter(370))
 	, shot3(new EShot03)
+	, bomber(new Effect(new ChargeEffect(100, 10, 70, 10)))		// 200, 10, 70, 10
 	, big_time(0)
 	, angle(0.0f)
 	, isMove(false)
@@ -129,6 +130,9 @@ void BossA::Update(const Player& player)
 		if (IS_HIT)	Damage(10);
 	}
 
+	/* エフェクト系 */
+	bomber->Update(pos.x, pos.y);
+
 	// ====================================================================================================
 	/*
 
@@ -211,9 +215,13 @@ void BossA::Draw()
 	if (isHit && !isWeak)
 	{
 		DrawRotaGraph(pos.x, pos.y, 2.5, GetRand(100), hg_shield, true);
-//		DrawRotaGraph(pos.x, pos.y, 2.5, 0.0, hg_shield, true);
+		//DrawRotaGraph(pos.x, pos.y, 2.5, 0.0, hg_shield, true); // 回転しない
 	}
 
+	/* エフェクト関連 */
+	bomber->Draw();
+
+	/* 弾 */
 	shot3->Draw();
 
 	// TEST-------------------------------------------------------------------
@@ -320,10 +328,10 @@ void BossA::Weak_Update()
 	if (c_atk1->isLast())	Eshot::GoFire1();
 	
 	// チャージ
-	if (big_time == 400)	Game::PlayCharge(pos.x, pos.y);
+	if (big_time == 400)	bomber->PlayAnime(pos.x, pos.y);
 
 	// 破片
-	if (big_time == 500)	Game::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_SmallOrange);
+	if (big_time == 500)	Effector::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_SmallOrange);
 	
 	// 大きい弾
 	if (big_time == 500)
@@ -351,7 +359,7 @@ void BossA::Dead_Update()
 	count++;
 
 	// 一定の間隔で小爆発
-	if(time % 20 == 0 && pos.y < 480)	Game::PlayAnime(pos.x + GetRand(80) - 40, pos.y + GetRand(80) - 40, eExplosion_small);
+	if(time % 20 == 0 && pos.y < 480)	Effector::PlayAnime(pos.x + GetRand(80) - 40, pos.y + GetRand(80) - 40, eExplosion_small);
 
 	pos.y += 1.;
 
@@ -425,11 +433,11 @@ void BossA::Damage(const int& point)
 	// 弱っていれば
 	if (IS_WEAK)
 	{
-		Game::PlayAnime(pos.x + 40, pos.y + 40, eExplosion_small);
-		Game::PlayAnime(pos.x + 20, pos.y - 10, eExplosion_small);
-		Game::PlayAnime(pos.x - 20, pos.y + 20, eExplosion_small);
+		Effector::PlayAnime(pos.x + 40, pos.y + 40, eExplosion_small);
+		Effector::PlayAnime(pos.x + 20, pos.y - 10, eExplosion_small);
+		Effector::PlayAnime(pos.x - 20, pos.y + 20, eExplosion_small);
 
-		Game::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_SmallBlue);
+		Effector::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_SmallBlue);
 		PlaySoundMem(hs_break, DX_PLAYTYPE_BACK);
 	}
 	
@@ -445,8 +453,8 @@ void BossA::Damage(const int& point)
 	{
 		ChangeState(eBossA_Dead);
 		isDead = true;
-		Game::PlayAnime(pos.x, pos.y, eExplosion_big);
-		Game::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_BigAll);
-		Game::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_BigAll);
+		Effector::PlayAnime(pos.x, pos.y, eExplosion_big);
+		Effector::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_BigAll);
+		Effector::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_BigAll);
 	}
 }

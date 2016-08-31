@@ -113,7 +113,7 @@ void EShot03::Move(const int & id, const Player& player)
 	const bool& IS_HIT2 = Bomb::IsHit(HIT_RANGE, pos[id].x, pos[id].y);
 
 	// “–‚½‚Á‚ç”š”­
-	if (IS_HIT)	Game::PlayAnime(pos[id].x, pos[id].y, eExplosion_small);
+	if (IS_HIT)	Effector::PlayAnime(pos[id].x, pos[id].y, eExplosion_small);
 
 	// ‰æ–ÊŠO‚ÅÁ‚·
 	if (Shot::SC_LIMIT_XL > pos[id].x ||

@@ -116,17 +116,15 @@ void Stage::Update()
 
 	Move();
 
-	if (Keyboard_Get(KEY_INPUT_6) == 1)	ChangeVolumeSoundMem(0, hs_bgm);
-
 	// TEST-----------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
 
 	/// Žž‚ª‚­‚é‚Ü‚Å••ˆó
 //	if (effect->getIsAnime() && !f_quake)	f_quake = true;
-	if (Keyboard_Get(KEY_INPUT_W) >= 1) cycle += 0.1;
-	if (Keyboard_Get(KEY_INPUT_S) >= 1) cycle -= 0.1;
-	if (Keyboard_Get(KEY_INPUT_D) >= 1) shake += 0.1;
-	if (Keyboard_Get(KEY_INPUT_A) >= 1) shake -= 0.1;
+	if (Keyboard::Instance()->isDown(KEY_INPUT_W)) cycle += 0.1;
+	if (Keyboard::Instance()->isDown(KEY_INPUT_S)) cycle -= 0.1;
+	if (Keyboard::Instance()->isDown(KEY_INPUT_D)) shake += 0.1;
+	if (Keyboard::Instance()->isDown(KEY_INPUT_A)) shake -= 0.1;
 }
 
 

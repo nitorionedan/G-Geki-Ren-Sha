@@ -36,7 +36,7 @@ void GameOver::Update()
 	
 	if (time_in == 0)	mSceneChanger->ChangeScene(eScene_Menu);
 	
-	if (Keyboard_Get(KEY_INPUT_Z) == 1)	mSceneChanger->ChangeScene(eScene_Menu);
+	if (Keyboard::Instance()->isPush(KEY_INPUT_Z))	mSceneChanger->ChangeScene(eScene_Menu);
 }
 
 

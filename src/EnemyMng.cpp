@@ -1,7 +1,10 @@
-#include <DxLib.h>
 #include "EnemyMng.hpp"
 #include "Game.hpp"
 #include "DebugMode.hpp"
+
+#include "NullEnemyShot.hpp"
+
+#include <DxLib.h>
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
@@ -17,6 +20,7 @@ bool	EnemyMng::isBossZone;
 
 EnemyMng::EnemyMng()
 	: T_T(1)
+	, bossShot(new BossShotMgr(new NullEnemyShot))
 {
 	ene_count = 0;
 	isBossZone = false;
@@ -167,6 +171,8 @@ out:
 
 void EnemyMng::Update(const Player& player)
 {
+	bossShot->Update(player);
+
 	if (enemy == nullptr)	return;
 
 	for (int i = 0; i < e_num; i++)
@@ -176,6 +182,8 @@ void EnemyMng::Update(const Player& player)
 
 void EnemyMng::Draw()
 {
+	bossShot->Draw();
+
 	if (enemy == nullptr)	return;
 
 	for (int i = 0; i < e_num; i++)
@@ -190,7 +198,11 @@ void EnemyMng::CountDownEneNum()
 {
 	ene_count--;
 
-	if (ene_count == 0)	Game::StartBoss();
+	if (ene_count == 0)
+	{
+		Game::StartBoss();
+		// bossShot->ChangeShot();
+	}
 }
 
 

@@ -45,10 +45,12 @@ void Menu::Update()
 	title->Update();			// タイトルロゴ
 	if (!title->isStop)	return;	// 止まっていなければここはスルー
 
-	const bool& INPUT_VERTICAL = ( Keyboard_Get(KEY_INPUT_DOWN) == 1 || Keyboard_Get(KEY_INPUT_UP)     == 1 );
-	const bool& INPUT_OK       = ( Keyboard_Get(KEY_INPUT_Z)    == 1 || Keyboard_Get(KEY_INPUT_RETURN) == 1 );
-	const bool& PUSH_KEY_UP    = ( Keyboard_Get(KEY_INPUT_UP)   == 1 );
-	const bool& PUSH_KEY_DOWN  = ( Keyboard_Get(KEY_INPUT_DOWN) == 1 );
+	const bool& INPUT_VERTICAL = (Keyboard::Instance()->isPush(KEY_INPUT_DOWN) ||
+								  Keyboard::Instance()->isPush(KEY_INPUT_UP));
+	const bool& INPUT_OK       = (Keyboard::Instance()->isPush(KEY_INPUT_Z) ||
+								  Keyboard::Instance()->isPush(KEY_INPUT_RETURN));
+	const bool& PUSH_KEY_UP    = (Keyboard::Instance()->isPush(KEY_INPUT_UP));
+	const bool& PUSH_KEY_DOWN  = (Keyboard::Instance()->isPush(KEY_INPUT_DOWN));
 	const bool& STATE_START    = selectNum == 0;
 	const bool& STATE_QUIT     = selectNum == 3;
 
@@ -112,10 +114,10 @@ void Menu::Draw()
 
 void Menu::AnotherUpdate() 
 {
-	const bool& KEY_PUSH_RIGHT	= ( Keyboard_Get(KEY_INPUT_RIGHT) == 1 );
-	const bool& KEY_PUSH_UP		= ( Keyboard_Get(KEY_INPUT_UP)    == 1 );
-	const bool& KEY_PUSH_DOWN	= ( Keyboard_Get(KEY_INPUT_DOWN)  == 1 );
-	const bool& KEY_PUSH_LEFT	= ( Keyboard_Get(KEY_INPUT_LEFT)  == 1 );
+	const bool& KEY_PUSH_RIGHT	= (Keyboard::Instance()->isPush(KEY_INPUT_RIGHT));
+	const bool& KEY_PUSH_UP		= (Keyboard::Instance()->isPush(KEY_INPUT_UP));
+	const bool& KEY_PUSH_DOWN	= (Keyboard::Instance()->isPush(KEY_INPUT_DOWN));
+	const bool& KEY_PUSH_LEFT	= (Keyboard::Instance()->isPush(KEY_INPUT_LEFT));
 
 
 	if (KEY_PUSH_RIGHT && ano_tri < 4)						ano_tri++;

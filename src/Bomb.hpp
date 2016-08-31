@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Vector2D.hpp"
-#include "Player.hpp"
 #include <array>
 #include <memory>
 
@@ -21,9 +20,10 @@ class Bomb
 public:
 	Bomb();
 	~Bomb(){}
-	void Update(const Player& player);
+	void Update();
 	void Draw();
-	void Fire(int shiftLevel);
+	void SetParam(Vector2D& pos, int& shiftLevel, int& bombNum);
+	void Fire();
 	static bool IsHit(const int& ColCircle, const double& ColX, const double& ColY);
 
 private:
@@ -39,12 +39,8 @@ private:
 	Vector2D playerPos;
 	int time;
 	int bombNum;
-
-	// ‰æ‘œ
 	int gh;
-
-	// Œø‰Ê‰¹
 	int sh;
-
+	int shiftLevel;
 	bool isBomb;
 };

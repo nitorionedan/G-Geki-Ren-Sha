@@ -6,8 +6,6 @@
 #include "Vector2D.hpp"
 #include "HitEffect.hpp"
 #include "Effect.hpp"
-#include "Bomb.hpp"
-
 #include <array>
 #include <memory>
 
@@ -28,6 +26,9 @@ public:
 	void Update(const Player& player);
 	void Draw();
 	void ShiftReset();
+	const int GetShiftLevel() const {
+		return shiftLevel;
+	}
 
 private:
 	void Input();													// 入力管理
@@ -37,7 +38,7 @@ private:
 	void Move();													// 動きを計算
 	void HitCheck();
 	void Reset();													// 弾をリセット
-	void SetAtk(const int Aatk, const int Batk, const int Catk);	// 攻撃力を変える
+	void SetAtk(const int& Aatk, const int& Batk, const int& Catk);	// 攻撃力を変える
 	void CopyStaticMem();
 
 	const int SCREEN_LIMIT_XR, SCREEN_LIMIT_XL;		// 画面の範囲
@@ -72,7 +73,6 @@ private:
 	std::unique_ptr<Counter> c_shot;				// 発射時間用カウンター
 //	std::unique_ptr<HitEffect> effect;
 	std::unique_ptr<Effect> effect;
-	std::unique_ptr<Bomb> bomb;
 	std::array<Bullet*, 20>	Ashot;					// 青
 	std::array<Bullet*, 30>	Bshot;					// 橙
 	std::array<Bullet*, 30>	Cshot;					// 赤

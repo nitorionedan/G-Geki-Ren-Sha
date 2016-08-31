@@ -78,12 +78,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		FrameStartTime = GetNowCount();															// 現在のカウントを保存
 
 		sceneMng->Update();																		// 現在のシーンデータを更新
-		Keyboard_Update();																		// キー入力データ更新
+		Keyboard::Instance()->Update();															// キー入力データ更新
 
-		if (Keyboard_Get(KEY_INPUT_ESCAPE) == 1)	break;										// [Esc]で疑似強制終了
-		if (Keyboard_Get(KEY_INPUT_F5) == 1)		ChangeWindowMode(ScSizeFrag = !ScSizeFrag);	// 画面モード変更
-		if (Keyboard_Get(KEY_INPUT_F) == 1)	FPS = 30;											// ゆっくり
-		if (Keyboard_Get(KEY_INPUT_G) == 1)	FPS = 60;											// 普通
+		if (Keyboard::Instance()->isPush(KEY_INPUT_ESCAPE))	break;								// [Esc]で疑似強制終了
+		if (Keyboard::Instance()->isPush(KEY_INPUT_F5))
+			ChangeWindowMode(ScSizeFrag = !ScSizeFrag);											// 画面モード変更
+		if (Keyboard::Instance()->isPush(KEY_INPUT_F))	FPS = 30;								// ゆっくり
+		if (Keyboard::Instance()->isPush(KEY_INPUT_G))	FPS = 60;								// 普通
 
 		sceneMng->Draw();																		// 現在のシーンを描画
 		DebugMode::Draw();

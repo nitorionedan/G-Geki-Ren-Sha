@@ -66,7 +66,8 @@ Another::~Another()
 
 void Another::Update() 
 {
-	if (Keyboard_Get(KEY_INPUT_Q) == 1)	isPause = !isPause;
+	if (Keyboard::Instance()->isPush(KEY_INPUT_Q))
+		isPause = !isPause;
 
 	if (isPause)	return;
 	test_c++;

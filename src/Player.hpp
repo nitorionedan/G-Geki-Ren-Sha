@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Task.hpp"
 #include "Keyboard.hpp"
 #include "Graphic.hpp"
 #include "Range.hpp"
 #include "Counter.hpp"
 #include "Vector2D.hpp"
 #include "PieceEffect.hpp"
+#include "Bomb.hpp"
 #include <memory>
 
 
@@ -34,6 +34,7 @@ public:
 	~Player();
 	void Update();
 	void Draw();
+	void setup(std::shared_ptr<Bomb>);
 	void Update_Start();
 	void Update_Game();
 	void Update_Dead();
@@ -113,6 +114,7 @@ private:
 	std::unique_ptr<Graphic> graphic;	// 文字画像
 	std::unique_ptr<Counter> c_start;	// スタート準備用カウンター
 	std::unique_ptr<Counter> c_dead;
+	std::shared_ptr<Bomb> mBomber;
 
 	eInputDir keydir;		// キー入力方向
 	ePlayerState state;		// プレイヤーの状態

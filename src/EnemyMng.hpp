@@ -3,7 +3,7 @@
 
 #include "Enemy.hpp"
 #include "Stage.hpp"
-
+#include "BossShotMgr.hpp" 
 
 typedef struct
 {
@@ -43,13 +43,12 @@ private:
 
 	// G‹›“G
 	static Enemy** enemy;
-
 	// “G‚Ì”
 	static int e_num;
-
 	static int ene_count;
-
 	static bool isBossZone;
+
+	std::shared_ptr<BossShotMgr> bossShot;
 };
 
 

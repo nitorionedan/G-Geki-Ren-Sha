@@ -52,7 +52,7 @@ void SceneMng::Update()
 	mScene->Update();											// シーンの更新
 
 	// DEBUG ONLY
-	if (Keyboard_Get(KEY_INPUT_F1) == 1)	DebugMode::SwitchTest();
+	if (Keyboard::Instance()->isPush(KEY_INPUT_F1))	DebugMode::SwitchTest();
 }
 
 

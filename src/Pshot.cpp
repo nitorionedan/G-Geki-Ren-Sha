@@ -2,12 +2,13 @@
 
 #include "Pshot.hpp"
 #include "Keyboard.hpp"
-#include "Game.hpp"
 #include "DebugMode.hpp"
 #include "Player.hpp"
 #include "Vector2D.hpp"
 #include "Stage.hpp"
 #include "EnemyMng.hpp"
+//#include "Effector.hpp"
+#include "Game.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -61,16 +62,15 @@ Pshot::Pshot()
 	, hs_hit(LoadSoundMem("SOUND/SE/damage01.wav"))
 	, c_shot(new Counter(30))
 	, effect(new Effect(new HitEffect))
-	, bomb(new Bomb)
 	, shiftLevel(0)
 	, mPlayer_x(0.0)
 	, mPlayer_y(0.0)
 	, isShot(false)
 	, isShotNext(false)
 {
-	for (auto &shot : Ashot)	shot = new Bullet();
-	for (auto &shot : Bshot)	shot = new Bullet();
-	for (auto &shot : Cshot)	shot = new Bullet();
+	for (auto& shot : Ashot)	shot = new Bullet();
+	for (auto& shot : Bshot)	shot = new Bullet();
+	for (auto& shot : Cshot)	shot = new Bullet();
 	
 	hg.at(eShot_Blue)		= LoadGraph("GRAPH/GAME/shot0.png");
 	hg.at(eShot_Orange)		= LoadGraph("GRAPH/GAME/tama.png");
@@ -82,9 +82,9 @@ Pshot::Pshot()
 	ChangeVolumeSoundMem(110, hs_shot);
 	ChangeVolumeSoundMem(135, hs_hit);
 
-	for (auto shot : Ashot)	shot->atk = 2;
-	for (auto shot : Bshot)	shot->atk = 3;
-	for (auto shot : Cshot)	shot->atk = 1;
+	for (auto& shot : Ashot)	shot->atk = 2;
+	for (auto& shot : Bshot)	shot->atk = 3;
+	for (auto& shot : Cshot)	shot->atk = 1;
 
 	x_pos.fill(0.0);
 	y_pos.fill(0.0);
@@ -128,7 +128,6 @@ Pshot::~Pshot()
 void Pshot::Update(const Player& player)
 {
 	shiftLevel = player.GetShiftLevel();					// シフトレベルを手に入れる
-	bomb->Update(player);
 	SetFirePosition(player.GetPos().x, player.GetPos().y);	// 発射位置を設定
 	Input();												// 入力管理
 	Move();													// 動き計算
@@ -142,7 +141,6 @@ void Pshot::Update(const Player& player)
 
 void Pshot::Draw()
 {
-	bomb->Draw();
 
 	for (auto &shot : Ashot) // 青
 	{
@@ -261,10 +259,10 @@ void Pshot::ShiftReset()
 
 void Pshot::Input()
 {
-	const bool PUSH_Z_KEY	= ( Keyboard_Get(KEY_INPUT_Z) == 1 );
-	const bool isREADY_NEXT = ( isShotNext && !isShot );				// 次の発射が待っているか？
-	const bool isON_NEXT	= ( PUSH_Z_KEY && isShot && !isShotNext );	// 発射中に発射ボタンを押したか？
-	const bool isSHOT		= ( PUSH_Z_KEY && !isShot );				// 発射したか？
+	const bool& PUSH_Z_KEY	= ( Keyboard::Instance()->isPush(KEY_INPUT_Z) );
+	const bool& isREADY_NEXT = ( isShotNext && !isShot );				// 次の発射が待っているか？
+	const bool& isON_NEXT	= ( PUSH_Z_KEY && isShot && !isShotNext );	// 発射中に発射ボタンを押したか？
+	const bool& isSHOT		= ( PUSH_Z_KEY && !isShot );				// 発射したか？
 
 	if (isREADY_NEXT)
 	{
@@ -274,7 +272,6 @@ void Pshot::Input()
 	if (isON_NEXT)	isShotNext	= true;
 	if (isSHOT)		isShot		= true;
 	if (isShot)		Fire();				// 発射処理
-	if (Keyboard_Get(KEY_INPUT_X) == 1)	bomb->Fire(shiftLevel);
 }
 
 
@@ -337,16 +334,16 @@ void Pshot::Fire()
 	// ------------------------------------------------------------------------
 	if(shiftLevel == 1)
 	{
-		const bool isREADY_A = ( c_shot->Remainder(5) == 0 && c_shot->GetNowcount() > 20 );
+		const bool& isREADY_A = ( c_shot->Remainder(5) == 0 && c_shot->GetNowcount() > 20 );
 		/// Bshot なし
-		const bool isFIRE_1 = ( c_shot->GetNowcount() == 20 );
-		const bool isFIRE_3 = ( c_shot->GetNowcount() == 15 );
-		const bool isREADY_C = (isFIRE_1 || isFIRE_3);
+		const bool& isFIRE_1 = ( c_shot->GetNowcount() == 20 );
+		const bool& isFIRE_3 = ( c_shot->GetNowcount() == 15 );
+		const bool& isREADY_C = (isFIRE_1 || isFIRE_3);
 
 		// Ashot ---------------------------------------------------
 		if(isREADY_A)
 		{
-			for(auto &shot : Ashot)
+			for(auto& shot : Ashot)
 			{
 				if (shot->f_exist)	continue;	// 存在しているなら次へ
 				shot->f_exist = true;
@@ -390,13 +387,13 @@ void Pshot::Fire()
 	// ------------------------------------------------------------------------
 	if(shiftLevel == 2)
 	{
-	const bool isREADY_A  = ( c_shot->Remainder(4) == 2 && c_shot->GetNowcount() > 21 );
-		const bool isC_FIRE_1 = (c_shot->GetNowcount() == 30);
-		const bool isC_FIRE_3 = (c_shot->GetNowcount() == 24);
-		const bool isC_FIRE_5 = (c_shot->GetNowcount() == 19);
-		const bool isREADY_C  = ( isC_FIRE_1 || isC_FIRE_3 || isC_FIRE_5 );
-		const double A_SHOT_XL = (mPlayer_x - 5.0);
-		const double A_SHOT_XR = (mPlayer_x + 5.0);
+		const bool& isREADY_A  = ( c_shot->Remainder(4) == 2 && c_shot->GetNowcount() > 21 );
+		const bool& isC_FIRE_1 = (c_shot->GetNowcount() == 30);
+		const bool& isC_FIRE_3 = (c_shot->GetNowcount() == 24);
+		const bool& isC_FIRE_5 = (c_shot->GetNowcount() == 19);
+		const bool& isREADY_C  = ( isC_FIRE_1 || isC_FIRE_3 || isC_FIRE_5 );
+		const double& A_SHOT_XL = (mPlayer_x - 5.0);
+		const double& A_SHOT_XR = (mPlayer_x + 5.0);
 
 		// Ashot ---------------------------------------------------
 		if (isREADY_A)
@@ -463,28 +460,24 @@ void Pshot::Fire()
 	// ------------------------------------------------------------------------
 	if(shiftLevel == 3)
 	{
-		const bool isREADY_A = (c_shot->Remainder(4) == 2);
+		const bool& isREADY_A = (c_shot->Remainder(4) == 2);
 
-		const bool isB_FIRE_1 = (c_shot->GetNowcount() == 25); // 25
-		const bool isB_FIRE_2 = (c_shot->GetNowcount() == 22); // 20
-		const bool isB_FIRE_3 = (c_shot->GetNowcount() == 19); // 15
+		const bool& isB_FIRE_1 = (c_shot->GetNowcount() == 25); // 25
+		const bool& isB_FIRE_2 = (c_shot->GetNowcount() == 22); // 20
+		const bool& isB_FIRE_3 = (c_shot->GetNowcount() == 19); // 15
 
-		const bool isC_FIRE_1 = (c_shot->GetNowcount() == 30);
-		const bool isC_FIRE_3 = (c_shot->GetNowcount() == 24);
-		const bool isC_FIRE_5 = (c_shot->GetNowcount() == 19);
+		const bool& isC_FIRE_1 = (c_shot->GetNowcount() == 30);
+		const bool& isC_FIRE_3 = (c_shot->GetNowcount() == 24);
+		const bool& isC_FIRE_5 = (c_shot->GetNowcount() == 19);
 
-
-		const bool isREADY_B =
-			(isB_FIRE_1
-				|| isB_FIRE_2
-				|| isB_FIRE_3 );
-		const bool isREADY_C =
-			(isC_FIRE_1
-				|| isC_FIRE_3
-				|| isC_FIRE_5 );
-		const double A_SHOT_XL = (mPlayer_x - 5.0);
-		const double A_SHOT_XR = (mPlayer_x + 5.0);
-
+		const bool& isREADY_B = (isB_FIRE_1 ||
+								 isB_FIRE_2 ||
+								 isB_FIRE_3 );
+		const bool& isREADY_C =	(isC_FIRE_1 ||
+								 isC_FIRE_3	||
+								 isC_FIRE_5 );
+		const double& A_SHOT_XL = (mPlayer_x - 5.0);
+		const double& A_SHOT_XR = (mPlayer_x + 5.0);
 
 		// Ashot ---------------------------------------------------
 		if (isREADY_A)
@@ -556,33 +549,32 @@ void Pshot::Fire()
 	// ------------------------------------------------------------------------
 	if(shiftLevel == 4)
 	{
-		const bool isREADY_A = (c_shot->Remainder(4) == 2);
+		const bool& isREADY_A = (c_shot->Remainder(4) == 2);
 		
-		const bool isB_FIRE_1 = (c_shot->GetNowcount() == 25); // 25
-		const bool isB_FIRE_2 = (c_shot->GetNowcount() == 22); // 20
-		const bool isB_FIRE_3 = (c_shot->GetNowcount() == 19); // 15
+		const bool& isB_FIRE_1 = (c_shot->GetNowcount() == 25); // 25
+		const bool& isB_FIRE_2 = (c_shot->GetNowcount() == 22); // 20
+		const bool& isB_FIRE_3 = (c_shot->GetNowcount() == 19); // 15
 
-		const bool isC_FIRE_1 = (c_shot->GetNowcount() == 30);
-		const bool isC_FIRE_2 = (c_shot->GetNowcount() == 27);
-		const bool isC_FIRE_3 = (c_shot->GetNowcount() == 24);
-		const bool isC_FIRE_4 = (c_shot->GetNowcount() == 22);
-		const bool isC_FIRE_5 = (c_shot->GetNowcount() == 19);
-		const bool isC_FIRE_6 = (c_shot->GetNowcount() == 16);
+		const bool& isC_FIRE_1 = (c_shot->GetNowcount() == 30);
+		const bool& isC_FIRE_2 = (c_shot->GetNowcount() == 27);
+		const bool& isC_FIRE_3 = (c_shot->GetNowcount() == 24);
+		const bool& isC_FIRE_4 = (c_shot->GetNowcount() == 22);
+		const bool& isC_FIRE_5 = (c_shot->GetNowcount() == 19);
+		const bool& isC_FIRE_6 = (c_shot->GetNowcount() == 16);
 
-		const bool isREADY_B = (
+		const bool& isREADY_B = (
 			isB_FIRE_1
 			|| isB_FIRE_2
 			|| isB_FIRE_3 );
-		const bool isREADY_C = (
+		const bool& isREADY_C = (
 			isC_FIRE_1
 			|| isC_FIRE_2
 			|| isC_FIRE_3
 			|| isC_FIRE_4
 			|| isC_FIRE_5
 			|| isC_FIRE_6 );
-		const double A_SHOT_XL = (mPlayer_x - 5.0);
-		const double A_SHOT_XR = (mPlayer_x + 5.0);
-
+		const double& A_SHOT_XL = (mPlayer_x - 5.0);
+		const double& A_SHOT_XR = (mPlayer_x + 5.0);
 
 		// Ashot ---------------------------------------------------
 		if (isREADY_A)
@@ -684,15 +676,13 @@ void Pshot::Fire()
 			}
 		}
 	}
-	// ------------------------------------------------------------------------
-
 }
 
 
 void Pshot::Move()
 {
 	// Ashot --------------------------------------
-	for (auto &shot : Ashot)
+	for (auto& shot : Ashot)
 	{
 		if (shot->f_exist == false)	continue;	// 存在していないなら次へ
 
@@ -700,7 +690,7 @@ void Pshot::Move()
 	}
 
 	// Bshot --------------------------------------
-	for(auto &shot : Bshot)
+	for(auto& shot : Bshot)
 	{
 		if (shot->f_exist == false)	continue;
 
@@ -709,12 +699,12 @@ void Pshot::Move()
 	}
 
 	// Cshot --------------------------------------
-	for (auto &shot : Cshot)
+	for (auto& shot : Cshot)
 	{
 		if (shot->f_exist == false)	continue;
 
-		const double X_VECTOR = std::cos(shot->angle) * C_SPEED;
-		const double Y_VECTOR = std::sin(shot->angle) * C_SPEED;
+		const double& X_VECTOR = std::cos(shot->angle) * C_SPEED;
+		const double& Y_VECTOR = std::sin(shot->angle) * C_SPEED;
 
 		shot->x_pos += X_VECTOR;
 		shot->y_pos += Y_VECTOR;
@@ -724,11 +714,11 @@ void Pshot::Move()
 
 void Pshot::HitCheck()
 {
-	for(auto &shot : Ashot)
+	for(auto& shot : Ashot)
 	{
 		if (!shot->f_exist)	continue;
-		const bool IS_HIT = ( Game::IsHitBoss(shot->x_pos, shot->y_pos, shot->atk) ||
-								EnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk) );
+		const bool& IS_HIT = (Game::IsHitBoss(shot->x_pos, shot->y_pos, shot->atk) ||
+							  EnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk));
 		if (IS_HIT)	shot->f_exist = false;
 		if (IS_HIT)	PlaySoundMem(hs_hit, DX_PLAYTYPE_BACK);
 		if (IS_HIT)	effect->PlayAnime(shot->x_pos, shot->y_pos);
@@ -737,8 +727,8 @@ void Pshot::HitCheck()
 	for (auto &shot : Bshot)
 	{
 		if (!shot->f_exist)	continue;
-		const bool IS_HIT = (Game::IsHitBoss(shot->x_pos, shot->y_pos, shot->atk) ||
-								EnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk));
+		const bool& IS_HIT = (Game::IsHitBoss(shot->x_pos, shot->y_pos, shot->atk) ||
+							  EnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk));
 		if (IS_HIT)	shot->f_exist = false;
 		if (IS_HIT)	PlaySoundMem(hs_hit, DX_PLAYTYPE_BACK);
 		if (IS_HIT)	effect->PlayAnime(shot->x_pos, shot->y_pos);
@@ -747,8 +737,8 @@ void Pshot::HitCheck()
 	for (auto &shot : Cshot)
 	{
 		if (!shot->f_exist)	continue;
-		const bool IS_HIT = (Game::IsHitBoss(shot->x_pos, shot->y_pos, shot->atk) ||
-								EnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk));
+		const bool& IS_HIT = (Game::IsHitBoss(shot->x_pos, shot->y_pos, shot->atk) ||
+							  EnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk));
 		if (IS_HIT)	shot->f_exist = false;
 		if (IS_HIT)	PlaySoundMem(hs_hit, DX_PLAYTYPE_BACK);
 		if (IS_HIT)	effect->PlayAnime(shot->x_pos, shot->y_pos);
@@ -801,11 +791,11 @@ void Pshot::Reset()
 }
 
 
-void Pshot::SetAtk(const int Aatk, const int Batk, const int Catk)
+void Pshot::SetAtk(const int& Aatk, const int& Batk, const int& Catk)
 {
-	for (auto shot : Ashot)	shot->atk = Aatk;
-	for (auto shot : Bshot)	shot->atk = Batk;
-	for (auto shot : Cshot)	shot->atk = Catk;
+	for (auto& shot : Ashot)	shot->atk = Aatk;
+	for (auto& shot : Bshot)	shot->atk = Batk;
+	for (auto& shot : Cshot)	shot->atk = Catk;
 }
 
 
@@ -833,4 +823,3 @@ void Pshot::CopyStaticMem()
 	}
 
 }
-// EOF

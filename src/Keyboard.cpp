@@ -1,40 +1,67 @@
-//------------------------------------------------------------------------------
-/// @file
-/// @brief    Keyboard.hppの実装
-/// @author   PG班 矢風！
-///
-/// @copyright  Copyright 2016 Shohei.Y
-/// @attention  このファイルの利用は、同梱のREADMEにある
-///             利用条件に従ってください
-
-//------------------------------------------------------------------------------
-
-#include "DxLib.h"
-
 #include "Keyboard.hpp"
+#include <DxLib.h>
 
 
-static int m_Key[256];			  // キーの入力状態格納用変数
-static int n_Key[256];
-
-
-// キーの入力状態更新
-void Keyboard_Update()
+Keyboard::Keyboard()
 {
-	char tmpKey[256];             // 現在のキーの入力状態を格納する
-	GetHitKeyStateAll(tmpKey);    // 全てのキーの入力状態を得る
+	for (auto& i : mKeyDownCount)	i = 0;
+	for (auto& i : mKeyUpCount)		i = 0;
+}
 
-	for (int i = 0; i < 256; i++)
+
+bool Keyboard::Update()
+{
+	char nowKeyStatus[KEY_NUM];
+	GetHitKeyStateAll(nowKeyStatus);
+
+	for (int i = 0; i < KEY_NUM; i++)
 	{
-		if (tmpKey[i] != 0)     // i番のキーコードに対応するキーが押されていたら
-			m_Key[i]++;         // 加算
-		else                    // 押されていなければ
-			m_Key[i] = 0;       // 0にする
+		if(nowKeyStatus[i] != 0)
+		{
+			if(mKeyUpCount[i] > 0)
+				mKeyUpCount[i] = 0;
+			mKeyDownCount[i]++;
+		}
+		else
+		{
+			if(mKeyDownCount[i] > 0)
+				mKeyDownCount[i] = 0;
+			mKeyUpCount[i]++;
+		}
 	}
+	return true;
 }
 
 
-// KeyCodeのキーの入力状態を取得する
-int Keyboard_Get(int KeyCode){
-	return m_Key[KeyCode];		  // KeyCodeの入力状態を返す
+int Keyboard::GetDown(int keyCode)
+{
+	if (!Keyboard::IsAvailableCode(keyCode))
+		return -1;
+	return mKeyDownCount[keyCode];
 }
+
+
+int Keyboard::GetUp(int keyCode)
+{
+	if (!Keyboard::IsAvailableCode(keyCode))
+		return -1;
+	return mKeyUpCount[keyCode];
+}
+
+
+bool Keyboard::isDown(int keyCode){
+	return (mKeyDownCount[keyCode] >= 1) ? true : false;
+}
+
+
+bool Keyboard::isPush(int keyCode){
+	return (mKeyDownCount[keyCode] == 1) ? true : false;
+}
+
+
+bool Keyboard::IsAvailableCode(int keyCode){
+	return ( !(0 <= keyCode && keyCode < KEY_NUM) ) ? false : true;
+}
+
+
+// EOF

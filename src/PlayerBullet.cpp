@@ -1,5 +1,4 @@
-#include "DxLib.h"
-
+#include <DxLib.h>
 #include "PlayerBullet.hpp"
 #include "Keyboard.hpp"
 #include <cmath>
@@ -36,16 +35,17 @@ PlayerBullet::~PlayerBullet()
 	DeleteGraph(hg_blue);
 	DeleteGraph(hg_orange);
 // 	DeleteGraph(hg_red);
-	for (auto x : Abullet)	delete x;
-	for (auto x : Bbullet)	delete x;
-	for (auto x : Cbullet)	delete x;
-	for (auto x : Dbullet)	delete x;
+	for (auto& x : Abullet)	delete x;
+	for (auto& x : Bbullet)	delete x;
+	for (auto& x : Cbullet)	delete x;
+	for (auto& x : Dbullet)	delete x;
 }
 
 
 void PlayerBullet::Update()
 {
-	const bool PUSH_SHOT_KEY = ( Keyboard_Get(KEY_INPUT_Z) == 1 || Keyboard_Get(KEY_INPUT_RETURN) == 1 );
+	const bool& PUSH_SHOT_KEY = (Keyboard::Instance()->isPush(KEY_INPUT_Z) ||
+								 Keyboard::Instance()->isPush(KEY_INPUT_RETURN));
 
 	// -> PlayerÅ@ÇÃéÄñSÇ…ä÷ÇµÇƒÇÃÉXÉãÅ[èàóùÇèëÇ≠
 
@@ -57,15 +57,15 @@ void PlayerBullet::Update()
 
 void PlayerBullet::Draw()
 {
-	for (auto &blt : Abullet)
+	for (auto& blt : Abullet)
 	{
-		const bool   isNone = !(blt->f_exist);
+		const bool& isNone = !(blt->f_exist);
 
 		if (isNone)	continue;										// íeÇ™ë∂ç›ÇµÇ»Ç¢Ç»ÇÁÇ±Ç±ÇÕñ≥éã
 
-		const double X_BLT		= blt->x_pos;
-		const double Y_BLT		= blt->y_pos;
-		const double ROTA_BLT	= -(blt->angle);
+		const double& X_BLT	= blt->x_pos;
+		const double& Y_BLT	= blt->y_pos;
+		const double& ROTA_BLT = -(blt->angle);
 
 		DrawRotaGraph(X_BLT, Y_BLT, 2.0, ROTA_BLT, hg_blue, true);	// é©ã@ÇÃíeÇÃï`âÊ
 	}
@@ -76,7 +76,7 @@ void PlayerBullet::SetFirePos(const double* x_player, const double* y_player)
 {
 	for (auto &blt : Abullet)
 	{
-		const bool isExist = blt->f_exist;
+		const bool& isExist = blt->f_exist;
 
 		if (isExist)	continue;					// é©ã@íeÇ™ë∂ç›Ç∑ÇÈÇ»ÇÁÇ±Ç±ÇÕñ≥éã
 
@@ -93,12 +93,12 @@ void PlayerBullet::Fire()
 	{
 		for (int i = 0; i < 2; i++)
 		{
-			const bool	 isExist		= Abullet[i]->f_exist;
+			const bool&	 isExist = Abullet[i]->f_exist;
 
 			if (isExist)	continue;
 
-			const double X_POS			= Abullet[i]->x_pos;
-			const double Y_POS			= Abullet[i]->y_pos - 10;
+			const double& X_POS	= Abullet[i]->x_pos;
+			const double& Y_POS	= Abullet[i]->y_pos - 10;
 
 			FireEffect(X_POS, Y_POS);	// î≠åı
 
@@ -110,12 +110,12 @@ void PlayerBullet::Fire()
 
 	for (int i = 0; i < shiftLevel; i++)
 	{
-		const bool isExist = Abullet[i]->f_exist;
+		const bool& isExist = Abullet[i]->f_exist;
 
 		if (isExist)	continue;
 
-		const double X_POS = Abullet[i]->x_pos;
-		const double Y_POS = Abullet[i]->y_pos - 10;
+		const double& X_POS = Abullet[i]->x_pos;
+		const double& Y_POS = Abullet[i]->y_pos - 10;
 
 		// î≠åı
 		FireEffect(X_POS, Y_POS);
@@ -133,10 +133,10 @@ void PlayerBullet::Move()
 		// ë∂ç›ÇµÇƒÇ¢ÇÈíeÇìÆÇ©Ç∑
 		for (int i = 0; i < 2; i++)
 		{
-			const double X_VECTOR_BLT	= sin(Abullet[i]->angle) * PlayerBullet::SPEED;
-			const double Y_VECTOR_BLT	= cos(Abullet[i]->angle) * PlayerBullet::SPEED;
-			const bool   isLimitOver	= Abullet[i]->y_pos < LimScYT;
-			const bool   isExist		= Abullet[i]->f_exist;
+			const double& X_VECTOR_BLT	= sin(Abullet[i]->angle) * PlayerBullet::SPEED;
+			const double& Y_VECTOR_BLT	= cos(Abullet[i]->angle) * PlayerBullet::SPEED;
+			const bool& isLimitOver	= Abullet[i]->y_pos < LimScYT;
+			const bool& isExist	= Abullet[i]->f_exist;
 
 			if (isExist)
 			{
@@ -162,7 +162,7 @@ void PlayerBullet::Move()
 		// ë∂ç›ÇµÇƒÇ¢ÇÈíeÇìÆÇ©Ç∑
 		if (Abullet[i]->f_exist)
 		{
-			const bool RANGE_OVER = Abullet[i]->y_pos < LimScYT;
+			const bool& RANGE_OVER = Abullet[i]->y_pos < LimScYT;
 
 			Abullet[i]->x_pos -= sin(Abullet[i]->angle) * PlayerBullet::SPEED;
 			Abullet[i]->y_pos -= cos(Abullet[i]->angle) * PlayerBullet::SPEED;
@@ -176,8 +176,8 @@ void PlayerBullet::Move()
 void PlayerBullet::Reset(int num)
 {
 	Abullet[num]->f_exist = false;
-	Abullet[num]->x_pos   = -100;
-	Abullet[num]->y_pos   = -100;
+	Abullet[num]->x_pos = -100;
+	Abullet[num]->y_pos = -100;
 }
 
 

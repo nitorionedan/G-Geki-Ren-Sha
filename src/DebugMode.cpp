@@ -26,7 +26,7 @@ void DebugMode::Update()
 {
 	if (!isTest)	return;
 
-	if (Keyboard_Get(KEY_INPUT_F2) == 1)
+	if (Keyboard::Instance()->isPush(KEY_INPUT_F2))
 	{
 		isConfig = !isConfig;
 		Game::Pause();

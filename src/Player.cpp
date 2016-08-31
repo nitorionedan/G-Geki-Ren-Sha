@@ -2,7 +2,8 @@
 
 #include "DxLib.h"
 
-#include "Player.hpp"
+
+// Player についての循環参照
 #include "Vector2D.hpp"
 #include "DebugMode.hpp"
 #include "Stage.hpp"
@@ -10,6 +11,7 @@
 #include "Graphics2D.hpp"
 #include <algorithm>
 #include <cassert>
+#include "Player.hpp"
 
 #define NOMINMAX
 
@@ -79,12 +81,21 @@ void Player::Update()
 
 	isHit = false;
 
+	/* setting some params to bomber */
+	mBomber->SetParam(pos, powlv, bombNum);
+
+	if(Keyboard::Instance()->isPush(KEY_INPUT_X) && bombNum > 0)
+	{
+		bombNum--;
+		mBomber->Fire();
+	}
+
 	// TEST------------------------------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
 
-	if (Keyboard_Get(KEY_INPUT_O) == 1)
+	if (Keyboard::Instance()->isPush(KEY_INPUT_O))
 		Shift(false);
-	if (Keyboard_Get(KEY_INPUT_P) == 1)
+	if (Keyboard::Instance()->isPush(KEY_INPUT_P))
 		Shift(true);
 }
 
@@ -119,9 +130,15 @@ void Player::Draw()
 }
 
 
+void Player::setup(std::shared_ptr<Bomb> bomber)
+{
+	mBomber = bomber;
+}
+
+
 void Player::Update_Start()
 {
-	const bool isStartPosition = (pos.y == Y_START);
+	const bool& isStartPosition = (pos.y == Y_START);
 
 	c_start->Update();
 
@@ -160,15 +177,15 @@ void Player::Update_Dead()
 	if (IS_DIEING)
 	{		
 		if (c_dead->GetNowcount() == 40)
-			Game::PlayAnime(pos.x + 19., pos.y - 23., eExplosion_small);
+			Effector::PlayAnime(pos.x + 19., pos.y - 23., eExplosion_small);
 		if (c_dead->GetNowcount() == 32)
-			Game::PlayAnime(pos.x - 3., pos.y + 68., eExplosion_small);
+			Effector::PlayAnime(pos.x - 3., pos.y + 68., eExplosion_small);
 		if (c_dead->GetNowcount() == 24)
-			Game::PlayAnime(pos.x - 12., pos.y - 3., eExplosion_small);
+			Effector::PlayAnime(pos.x - 12., pos.y - 3., eExplosion_small);
 		if (c_dead->GetNowcount() == 16)
-			Game::PlayAnime(pos.x + 52., pos.y - 56., eExplosion_small);
+			Effector::PlayAnime(pos.x + 52., pos.y - 56., eExplosion_small);
 		if (c_dead->GetNowcount() == 8)
-			Game::PlayAnime(pos.x - 39., pos.y + 27., eExplosion_small);
+			Effector::PlayAnime(pos.x - 39., pos.y + 27., eExplosion_small);
 	}
 
 	pos.x += vec.x;
@@ -288,9 +305,9 @@ void Player::SetStart()
 
 void Player::InputMng()
 {
-	const bool& KEY_STAY_RIGHT = ( Keyboard_Get(KEY_INPUT_RIGHT) >= 30 );
-	const bool& KEY_STAY_LEFT  = ( Keyboard_Get(KEY_INPUT_LEFT) >= 30 );
-	const bool& PUSH_Z_KEY     = ( Keyboard_Get(KEY_INPUT_Z) == 1 );
+	const bool& KEY_STAY_RIGHT = ( Keyboard::Instance()->GetDown(KEY_INPUT_RIGHT) >= 30 );
+	const bool& KEY_STAY_LEFT = (Keyboard::Instance()->GetDown(KEY_INPUT_LEFT) >= 30 );
+	const bool& PUSH_Z_KEY = (Keyboard::Instance()->isPush(KEY_INPUT_Z));
 
 	keydir = eInputDir::Neutral;						// キーをニュートラルにする
 	
@@ -304,12 +321,14 @@ void Player::InputMng()
 
 void Player::Move()
 {
-	const bool& INPUT_HORIZONTAL  = Keyboard_Get(KEY_INPUT_RIGHT) >= 1 || Keyboard_Get(KEY_INPUT_LEFT) >= 1;
-	const bool& INPUT_VERTICAL    = Keyboard_Get(KEY_INPUT_UP)    >= 1 || Keyboard_Get(KEY_INPUT_DOWN) >= 1;
-	const bool& KEY_STAY_RIGHT    = Keyboard_Get(KEY_INPUT_RIGHT) >= 1;
-	const bool& KEY_STAY_LEFT     = Keyboard_Get(KEY_INPUT_LEFT)  >= 1;
-	const bool& KEY_STAY_UP       = Keyboard_Get(KEY_INPUT_UP)    >= 1;
-	const bool& KEY_STAY_DOWN     = Keyboard_Get(KEY_INPUT_DOWN)  >= 1;
+	const bool& INPUT_HORIZONTAL  = Keyboard::Instance()->isDown(KEY_INPUT_RIGHT) ||
+									Keyboard::Instance()->isDown(KEY_INPUT_LEFT);
+	const bool& INPUT_VERTICAL    = Keyboard::Instance()->isDown(KEY_INPUT_UP) ||
+									Keyboard::Instance()->isDown(KEY_INPUT_DOWN);
+	const bool& KEY_STAY_RIGHT    = Keyboard::Instance()->isDown(KEY_INPUT_RIGHT);
+	const bool& KEY_STAY_LEFT     = Keyboard::Instance()->isDown(KEY_INPUT_LEFT);
+	const bool& KEY_STAY_UP       = Keyboard::Instance()->isDown(KEY_INPUT_UP);
+	const bool& KEY_STAY_DOWN     = Keyboard::Instance()->isDown(KEY_INPUT_DOWN);
 	
 	double speed;
 	// スピード設定
@@ -335,8 +354,8 @@ void Player::Move()
 void Player::Rensha_Update()
 {
 	/* 連射ゲージ加算 */
-	const bool& isRensha = (Keyboard_Get(KEY_INPUT_Z) == 1 ||
-							Keyboard_Get(KEY_INPUT_A) == 1);
+	const bool& isRensha = (Keyboard::Instance()->isPush(KEY_INPUT_Z) ||
+							Keyboard::Instance()->isPush(KEY_INPUT_A));
 	if(isRensha)
 	{
 		if(rensha < 41)
@@ -421,7 +440,7 @@ bool Player::HitCheckCircle(const double& ColX, const double& ColY)
 		isHit = true;
 		isMuteki = true;
 		vec.SetVec(std::cos(1.5 * GetRand(100)), 1.5 * std::cos(GetRand(100)));
-		Game::PlaySpread(pos.x, pos.y, GetRand(100), dead_ef);
+		Effector::PlaySpread(pos.x, pos.y, GetRand(100), dead_ef);
 		PlaySoundMem(hs_dead, DX_PLAYTYPE_BACK);
 	}
 
@@ -446,7 +465,7 @@ bool Player::HitCheckCircle(const double & Range1, const double & Range2, const 
 		isHit = true;
 		isMuteki = true;
 		vec.SetVec(std::cos(1.5 * GetRand(100)), 1.5 * std::cos(GetRand(100)));
-		Game::PlaySpread(pos.x, pos.y, GetRand(100), dead_ef);
+		Effector::PlaySpread(pos.x, pos.y, GetRand(100), dead_ef);
 		Game::PlayQuake();
 		PlaySoundMem(hs_dead, DX_PLAYTYPE_BACK);
 	}

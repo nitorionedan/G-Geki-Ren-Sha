@@ -38,17 +38,14 @@ Score::~Score()
 
 void Score::Update()
 {
-	if(Keyboard_Get(KEY_INPUT_Y) == 1)	clsDx();
+	if(Keyboard::Instance()->isPush(KEY_INPUT_Y))	clsDx();
 	if (val_score != score)				val_score = score;
 	if (val_hiscore != hi_score)		val_hiscore = hi_score;
 	if (score > hi_score)				hi_score = score;
 
 	// TEST
 	if (!DebugMode::isTest)	return;
-	/*
-	if (Keyboard_Get(KEY_INPUT_1) == 1)	AddScore(123); // test
-	if (Keyboard_Get(KEY_INPUT_2) == 1)	DeleteScore(); // test
-	*/
+
 
 //	ShowResult();
 }

@@ -203,7 +203,7 @@ void Enemy::Update(const Player& player)
 		isDamage = false;
 
 		// UŒ‚‚³‚ê‚½‚ç‹N‚±‚é
-		if (Keyboard_Get(KEY_INPUT_Z) == 1)	isUngry = true;
+		if (Keyboard::Instance()->isPush(KEY_INPUT_Z))	isUngry = true;
 
 		Move(player);
 	}
@@ -668,7 +668,7 @@ void Enemy::Damage(int damage)
 		isExist = false;
 
 		Score::AddScore(400);
-		Game::PlayAnime(pos.x, pos.y, eExplosion_small);
+		Effector::PlayAnime(pos.x, pos.y, eExplosion_small);
 		EnemyMng::CountDownEneNum();
 		break;
 
@@ -688,8 +688,8 @@ void Enemy::Damage(int damage)
 		isExist = false;
 
 		Score::AddScore(900);
-		Game::PlayAnime(pos.x, pos.y, eExplosion_small);
-		Game::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_SmallAll);
+		Effector::PlayAnime(pos.x, pos.y, eExplosion_small);
+		Effector::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_SmallAll);
 		EnemyMng::CountDownEneNum();
 		break;
 
@@ -709,9 +709,9 @@ void Enemy::Damage(int damage)
 		PlaySoundMem(sh_voice, DX_PLAYTYPE_BACK);
 		
 		Score::AddScore(1500);
-		Game::PlayAnime(pos.x, pos.y, eExplosion_normal);
-		Game::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_Bigs);
-		Game::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_SmallBlue);
+		Effector::PlayAnime(pos.x, pos.y, eExplosion_normal);
+		Effector::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_Bigs);
+		Effector::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_SmallBlue);
 		EnemyMng::CountDownEneNum();
 
 		if (pos.y < 0)

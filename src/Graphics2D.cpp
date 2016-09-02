@@ -114,7 +114,6 @@ void Graphics2D::DrawRasterScroll(const int& X, const int& Y, double Cycle, doub
 		}	break;
 	}
 
-	if (Game::IsPause())	return;
 	++Correction;
 }
 

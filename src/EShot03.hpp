@@ -12,7 +12,7 @@ class EShot03 : public ShotTask
 public:
 	EShot03();
 	~EShot03();
-	virtual void Update(const double& PosX, const double& PosY, const Player& player) override;
+	virtual void Update(const double& PosX, const double& PosY) override;
 	virtual void Draw() override;
 
 	// @brief					発射（1発）
@@ -30,7 +30,7 @@ public:
 
 private:
 	// @param[in]	id	添え字番号
-	void Move(const int& id, const Player& player);
+	void Move(const int& id);
 
 	const int HIT_RANGE;		// 当たり範囲
 	const int ALL_FRAME_NUM;	// アニメーションの総枚数

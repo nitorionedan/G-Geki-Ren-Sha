@@ -12,7 +12,7 @@ class EShot04 : public ShotTask
 public:
 	EShot04();
 	~EShot04();
-	virtual void Update(const double& PosX, const double& PosY, const Player& player) override;
+	virtual void Update(const double& PosX, const double& PosY) override;
 	virtual void Draw() override;
 	virtual void Fire(const double& SPEED, const double& ANGLE) override;
 	virtual void Fire(const double& PosX, const double& PosY, const double& SPEED, const double& ANGLE) override;
@@ -20,7 +20,7 @@ public:
 
 private:
 	// @param[in]	id	添え字番号
-	void Move(const int& id, const Player& player);
+	void Move(const int& id);
 
 	const int ALL_FRAME_NUM;	// アニメーションの総枚数
 	const int FRAME_TIME;		// １コマの表示時間（フレーム数）

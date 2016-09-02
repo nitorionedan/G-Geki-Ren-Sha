@@ -49,13 +49,15 @@ public:
 	void Draw() override;       //描画処理をオーバーライド
 	void GetPlayerPosition(double* x, double* y){}
 	void GetEnemyPosition(int index, double *x, double *y){}
+	void Pause();
 
-	static void Pause();
 	static void ItemDrop(double PosX, double PosY);
 	static void ItemDrop(double PosX, double PosY, eItem_type type);
 	static void StageCall();
 	static void GameOver();
-	static bool IsPause();
+	const bool IsPause() const {
+		return f_pause;
+	}
 
 	// @brief	自機の円と他の点の当たり判定
 	bool IsHitPlayer(const double& myX, const double& myY);
@@ -67,12 +69,10 @@ public:
 	static bool IsHitBoss(const double& myX, const double& myY, int& dmgPoint);
 
 private:
-	void Update_Status();
 	void Draw_StageMsg();
 	void Draw_Status();
 
 	static ItemMng*	itemMng;
-	static bool f_pause;
 	static bool isMsg;
 	static bool isDead;
 
@@ -87,5 +87,6 @@ private:
 	std::shared_ptr<Stage> stage;
 	std::shared_ptr<BossChara> boss;
 	std::shared_ptr<EnemyMng> enemyMng;
-	// TEST
+	
+	bool f_pause;
 };

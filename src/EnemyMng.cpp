@@ -155,7 +155,7 @@ void EnemyMng::Update(const Player& player)
 	bossShot->Update(player);
 
 	for (auto i : enemy)
-		i->Update(player);
+		i->Update();
 }
 
 
@@ -275,6 +275,7 @@ std::shared_ptr<EnemyMng> IEnemyMng::mEnemyMng;
 void IEnemyMng::set(std::shared_ptr<EnemyMng> enemyMng)
 {
 	mEnemyMng = enemyMng;
+	assert(mEnemyMng != nullptr && "IEnemyMng::set()");
 }
 
 

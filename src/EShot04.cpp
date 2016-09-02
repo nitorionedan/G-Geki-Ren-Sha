@@ -29,7 +29,7 @@ EShot04::~EShot04()
 }
 
 
-void EShot04::Update(const double & PosX, const double & PosY, const Player& player)
+void EShot04::Update(const double & PosX, const double & PosY)
 {
 	for (int i = 0; i < ALL_NUM; i++)
 	{
@@ -40,7 +40,7 @@ void EShot04::Update(const double & PosX, const double & PosY, const Player& pla
 
 		time[i]++;
 		ang[i] -= 0.2;
-		Move(i, player);
+		Move(i);
 	}
 
 	effect->Update();
@@ -100,7 +100,7 @@ bool EShot04::IsHit(const double & ColX, const double & ColY, const double & Col
 }
 
 
-void EShot04::Move(const int & id, const Player& player)
+void EShot04::Move(const int & id)
 {
 	// 進ませる
 	pos[id].x += vspeed[id] * std::cos(vangle[id]);
@@ -108,7 +108,7 @@ void EShot04::Move(const int & id, const Player& player)
 
 	// 当たり判定チェック
 	const bool& IS_HIT = Vector2D::CirclesCollision(HIT_RANGE, Player::HIT_RANGE,
-		pos[id].x, pos[id].y, player.GetPos().x, player.GetPos().y);
+		pos[id].x, pos[id].y, IPlayer::GetPos().x, IPlayer::GetPos().y);
 
 	const bool& IS_HIT2 = Bomb::IsHit(HIT_RANGE, pos[id].x, pos[id].y);
 

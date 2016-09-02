@@ -34,8 +34,8 @@ class BossChara
 public:
 	BossChara(BossTask* mBoss_);
 	~BossChara();
-	void Update(const Player& player) {
-		mBoss->Update(player);
+	void Update() {
+		mBoss->Update();
 	}
 	void Draw() {
 		mBoss->Draw();

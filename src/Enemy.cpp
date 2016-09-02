@@ -14,6 +14,7 @@
 #include <DxLib.h>
 #include <algorithm>
 #include <cmath>
+#include <cassert>
 
 #undef max // ざけんなこのカス必要ねえんだよ！
 #undef min // What's the fuck!
@@ -154,13 +155,13 @@ Enemy::~Enemy()
 	case 1:
 		break;
 	case 2:
-		for (int i = 0; i < sizeof(gh_ene02) / sizeof(gh_ene02[0]); i++)
+		for (int i = 0; i < _countof(gh_ene02); i++)
 			DeleteGraph(gh_ene02[i]);
 		break;
 	case 3:
 		break;
 	case 4:
-		for (int i = 0; i < sizeof(gh_ene04) / sizeof(gh_ene04[0]); i++)
+		for (int i = 0; i < _countof(gh_ene04); i++)
 			DeleteGraph(gh_ene04[i]);
 		break;
 	case 5:
@@ -170,9 +171,7 @@ Enemy::~Enemy()
 	case 7:
 		break;
 
-	default:
-		printfDx("ERROR:Enemy.cpp");
-		break;
+	default:	assert("Enemy::~Enemy()");
 	}
 
 	if (gh_shot00 != NULL)	DeleteGraph(gh_shot00);
@@ -180,13 +179,11 @@ Enemy::~Enemy()
 }
 
 
-void Enemy::Update(const Player& player)
+void Enemy::Update()
 {
 	// 登場時間が来たら出てくる
 	if (Stage::GetTime() == in_time)
-	{
 		isExist = true;
-	}
 
 	if (isExist)
 	{
@@ -201,18 +198,20 @@ void Enemy::Update(const Player& player)
 		if (Keyboard::Instance()->isPush(KEY_INPUT_Z))
 			isUngry = true;
 
-		Move(player);
+		Move();
 	}
 
-	shot->Update(pos.x, pos.y, player);
+	shot->Update(pos.x, pos.y);
 	
-	if (shot2 != nullptr)	shot2->Update(pos.x, pos.y, player);
+	if (shot2 != nullptr)
+		shot2->Update(pos.x, pos.y);
 	
-	if (shot3 != nullptr)	shot3->Update(pos.x, pos.y, player);
+	if (shot3 != nullptr)	
+		shot3->Update(pos.x, pos.y);
 
 	if (!isExist)	return;
 	
-	Fire(player);
+	Fire();
 }
 
 
@@ -333,27 +332,27 @@ void Enemy::AngleTarget(const double Target_x, const double Target_y){
 }
 
 
-void Enemy::Move(const Player& player)
+void Enemy::Move()
 {
 	switch (m_pattern)
 	{
-	case 0:	Move_0(player);	break;
-	case 1:	Move_1(player);	break;
-	case 2:	Move_2(player);	break;
-	case 3:	Move_3(player);	break;
-	case 4:	Move_4(player);	break;
-	case 5:	Move_5(player);	break;
-	case 6:	Move_6(player);	break;
-	case 7:	Move_7(player);	break;
+	case 0:	Move_0();	break;
+	case 1:	Move_1();	break;
+	case 2:	Move_2();	break;
+	case 3:	Move_3();	break;
+	case 4:	Move_4();	break;
+	case 5:	Move_5();	break;
+	case 6:	Move_6();	break;
+	case 7:	Move_7();	break;
 	}
 
 	const bool& IS_HIT = Vector2D::CirclesCollision(hitRange, Player::HIT_RANGE,
-						pos.x, pos.y, player.GetPos().x, player.GetPos().y);
+						pos.x, pos.y, IPlayer::GetPos().x, IPlayer::GetPos().y);
 	if (IS_HIT)	Damage(1);
 }
 
 
-void Enemy::Move_0(const Player& player)
+void Enemy::Move_0()
 {
 	const bool& IS_IN = (elapsedTime >= 0 && elapsedTime <= stop_time);
 	const bool& IS_OUT = (elapsedTime >= out_time);
@@ -363,25 +362,25 @@ void Enemy::Move_0(const Player& player)
 	if (IS_IN)
 	{
 		// プレイヤーの前か画面の上半分なら
-		if (player.GetPos().y - 60.0 > pos.y || pos.y >= 320.)
+		if (IPlayer::GetPos().y - 60.0 > pos.y || pos.y >= 320.)
 		{
 			// 減速
 //			vspeed_y -= 0.02;
-			vspeed_y = (player.GetPos().y - 60. - pos.y) * BRAKE;
+			vspeed_y = (IPlayer::GetPos().y - 60. - pos.y) * BRAKE;
 		}
 
 		// 降りる
 		if (isMove)	pos.y += vspeed_y;
 
 		// 横移動：左から右
-		if (pos.x < player.GetPos().x - 10. && isMove)
+		if (pos.x < IPlayer::GetPos().x - 10. && isMove)
 		{
-			vspeed_x = (player.GetPos().x - 20. - pos.x) * BRAKE;
+			vspeed_x = (IPlayer::GetPos().x - 20. - pos.x) * BRAKE;
 			pos.x += vspeed_x;
 		}
 
 		// 横移動２：右から左
-		if (pos.x > player.GetPos().x + 10. && isMove)
+		if (pos.x > IPlayer::GetPos().x + 10. && isMove)
 		{
 			pos.x -= vspeed_x;
 			vspeed_x *= 0.99999999;
@@ -398,7 +397,7 @@ void Enemy::Move_0(const Player& player)
 	}
 
 	// 自機に向く
-	if (elapsedTime < out_time)	AngleTarget(player.GetPos().x, player.GetPos().y);
+	if (elapsedTime < out_time)	AngleTarget(IPlayer::GetPos().x, IPlayer::GetPos().y);
 
 	// スピード変更
 	if (elapsedTime == out_time)	vspeed_y = 0.;
@@ -426,7 +425,7 @@ void Enemy::Move_0(const Player& player)
 }
 
 
-void Enemy::Move_1(const Player& player)
+void Enemy::Move_1()
 {
 	vspeed_x = std::cos(elapsedTime / 30.) * 8. * std::sin(elapsedTime / 10.) * std::cos(elapsedTime / 10.);
 
@@ -434,14 +433,14 @@ void Enemy::Move_1(const Player& player)
 	pos.y += vspeed_y;
 
 	// 自機に向く
-	AngleTarget(player.GetPos().x, player.GetPos().y);
+	AngleTarget(IPlayer::GetPos().x, IPlayer::GetPos().y);
 
 	if (pos.y > 490.)
 		isExist = false;
 }
 
 
-void Enemy::Move_2(const Player& player)
+void Enemy::Move_2()
 {
 	vspeed_x = 0.;
 	vspeed_y = 2.;
@@ -453,12 +452,12 @@ void Enemy::Move_2(const Player& player)
 }
 
 
-void Enemy::Move_3(const Player& player)
+void Enemy::Move_3()
 {
 }
 
 
-void Enemy::Move_4(const Player& player)
+void Enemy::Move_4()
 {
 	static float c_move = 0.f;
 	c_move += 0.01f;
@@ -479,40 +478,25 @@ void Enemy::Move_4(const Player& player)
 }
 
 
-void Enemy::Move_5(const Player& player)
-{
-}
-
-
-void Enemy::Move_6(const Player& player)
-{
-}
-
-
-void Enemy::Move_7(const Player& player)
-{
-}
-
-
-void Enemy::Fire(const Player& player)
+void Enemy::Fire()
 {
 	switch (type)
 	{
-	case 0: Fire_0(player);	break;
-	case 1: Fire_1(player);	break;
-	case 2:	Fire_2(player);	break;
-	case 3:	Fire_3(player);	break;
-	case 4:	Fire_4(player);	break;
-	case 5:	Fire_5(player);	break;
-	case 6:	Fire_6(player);	break;
-	case 7:	Fire_7(player);	break;
+	case 0: Fire_0();	break;
+	case 1: Fire_1();	break;
+	case 2:	Fire_2();	break;
+	case 3:	Fire_3();	break;
+	case 4:	Fire_4();	break;
+	case 5:	Fire_5();	break;
+	case 6:	Fire_6();	break;
+	case 7:	Fire_7();	break;
 	}
 }
 
 
-void Enemy::Fire_0(const Player& player)
+void Enemy::Fire_0()
 {
-	const double& ANGLE = atan2(player.GetPos().y - pos.y, player.GetPos().x - pos.x);
+	const double& ANGLE = atan2(IPlayer::GetPos().y - pos.y, IPlayer::GetPos().x - pos.x);
 
 	if (elapsedTime == 20)
 	{
@@ -557,9 +541,9 @@ void Enemy::Fire_0(const Player& player)
 }
 
 
-void Enemy::Fire_1(const Player& player)
+void Enemy::Fire_1()
 {
-	const double& ANGLE = atan2(player.GetPos().y - pos.y, player.GetPos().x - pos.x);
+	const double& ANGLE = atan2(IPlayer::GetPos().y - pos.y, IPlayer::GetPos().x - pos.x);
 
 	if (elapsedTime >= stop_time)
 	{
@@ -569,22 +553,22 @@ void Enemy::Fire_1(const Player& player)
 }
 
 
-void Enemy::Fire_2(const Player& player)
+void Enemy::Fire_2()
 {
 }
 
 
-void Enemy::Fire_3(const Player& player)
+void Enemy::Fire_3()
 {
 }
 
 
-void Enemy::Fire_4(const Player& player)
+void Enemy::Fire_4()
 {
 	// 自機狙い方向決め
 	if (s_time == stop_time - 30)
 	{
-		vangle = atan2(player.GetPos().y - pos.y, player.GetPos().x - pos.x);
+		vangle = atan2(IPlayer::GetPos().y - pos.y, IPlayer::GetPos().x - pos.x);
 	}
 
 	// 4WAY x 2
@@ -619,17 +603,17 @@ void Enemy::Fire_4(const Player& player)
 }
 
 
-void Enemy::Fire_5(const Player& player)
+void Enemy::Fire_5()
 {
 }
 
 
-void Enemy::Fire_6(const Player& player)
+void Enemy::Fire_6()
 {
 }
 
 
-void Enemy::Fire_7(const Player& player)
+void Enemy::Fire_7()
 {
 }
 

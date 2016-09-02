@@ -59,7 +59,7 @@ void Eshot::Update(const Player& player)
 {	
 	SetFirePos();							// ”­ŽËˆÊ’u‚ðÝ’è
 	Fire();									// ”­ŽËˆ—
-	Move(player);									// ’e‚Ì“®‚«‚ðŒvŽZ
+	Move(player);							// ’e‚Ì“®‚«‚ðŒvŽZ
 
 	if (s_isFire1)	c_fire1->Update();		// UŒ‚ŠJŽn‚©‚çƒJƒEƒ“ƒgƒ_ƒEƒ“
 	if (s_isFire2)	c_fire2->Update();

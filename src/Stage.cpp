@@ -1,13 +1,11 @@
-#include "DxLib.h"
-
+#include <DxLib.h>
 #include "Stage.hpp"
 #include "Keyboard.hpp"
-//#include "BossA.hpp"
 #include "DebugMode.hpp"
 #include "Game.hpp"
-
 #include <algorithm>
 #include <cmath>
+#include <cassert>
 
 #define NOMINMAX
 
@@ -279,6 +277,7 @@ std::shared_ptr<Stage> IStage::mStage;
 void IStage::set(std::shared_ptr<Stage> stage)
 {
 	mStage = stage;
+	assert(mStage != nullptr && "IStage::set()");
 }
 
 

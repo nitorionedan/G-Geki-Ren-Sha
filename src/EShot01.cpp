@@ -28,10 +28,8 @@ EShot01::~EShot01()
 }
 
 
-void EShot01::Update(const double & PosX, const double & PosY, const Player& player)
+void EShot01::Update(const double & PosX, const double & PosY)
 {
-	playerPos = player.GetPos();
-
 	for (int i = 0; i < ALL_NUM; i++)
 	{
 		if (!isExist[i])
@@ -68,7 +66,7 @@ void EShot01::Fire(const double & SPEED, const double & ANGLE)
 		if (isExist[i])	continue;
 
 		isExist[i] = true;
-		rad[i] = std::atan2(playerPos.y - pos[i].y, playerPos.x - pos[i].x) - DX_PI / 2;
+		rad[i] = std::atan2(IPlayer::GetPos().y - pos[i].y, IPlayer::GetPos().x - pos[i].x) - DX_PI / 2;
 		vspeed[i] = SPEED;
 		vangle[i] = ANGLE;	break;
 	}
@@ -105,7 +103,7 @@ void EShot01::Move(const int & id)
 
 	// 当たり判定チェック
 	const bool& IS_HIT = Vector2D::CirclesCollision(HIT_RANGE, Player::HIT_RANGE,
-		pos[id].x, pos[id].y, playerPos.x, playerPos.y);
+		pos[id].x, pos[id].y, IPlayer::GetPos().x, IPlayer::GetPos().y);
 
 	// 当たったら消す
 	if (IS_HIT)	isExist[id] = false;

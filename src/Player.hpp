@@ -137,3 +137,25 @@ private:
 	bool isDead;			// éÄÇÒÇ≈Ç¢ÇÈÇ©ÅH
 	bool isMuteki;			// ñ≥ìGÇ©ÅH
 };
+
+
+class IPlayer
+{
+public:
+	~IPlayer(){}
+	static void set(std::shared_ptr<Player>);
+	static const Vector2D& GetPos() {
+		return mPlayer->GetPos();
+	}
+	static const int GetBombNum() {
+		return mPlayer->GetBombNum();
+	}
+	static const int GetShiftLevel() {
+		return mPlayer->GetShiftLevel();
+	}
+
+private:
+	IPlayer() { mPlayer = nullptr; }
+
+	static std::shared_ptr<Player> mPlayer;
+};

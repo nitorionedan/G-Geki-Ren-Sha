@@ -479,3 +479,14 @@ bool Player::HitCheckCircle(const double & Range1, const double & Range2, const 
 
 	return IS_HIT;
 }
+
+
+// ===================================================
+std::shared_ptr<Player> IPlayer::mPlayer;
+
+
+void IPlayer::set(std::shared_ptr<Player> player)
+{
+	mPlayer = player;
+	assert(mPlayer != nullptr && "IPlayer::set()");
+}

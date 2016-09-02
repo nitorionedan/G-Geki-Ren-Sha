@@ -93,12 +93,10 @@ BossA::~BossA()
 }
 
 
-void BossA::Update(const Player& player)
+void BossA::Update()
 {
-	playerPos = player.GetPos();
-
 	if(state != eBossA_Dead)
-		shot3->Update(pos.x, pos.y, player);
+		shot3->Update(pos.x, pos.y);
 
 	if (!isExist)	return;
 
@@ -127,7 +125,7 @@ void BossA::Update(const Player& player)
 	if (state != eBossA_Start)
 	{
 		const bool& IS_HIT = Vector2D::CirclesCollision(HIT_RANGE, Player::HIT_RANGE,
-			pos.x, pos.y, player.GetPos().x, player.GetPos().y);
+			pos.x, pos.y, IPlayer::GetPos().x, IPlayer::GetPos().y);
 		if (IS_HIT)	Damage(10);
 	}
 
@@ -157,47 +155,6 @@ void BossA::Update(const Player& player)
 
 	// TEST-------------------------------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
-
-	/*
-	if (Keyboard_Get(KEY_INPUT_RIGHT) == 1) {
-	mXrota += 0.1f;
-	}
-	if (Keyboard_Get(KEY_INPUT_LEFT) == 1) {
-	mXrota -= 0.1f;
-	}
-	if (Keyboard_Get(KEY_INPUT_UP) == 1) {
-	mYrota += 0.1f;
-	}
-	if (Keyboard_Get(KEY_INPUT_DOWN) == 1) {
-	mYrota -= 0.1f;
-	}
-
-	if (Keyboard_Get(KEY_INPUT_RIGHT) >= 1) {
-	mX += SPEED;
-	}
-	if (Keyboard_Get(KEY_INPUT_LEFT) >= 1) {
-	mX -= SPEED;
-	}
-	if (Keyboard_Get(KEY_INPUT_UP) >= 1) {
-	mY += SPEED;
-	}
-	if (Keyboard_Get(KEY_INPUT_DOWN) >= 1) {
-	mY -= SPEED;
-	}
-
-	if (Keyboard_Get(KEY_INPUT_RIGHT) >= 1) {
-	pos.x += SPEED;
-	}
-	if (Keyboard_Get(KEY_INPUT_LEFT) >= 1) {
-	pos.x -= SPEED;
-	}
-	if (Keyboard_Get(KEY_INPUT_UP) >= 1) {
-	pos.y -= SPEED;
-	}
-	if (Keyboard_Get(KEY_INPUT_DOWN) >= 1) {
-	pos.y += SPEED;
-	}
-	*/
 }
 
 
@@ -282,8 +239,8 @@ void BossA::Start_Update()
 
 void BossA::Normal_Update()
 {
-	const float& tarX = playerPos.x;
-	const float& tarY = playerPos.y;
+	const float& tarX = IPlayer::GetPos().x;
+	const float& tarY = IPlayer::GetPos().y;
 
 	// 自機の方向を計算
 	if (isOverLimit())
@@ -309,8 +266,8 @@ void BossA::Weak_Update()
 {
 	big_time++;
 
-	const float& playerX = playerPos.x;
-	const float& playerY = playerPos.y;
+	const float& playerX = IPlayer::GetPos().x;
+	const float& playerY = IPlayer::GetPos().y;
 
 	// 自機の方向を計算
 	if (isOverLimit())

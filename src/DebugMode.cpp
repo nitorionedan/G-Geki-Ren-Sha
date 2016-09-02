@@ -18,7 +18,6 @@ bool	DebugMode::isConfig			= false;
 void DebugMode::SwitchTest()
 {
 	isTest = !isTest;
-	clsDx();
 }
 
 
@@ -29,7 +28,6 @@ void DebugMode::Update()
 	if (Keyboard::Instance()->isPush(KEY_INPUT_F2))
 	{
 		isConfig = !isConfig;
-		Game::Pause();
 	}
 
 	if(isConfig){}
@@ -38,7 +36,5 @@ void DebugMode::Update()
 
 void DebugMode::Draw()
 {
-	if (!isTest)	return;
-
 	DrawFormatString(0, 20, GetColor(255, 0, 0), "DEBUG_MODE_NOW : OPTION[F2]");
 }

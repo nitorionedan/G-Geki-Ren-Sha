@@ -8,7 +8,7 @@ public:
 	ShotTask(){}
 	virtual ~ShotTask(){}
 
-	virtual void Update(const double& PosX, const double& PosY, const Player& player) = 0;
+	virtual void Update(const double& PosX, const double& PosY) = 0;
 	virtual void Draw() = 0;
 
 	// @brief					î≠éÀÅi1î≠Åj

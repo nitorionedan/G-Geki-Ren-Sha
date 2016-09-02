@@ -6,7 +6,6 @@
 
 
 ItemMng* Game::itemMng;
-bool Game::f_pause;
 bool Game::isMsg;
 bool Game::isDead;
 
@@ -21,7 +20,6 @@ Game::Game(ISceneChanger* changer)
 	, effector(new Effector)
 	, bomb(new Bomb)
 	, score(new Score)
-	//, stage(std::make_shared<Stage>)
 	, boss(new BossChara(new NullBoss))
 	, enemyMng(new EnemyMng)
 	, stage(new Stage)
@@ -35,6 +33,7 @@ Game::Game(ISceneChanger* changer)
 	IScore::set(score);
 	IEnemyMng::set(enemyMng);
 	IStage::set(stage);
+	IPlayer::set(player);
 
 	Initialize();
 }
@@ -48,16 +47,15 @@ Game::~Game()
 
 void Game::Initialize()
 {
+	IEnemyMng::Load(eStage::stage1);
+	IStage::Load(eStage::stage1);
+
 	f_pause = false;
 	isMsg = false;
 	isDead = false;
-
-	IEnemyMng::Load(eStage::stage1);
-	IStage::Load(eStage::stage1);
 }
 
 
-//更新
 void Game::Update()
 {	 
 	/* ポーズ */
@@ -75,7 +73,7 @@ void Game::Update()
 	stage->Update();
 
 	// Chara
-	boss->Update(*player);
+	boss->Update();
 	enemyMng->Update(*player);
 	player->Update();
 
@@ -101,20 +99,8 @@ void Game::Update()
 
 	if (isDead)	mSceneChanger->ChangeScene(eScene_GameOver);
 
-	// TEST ----------------------------------------------
+// TEST ----------------------------------------------
 	if (DebugMode::isTest == false)	return;
-
-	if (Keyboard::Instance()->isPush(KEY_INPUT_B))
-	{
-		boss->Start(eBoss_A);
-		//bossShot->ChangeShot(eEnemyShot::ShotA);
-	}
-
-	if(Keyboard::Instance()->isPush(KEY_INPUT_R))
-	{
-		boss->Start(eBoss_None);
-		//bossShot->ChangeShot(eEnemyShot::None);
-	}
 
 	if (Keyboard::Instance()->isPush(KEY_INPUT_U))	mSceneChanger->ChangeScene(eScene_GameOver);
 
@@ -128,7 +114,6 @@ void Game::Update()
 }
 
 
-//描画
 void Game::Draw()
 {
 	// Back Ground
@@ -193,11 +178,6 @@ void Game::GameOver()
 }
 
 
-bool Game::IsPause(){
-	return f_pause;
-}
-
-
 bool Game::IsHitPlayer(const double & myX, const double & myY)
 {
 	const bool& IS_HIT = player->HitCheckCircle(myX, myY);
@@ -222,11 +202,6 @@ bool Game::IsHitBoss(const double& myX, const double& myY, int & dmgPoint)
 }
 
 
-void Game::Update_Status()
-{
-}
-
-
 void Game::Draw_StageMsg()
 {
 	if (!isMsg)	return;
@@ -248,4 +223,3 @@ void Game::Draw_Status()
 	graphic->DrawMyString2(290, 262, "PAUSE", 16, false, 2.0);
 	graphic->DrawMyString2(20, 460, "(P) TITLE", 16, true, 2.0);
 }
-// EOF

@@ -14,8 +14,8 @@ public:
 
 	Shot(ShotTask* shot);
 	~Shot();
-	void Update(const double& PosX, const double& PosY, const Player& player) {
-		mShot->Update(PosX, PosY, player);
+	void Update(const double& PosX, const double& PosY) {
+		mShot->Update(PosX, PosY);
 	}
 	void Draw() {
 		mShot->Draw();

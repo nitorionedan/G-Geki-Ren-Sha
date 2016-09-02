@@ -25,14 +25,13 @@ EShot00::EShot00()
 
 EShot00::~EShot00()
 {
-	for (int i = 0; i < sizeof(gh) / sizeof(gh[0]); i++)	DeleteGraph(gh[i]);
+	for (int i = 0; i < _countof(gh); i++)
+		DeleteGraph(gh[i]);
 }
 
 
-void EShot00::Update(const double& PosX, const double& PosY, const Player& player)
+void EShot00::Update(const double& PosX, const double& PosY)
 {
-	playerPos = player.GetPos();
-
 	for (int i = 0; i < ALL_NUM; i++)
 	{
 		if (!isExist[i])
@@ -97,7 +96,7 @@ void EShot00::Move(const int & id)
 
 	// 当たり判定チェック
 	const bool& IS_HIT = Vector2D::CirclesCollision(HIT_RANGE, Player::HIT_RANGE,
-		pos[id].x, pos[id].y, playerPos.x, playerPos.y);
+						pos[id].x, pos[id].y, IPlayer::GetPos().x, IPlayer::GetPos().y);
 	const bool& IS_HIT2 = Bomb::IsHit(HIT_RANGE, pos[id].x, pos[id].y);
 
 	// 当たったら消す
@@ -116,48 +115,6 @@ void EShot00::Move(const int & id)
 		isExist[id] = false;
 	}
 }
-
-/*
-void EShot00::DrawAnime(const double & PosX, const double & PosY, const double & ANGLE, const int & TIME, const int& FRAME_NUM, const int & TIME_FRAME, int Gr_Handle[])
-{
-	const int& SUM_FRAME_TIME = (FRAME_NUM * TIME_FRAME);
-
-	// アニメーション
-	for (int j = 0; j < FRAME_NUM; j++)
-	{
-		if (TIME % SUM_FRAME_TIME < j * FRAME_TIME ||
-			TIME % SUM_FRAME_TIME > FRAME_TIME + (j * FRAME_TIME))
-			continue;
-
-		DrawRotaGraph(PosX, PosY, 2.0, ANGLE, Gr_Handle[j], true);
-
-		DrawCircle(PosX, PosY, HIT_RANGE, GetColor(0, 255, 0), false);
-		break;
-	}
-}
-*/
-
-/*
-void EShot00::DrawAnime(const double & PosX, const double & PosY, const double & ANGLE, const int & FRAME_NUM, const int & TIME_FRAME, int Gr_Handle[])
-{
-	const int& SUM_FRAME_TIME = (FRAME_NUM * TIME_FRAME);
-	static int aniTime = 0;
-	aniTime++;
-
-	// アニメーション
-	for (int j = 0; j < FRAME_NUM; j++)
-	{
-		if (aniTime % SUM_FRAME_TIME < j * FRAME_TIME ||
-			aniTime % SUM_FRAME_TIME > FRAME_TIME + (j * FRAME_TIME))
-			continue;
-
-		DrawRotaGraph(PosX, PosY, 2.0, ANGLE, Gr_Handle[j], true);
-
-		DrawCircle(PosX, PosY, HIT_RANGE, GetColor(0, 255, 0), false);
-		break;
-	}
-}
-*/
 
 
 bool EShot00::IsHit(const double & ColX, const double & ColY, const double & ColR)

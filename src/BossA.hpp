@@ -24,7 +24,7 @@ public:
 	BossA();
 	~BossA();
 
-	virtual void Update(const Player& player) override;
+	virtual void Update() override;
 	virtual void Draw() override;
 
 	// @brief		当たり判定
@@ -72,7 +72,6 @@ private:
 	std::unique_ptr<EShot03>	shot3;
 	std::shared_ptr<Effect>		bomber;
 
-	Vector2D playerPos;
 	VECTOR	mPos;							// モデルのワールド座標
 	VECTOR	rota;							// モデルの回転値
 	VECTOR	startPos;						// スクリーンとワールド座標の線分

@@ -4,14 +4,11 @@
 #include "NullEnemyShot.hpp"
 #include "NullBoss.hpp"
 
-Score*			Game::score;
-Stage*			Game::stage;
-BossChara*		Game::boss;
-EnemyMng*		Game::enemyMng;
-ItemMng*		Game::itemMng;
-bool			Game::f_pause;
-bool			Game::isMsg;
-bool			Game::isDead;
+
+ItemMng* Game::itemMng;
+bool Game::f_pause;
+bool Game::isMsg;
+bool Game::isDead;
 
 
 Game::Game(ISceneChanger* changer)
@@ -23,32 +20,40 @@ Game::Game(ISceneChanger* changer)
 	, pshot(new Pshot)
 	, effector(new Effector)
 	, bomb(new Bomb)
+	, score(new Score)
+	//, stage(std::make_shared<Stage>)
+	, boss(new BossChara(new NullBoss))
+	, enemyMng(new EnemyMng)
+	, stage(new Stage)
 {
 	// static-----------------------------------------------------------------
-	{
-		f_pause = false;
-		isMsg = false;
-		isDead = false;
-
-		score = new Score;
-		boss = new BossChara(new NullBoss);
-		enemyMng = new EnemyMng;
-		stage = new Stage;
-		itemMng = new ItemMng;
-	}
+	itemMng = new ItemMng;
 
 	// these are must funcs
-	player->setup(bomb);
+	player->setup(bomb, pshot, stage);
+	enemyMng->setup(boss);
+	IScore::set(score);
+	IEnemyMng::set(enemyMng);
+	IStage::set(stage);
+
+	Initialize();
 }
 
 
 Game::~Game()
 {
-	delete score;
-	delete stage;
-	delete boss;
+	delete itemMng;
+}
 
-	delete enemyMng;
+
+void Game::Initialize()
+{
+	f_pause = false;
+	isMsg = false;
+	isDead = false;
+
+	IEnemyMng::Load(eStage::stage1);
+	IStage::Load(eStage::stage1);
 }
 
 
@@ -78,7 +83,7 @@ void Game::Update()
 	effector->Update();
 	
 	// Shot
-	pshot->Update(*player);
+	pshot->Update();
 	
 	// Bomber
 	bomb->Update();
@@ -162,21 +167,6 @@ void Game::Draw()
 }
 
 
-void Game::AddScore(const int & point){
-	score->AddScore(point);
-}
-
-
-void Game::PlayQuake(){
-	stage->PlayQuake();
-}
-
-
-void Game::LoadEnemy(eStage stage){
-	enemyMng->Load(stage);
-}
-
-
 void Game::Pause(){
 	f_pause = !f_pause;
 }
@@ -203,13 +193,6 @@ void Game::GameOver()
 }
 
 
-void Game::StartBoss()
-{
-	boss->Start(eBoss_A);
-	//bossShot->ChangeShot(eEnemyShot::ShotA);
-}
-
-
 bool Game::IsPause(){
 	return f_pause;
 }
@@ -233,8 +216,9 @@ bool Game::IsHitPlayer(const double & Range1, const double & Range2, const doubl
 
 bool Game::IsHitBoss(const double& myX, const double& myY, int & dmgPoint)
 {
-	const bool& IS_HIT = boss->HitCheck(myX, myY, dmgPoint);
-	return IS_HIT;
+	//const bool& IS_HIT = boss->HitCheck(myX, myY, dmgPoint);
+	//return IS_HIT;
+	return false;
 }
 
 

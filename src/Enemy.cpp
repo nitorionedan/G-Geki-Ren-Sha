@@ -1,15 +1,9 @@
-#include "DxLib.h"
-
 #include "Enemy.hpp"
-#include "Stage.hpp"
-#include "Player.hpp"
-#include "Pshot.hpp"
-#include "Vector2D.hpp"
 #include "Graphics2D.hpp"
 #include "DebugMode.hpp"
-#include "Score.hpp"
 #include "Game.hpp"
 #include "EnemyMng.hpp"
+#include "IScore.hpp"
 
 // Shots
 #include "EShot00.hpp"
@@ -17,6 +11,7 @@
 #include "EShot02.hpp"
 #include "Eshot04.hpp"
 
+#include <DxLib.h>
 #include <algorithm>
 #include <cmath>
 
@@ -203,7 +198,8 @@ void Enemy::Update(const Player& player)
 		isDamage = false;
 
 		// 攻撃されたら起こる
-		if (Keyboard::Instance()->isPush(KEY_INPUT_Z))	isUngry = true;
+		if (Keyboard::Instance()->isPush(KEY_INPUT_Z))
+			isUngry = true;
 
 		Move(player);
 	}
@@ -425,10 +421,7 @@ void Enemy::Move_0(const Player& player)
 	if (IS_OUT)
 	{
 		if (pos.y <= -40)
-		{
 			isExist = false;
-			EnemyMng::CountDownEneNum();
-		}
 	}
 }
 
@@ -444,10 +437,7 @@ void Enemy::Move_1(const Player& player)
 	AngleTarget(player.GetPos().x, player.GetPos().y);
 
 	if (pos.y > 490.)
-	{
 		isExist = false;
-		EnemyMng::CountDownEneNum();
-	}
 }
 
 
@@ -459,10 +449,7 @@ void Enemy::Move_2(const Player& player)
 	pos.y += vspeed_y;
 
 	if (pos.y > 490.)
-	{
 		isExist = false;
-		EnemyMng::CountDownEneNum();
-	}
 }
 
 
@@ -488,10 +475,7 @@ void Enemy::Move_4(const Player& player)
 	pos.x += vspeed_x * std::cos(c_move);
 
 	if (pos.y > 490.)
-	{
 		isExist = false;
-		EnemyMng::CountDownEneNum();
-	}
 }
 
 
@@ -658,7 +642,7 @@ void Enemy::Damage(int damage)
 	case 0:
 		hp -= damage;
 		isDamage = true;
-		Score::AddScore(1);
+		IScore::AddScore(1);
 
 		// 元気ならここで返す
 		if (hp > 0)	return;
@@ -667,9 +651,9 @@ void Enemy::Damage(int damage)
 
 		isExist = false;
 
-		Score::AddScore(400);
+		IScore::AddScore(400);
 		Effector::PlayAnime(pos.x, pos.y, eExplosion_small);
-		EnemyMng::CountDownEneNum();
+		IEnemyMng::CountDownEneNum();
 		break;
 
 	case 1:
@@ -678,7 +662,7 @@ void Enemy::Damage(int damage)
 	case 2:
 		hp -= damage;
 		isDamage = true;
-		Score::AddScore(1);
+		IScore::AddScore(1);
 
 		// 元気ならここで返す
 		if (hp > 0)	return;
@@ -687,10 +671,10 @@ void Enemy::Damage(int damage)
 
 		isExist = false;
 
-		Score::AddScore(900);
+		IScore::AddScore(900);
 		Effector::PlayAnime(pos.x, pos.y, eExplosion_small);
 		Effector::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_SmallAll);
-		EnemyMng::CountDownEneNum();
+		IEnemyMng::CountDownEneNum();
 		break;
 
 	case 3:
@@ -699,7 +683,7 @@ void Enemy::Damage(int damage)
 	case 4:
 		hp -= damage;
 		isDamage = true;
-		Score::AddScore(1);
+		IScore::AddScore(1);
 
 		// 元気ならここで返す
 		if (hp > 0)	return;
@@ -708,11 +692,11 @@ void Enemy::Damage(int damage)
 		
 		PlaySoundMem(sh_voice, DX_PLAYTYPE_BACK);
 		
-		Score::AddScore(1500);
+		IScore::AddScore(1500);
 		Effector::PlayAnime(pos.x, pos.y, eExplosion_normal);
 		Effector::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_Bigs);
 		Effector::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_SmallBlue);
-		EnemyMng::CountDownEneNum();
+		IEnemyMng::CountDownEneNum();
 
 		if (pos.y < 0)
 		{
@@ -748,5 +732,3 @@ void Enemy::ItemDrop()
 	int rand = GetRand(100);
 	if (rand < DROP_RATE)	Game::ItemDrop(pos.x, pos.y, eItem_P);
 }
-
-// EOF

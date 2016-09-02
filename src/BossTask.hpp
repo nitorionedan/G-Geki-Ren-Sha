@@ -5,7 +5,6 @@
 
 class BossTask
 {
-
 public:
 	virtual ~BossTask(){}
 	virtual void Update(const Player& player) = 0;

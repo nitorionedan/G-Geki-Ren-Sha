@@ -7,6 +7,7 @@
 #include "Eshot.hpp"
 #include "Vector2D.hpp"
 #include "Bomb.hpp"
+#include "IScore.hpp"
 
 #include <cmath>
 #include <algorithm>
@@ -249,7 +250,7 @@ bool BossA::HitCheck(const double & ColX, const double & ColY, const int& Damage
 	if (IS_HIT)
 	{
 		Damage(DamagePoint);
-		Game::AddScore(1);
+		IScore::AddScore(1);
 	}
 
 	return IS_HIT ? true : false;

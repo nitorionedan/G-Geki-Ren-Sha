@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Bullet.hpp"
-#include "Player.hpp"
 #include "Counter.hpp"
 #include "Vector2D.hpp"
 #include "HitEffect.hpp"
@@ -23,8 +22,9 @@ class Pshot
 public:
 	Pshot::Pshot();
 	Pshot::~Pshot();
-	void Update(const Player& player);
+	void Update();
 	void Draw();
+	void SetParam(Vector2D& pos, int& shiftLevel);
 	void ShiftReset();
 	const int GetShiftLevel() const {
 		return shiftLevel;

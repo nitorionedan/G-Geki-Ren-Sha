@@ -2,10 +2,8 @@
 #define DEF_ENEMY_HPP
 
 #include "Counter.hpp"
-#include "ShotTask.hpp"
 #include "Shot.hpp"
 #include "Vector2D.hpp"
-#include "ShotTask.hpp"
 #include "Player.hpp"
 #include <memory>
 
@@ -31,6 +29,9 @@ public:
 	~Enemy();
 	void Update(const Player& player);
 	void Draw();
+	const bool IsExist() const {
+		return isExist;
+	}
 	bool IsHit(const double& ColX, const double& ColY, const int& DAMAGE);
 	bool IsHit(const int & ColCircle, const double & ColX, const double & ColY, const int & Damage);
 

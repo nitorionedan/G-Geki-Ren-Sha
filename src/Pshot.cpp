@@ -1,13 +1,10 @@
-#include "DxLib.h"
-
+#include <DxLib.h>
 #include "Pshot.hpp"
 #include "Keyboard.hpp"
 #include "DebugMode.hpp"
 #include "Player.hpp"
-#include "Vector2D.hpp"
 #include "Stage.hpp"
 #include "EnemyMng.hpp"
-//#include "Effector.hpp"
 #include "Game.hpp"
 
 #include <algorithm>
@@ -125,10 +122,8 @@ Pshot::~Pshot()
 }
 
 
-void Pshot::Update(const Player& player)
+void Pshot::Update()
 {
-	shiftLevel = player.GetShiftLevel();					// シフトレベルを手に入れる
-	SetFirePosition(player.GetPos().x, player.GetPos().y);	// 発射位置を設定
 	Input();												// 入力管理
 	Move();													// 動き計算
 	HitCheck();												// 当たり判定
@@ -248,6 +243,13 @@ void Pshot::Draw()
 	else
 		DrawFormatString(0, 90, GetColor(0, 255, 0), "isShotNext = false");
 	*/
+}
+
+
+void Pshot::SetParam(Vector2D & pos, int & shiftLevel)
+{
+	SetFirePosition(pos.x, pos.y);
+	this->shiftLevel = shiftLevel;
 }
 
 
@@ -718,7 +720,7 @@ void Pshot::HitCheck()
 	{
 		if (!shot->f_exist)	continue;
 		const bool& IS_HIT = (Game::IsHitBoss(shot->x_pos, shot->y_pos, shot->atk) ||
-							  EnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk));
+							  IEnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk));
 		if (IS_HIT)	shot->f_exist = false;
 		if (IS_HIT)	PlaySoundMem(hs_hit, DX_PLAYTYPE_BACK);
 		if (IS_HIT)	effect->PlayAnime(shot->x_pos, shot->y_pos);
@@ -728,7 +730,7 @@ void Pshot::HitCheck()
 	{
 		if (!shot->f_exist)	continue;
 		const bool& IS_HIT = (Game::IsHitBoss(shot->x_pos, shot->y_pos, shot->atk) ||
-							  EnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk));
+							  IEnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk));
 		if (IS_HIT)	shot->f_exist = false;
 		if (IS_HIT)	PlaySoundMem(hs_hit, DX_PLAYTYPE_BACK);
 		if (IS_HIT)	effect->PlayAnime(shot->x_pos, shot->y_pos);
@@ -738,7 +740,7 @@ void Pshot::HitCheck()
 	{
 		if (!shot->f_exist)	continue;
 		const bool& IS_HIT = (Game::IsHitBoss(shot->x_pos, shot->y_pos, shot->atk) ||
-							  EnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk));
+							  IEnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk));
 		if (IS_HIT)	shot->f_exist = false;
 		if (IS_HIT)	PlaySoundMem(hs_hit, DX_PLAYTYPE_BACK);
 		if (IS_HIT)	effect->PlayAnime(shot->x_pos, shot->y_pos);

@@ -3,7 +3,7 @@
 #include "Bomb.hpp"
 #include "Game.hpp"
 #include "EnemyMng.hpp"
-#include "Score.hpp"
+#include "IScore.hpp"
 
 
 static const int EFFECT_NUM = 10;
@@ -111,7 +111,8 @@ bool Bomb::IsHit(const int & ColCircle, const double & ColX, const double & ColY
 
 		isHit = Vector2D::CirclesCollision(ColCircle, effect[i].rad, ColX, ColY, pos.x, pos.y);
 		
-		if (isHit)	Score::AddScore(50);
+		// static ‚¶‚á‚È‚­‚È‚Á‚½‚ç‚Í‚¸‚¹
+		if (isHit)	IScore::AddScore(50);
 		if (isHit)	return isHit;
 	}
 
@@ -156,7 +157,7 @@ void Bomb::MoveEffect()
 
 		effect[i].rad += 5;
 
-		EnemyMng::IsHit(effect[i].rad, pos.x, pos.y, 100);
+		IEnemyMng::IsHit(effect[i].rad, pos.x, pos.y, 100);
 
 		// ƒŠƒZƒbƒg
 		if (effect[i].rad > 400)

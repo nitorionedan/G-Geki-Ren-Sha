@@ -1,17 +1,13 @@
 #pragma warning(disable:4244)
 
-#include "DxLib.h"
-
-
-// Player ‚É‚Â‚¢‚Ä‚ÌzŠÂQÆ
-#include "Vector2D.hpp"
+#include <DxLib.h>
+#include "Player.hpp"
 #include "DebugMode.hpp"
-#include "Stage.hpp"
+#include "IScore.hpp"
 #include "Game.hpp"
 #include "Graphics2D.hpp"
 #include <algorithm>
 #include <cassert>
-#include "Player.hpp"
 
 #define NOMINMAX
 
@@ -32,6 +28,9 @@ Player::Player()
 	, graphic(new Graphic)
 	, c_start(new Counter(150))
 	, c_dead(new Counter(90))
+	, mBomber(nullptr)
+	, mPshot(nullptr)
+	, mStage(nullptr)
 	, elapsedTime(0)
 	, keydir(eInputDir::Neutral)
 	, dead_ef(eSpread_SmallGrey)
@@ -81,9 +80,13 @@ void Player::Update()
 
 	isHit = false;
 
+	/* setting some params to PShot */
+	mPshot->SetParam(pos, powlv);
+
 	/* setting some params to bomber */
 	mBomber->SetParam(pos, powlv, bombNum);
 
+	/* use bomb */
 	if(Keyboard::Instance()->isPush(KEY_INPUT_X) && bombNum > 0)
 	{
 		bombNum--;
@@ -130,9 +133,13 @@ void Player::Draw()
 }
 
 
-void Player::setup(std::shared_ptr<Bomb> bomber)
+void Player::setup(std::shared_ptr<Bomb> bomber,
+				   std::shared_ptr<Pshot> pshot,
+				   std::shared_ptr<Stage> stage)
 {
 	mBomber = bomber;
+	mPshot = pshot;
+	mStage = stage;
 }
 
 
@@ -392,7 +399,7 @@ void Player::SetArm()
 {
 	if(isArm)
 	{
-		Score::AddScore(10000);
+		IScore::AddScore(10000);
 		return;
 	}
 	isArm = true;
@@ -466,7 +473,7 @@ bool Player::HitCheckCircle(const double & Range1, const double & Range2, const 
 		isMuteki = true;
 		vec.SetVec(std::cos(1.5 * GetRand(100)), 1.5 * std::cos(GetRand(100)));
 		Effector::PlaySpread(pos.x, pos.y, GetRand(100), dead_ef);
-		Game::PlayQuake();
+		mStage->PlayQuake();
 		PlaySoundMem(hs_dead, DX_PLAYTYPE_BACK);
 	}
 

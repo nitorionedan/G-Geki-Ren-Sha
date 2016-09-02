@@ -3,9 +3,12 @@
 
 #include "Enemy.hpp"
 #include "Stage.hpp"
-#include "BossShotMgr.hpp" 
+#include "BossShotMgr.hpp"
+#include "BossChara.hpp"
+#include <vector>
 
-typedef struct
+
+struct tEnemyData
 {
 	int type,		// “Gí—Ş
 		stype,		// ’eí—Ş
@@ -20,7 +23,7 @@ typedef struct
 		s_speed,	// ’eƒXƒs[ƒh
 		hp,			// HP
 		item;		// ƒAƒCƒeƒ€
-} tEnemyData;
+};
 
 
 class EnemyMng
@@ -33,22 +36,37 @@ public:
 	void Load(eStage stage);
 	void Update(const Player& player);
 	void Draw();
+	void Finalize();
+	void setup(std::shared_ptr<BossChara>);
+	void CountDownEneNum();
+	void BossStart(eStage stage);
+	bool IsHit(const double& ColX, const double& ColY, const int& DAMAGE);
+	bool IsHit(const int& ColCircle, const double& ColX, const double& ColY, const int& Damage);
+
+private:
+	//std::vector<std::shared_ptr<Enemy>> enemy;				// G‹›“G
+	std::vector<Enemy*> enemy;									// G‹›“G
+
+	std::shared_ptr<BossShotMgr> bossShot;
+	std::shared_ptr<BossChara> mBoss;
+	int enemyCount;							// ¶‚«c‚Á‚Ä‚¢‚é“G‚Ì”
+	bool isBossZone;						// “G‚Ì”
+};
+
+
+class IEnemyMng
+{
+public:
+	~IEnemyMng() {}
+	static void set(std::shared_ptr<EnemyMng>);
+	static void Load(eStage);
 	static void CountDownEneNum();
 	static bool IsHit(const double& ColX, const double& ColY, const int& DAMAGE);
 	static bool IsHit(const int& ColCircle, const double& ColX, const double& ColY, const int& Damage);
 
 private:
-	// ƒ‹[ƒv—p
-	const int T_T;
-
-	// G‹›“G
-	static Enemy** enemy;
-	// “G‚Ì”
-	static int e_num;
-	static int ene_count;
-	static bool isBossZone;
-
-	std::shared_ptr<BossShotMgr> bossShot;
+	IEnemyMng() { mEnemyMng = nullptr; }
+	static std::shared_ptr<EnemyMng> mEnemyMng;
 };
 
 

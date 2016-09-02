@@ -2,7 +2,7 @@
 
 #include "Stage.hpp"
 #include "Keyboard.hpp"
-#include "BossA.hpp"
+//#include "BossA.hpp"
 #include "DebugMode.hpp"
 #include "Game.hpp"
 
@@ -95,8 +95,6 @@ void Stage::StageSet(eStage estage)
 		break;
 	}
 
-	// “Gƒf[ƒ^‚ğ“Ç‚İ‚Ş
-	Game::LoadEnemy(estage);
 	Game::StageCall();
 }
 
@@ -270,4 +268,21 @@ int Stage::WrapPos(int val, int max, int min)
 
 int Stage::GetTime(){
 	return s_time;
+}
+
+
+// IStage============================================
+
+std::shared_ptr<Stage> IStage::mStage;
+
+
+void IStage::set(std::shared_ptr<Stage> stage)
+{
+	mStage = stage;
+}
+
+
+void IStage::Load(eStage stage)
+{
+	mStage->StageSet(stage);
 }

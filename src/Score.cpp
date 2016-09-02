@@ -9,8 +9,6 @@
 
 const int Score::digit = 8;
 
-int Score::score;
-
 
 Score::Score()
 	: graphic(new Graphic)
@@ -97,13 +95,17 @@ void Score::ShowResult()
 
 void Score::LoadScore()
 {
+	// もし開けなければ
 	if ((error = fopen_s(&fp, name, "rb")) != 0)
 	{
+		// 新しく作ってデータを保存
 		SaveScore();
 		printfDx("\n新しく[score_data.dat]を作成しました。\n[Y] キー：おｋ\n");
 	}
+	// 開ければ
 	else
 	{
+		// データをロード
 		fread(&hi_score, sizeof(hi_score), 1, fp);
 		fclose(fp);
 	}
@@ -112,7 +114,6 @@ void Score::LoadScore()
 
 void Score::DeleteScore()
 {
-//	remove(name); // ファイルの削除なくてもええわ
 	score = 0;
 	hi_score = 0;
 }

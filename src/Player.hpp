@@ -7,6 +7,8 @@
 #include "Vector2D.hpp"
 #include "PieceEffect.hpp"
 #include "Bomb.hpp"
+#include "Pshot.hpp"
+#include "Stage.hpp"
 #include <memory>
 
 
@@ -34,7 +36,7 @@ public:
 	~Player();
 	void Update();
 	void Draw();
-	void setup(std::shared_ptr<Bomb>);
+	void setup(std::shared_ptr<Bomb>, std::shared_ptr<Pshot>, std::shared_ptr<Stage>);
 	void Update_Start();
 	void Update_Game();
 	void Update_Dead();
@@ -115,6 +117,8 @@ private:
 	std::unique_ptr<Counter> c_start;	// スタート準備用カウンター
 	std::unique_ptr<Counter> c_dead;
 	std::shared_ptr<Bomb> mBomber;
+	std::shared_ptr<Pshot> mPshot;
+	std::shared_ptr<Stage> mStage;
 
 	eInputDir keydir;		// キー入力方向
 	ePlayerState state;		// プレイヤーの状態

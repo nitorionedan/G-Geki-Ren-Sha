@@ -53,6 +53,7 @@
     <ClCompile Include="src\Graphics2D.cpp" />
     <ClCompile Include="src\HitEffect.cpp" />
     <ClCompile Include="src\ISceneChanger.cpp" />
+    <ClCompile Include="src\IScore.cpp" />
     <ClCompile Include="src\ItemMng.cpp" />
     <ClCompile Include="src\Keyboard.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -113,6 +114,7 @@
     <ClInclude Include="src\Graphics2D.hpp" />
     <ClInclude Include="src\HitEffect.hpp" />
     <ClInclude Include="src\ISceneChanger.hpp" />
+    <ClInclude Include="src\IScore.hpp" />
     <ClInclude Include="src\ItemMng.hpp" />
     <ClInclude Include="src\Keyboard.hpp" />
     <ClInclude Include="src\Main.hpp" />

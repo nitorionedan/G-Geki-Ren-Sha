@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Task.hpp"
 #include "Counter.hpp"
 #include "Graphics2D.hpp"
 #include "Vector2D.hpp"
@@ -29,15 +28,14 @@ enum eBG
 };
 
 
-class Stage
-	: public Task
-	, public Graphics2D
+class Stage	: public Graphics2D
 {
 public:
 	Stage();
 	~Stage();
-	virtual void Update() override;
-	virtual void Draw() override;
+	void Update();
+	void Draw();
+	void StageSet(eStage estage);
 	void NextStage();								// リザルト表示後呼ばれる
 	void Clear    ();								// ステージクリアしたとき呼ばれる
 	void AllClear ();								// 全クリ用
@@ -49,7 +47,6 @@ public:
 	eStage	nowStage;							// 現在のステージ
 
 private:
-	void StageSet(eStage estage);
 	void Move();
 	void Quake();								// ぶるぶる
 
@@ -70,4 +67,23 @@ private:
 	// static ------------
 	static int s_time;		// ステージの経過時間
 	static int s_rank;		// ランク
+};
+
+
+/*
+@brief		Stageクラスのインターフェイス
+@attention	Stageクラスにアクセスしたい場合はこちらにアクセスする
+@warning	最初に一度だけset関数を呼ばなけれないけない
+*/
+class IStage
+{
+public:
+	~IStage() {}
+	static void set(std::shared_ptr<Stage>);
+	static void Load(eStage);
+
+private:
+	IStage() { mStage = nullptr; }
+
+	static std::shared_ptr<Stage> mStage;
 };

@@ -1,41 +1,28 @@
 #include "EnemyMng.hpp"
-#include "Game.hpp"
 #include "DebugMode.hpp"
-
 #include "NullEnemyShot.hpp"
 
 #include <DxLib.h>
-#include <cstdlib>
-#include <cstring>
 #include <cassert>
 #include <fstream>
 #include <string>
-
-
-Enemy** EnemyMng::enemy;
-int     EnemyMng::e_num;
-int		EnemyMng::ene_count;
-bool	EnemyMng::isBossZone;
+#include <algorithm>
 
 
 EnemyMng::EnemyMng()
-	: T_T(1)
-	, bossShot(new BossShotMgr(new NullEnemyShot))
+	: bossShot(new BossShotMgr(new NullEnemyShot))
+	, mBoss(nullptr)
 {
-	ene_count = 0;
-	isBossZone = false;
+	enemy.reserve(100);
 
-	// 空の敵を作成
-	enemy = new Enemy*[2];
-	for (int i = 0; i < 2; i++)	enemy[i] = nullptr;
+	enemyCount = 0;
+	isBossZone = false;
 }
 
 
 EnemyMng::~EnemyMng()
 {
-	for (int i = 0; i < sizeof(enemy) / sizeof(enemy[0]); i++)
-		delete enemy[i];
-	delete[]	enemy;
+	Finalize();
 }
 
 
@@ -46,12 +33,8 @@ void EnemyMng::Load(eStage stage)
 	// File name: Enemys table.
 	std::string fname;
 
-	if (enemy != nullptr)
-	{
-		for (int i = 0; i < sizeof(enemy) / sizeof(enemy[0]); i++)
-			delete enemy[i];
-		delete[]	enemy;
-	}
+	if (!enemy.empty())
+		Finalize();
 
 	// Load enemys table.
 	switch (stage)
@@ -67,7 +50,7 @@ void EnemyMng::Load(eStage stage)
 	}
 
 	/* count enemys num */
-	e_num = 0;
+	enemyCount = 0;
 	std::ifstream ifs_count(fname, std::ios::in);
 	assert(ifs_count.is_open() && "EnemyMng::Load()");
 	
@@ -75,19 +58,17 @@ void EnemyMng::Load(eStage stage)
 	{
 		char tmp = ifs_count.get();
 		if (tmp == '\n')
-			e_num++;
+			enemyCount++;
 	}
-	
-	e_num--;	// adjust enemy num
-	ifs_count.close();
+	enemyCount--;	// adjust enemy num
 
-	/* set enemys num */
-	enemy = new Enemy*[e_num];
-	ene_count = e_num;
+	printfDx("%d\n", enemyCount);
+
+	ifs_count.close();
 
 	/* Create enemys data */
 	tEnemyData* ene_date;
-	ene_date = new tEnemyData[e_num];
+	ene_date = new tEnemyData[enemyCount];
 
 	std::string buf;
 	int nowCol = 1;
@@ -96,10 +77,10 @@ void EnemyMng::Load(eStage stage)
 
 	while (ifs.get() != '\n'); // header skip
 
-	while(T_T)
+	while(1)
 	{
 		char tmpChar;
-		while(T_T)
+		while(1)
 		{
 			tmpChar = ifs.get();
 			
@@ -147,9 +128,9 @@ out:
 	buf.clear();
 
 	// create enemys
-	for (int i = 0; i < e_num; i++)
+	for (int i = 0; i < enemyCount; i++)
 	{
-		enemy[i] = new Enemy(
+		enemy.emplace_back( new Enemy(
 			ene_date[i].type,
 			ene_date[i].stype,
 			ene_date[i].m_pattern,
@@ -162,7 +143,7 @@ out:
 			ene_date[i].y_pos,
 			ene_date[i].s_speed,
 			ene_date[i].hp,
-			ene_date[i].item);
+			ene_date[i].item) );
 	}
 
 	delete[] ene_date;
@@ -173,10 +154,8 @@ void EnemyMng::Update(const Player& player)
 {
 	bossShot->Update(player);
 
-	if (enemy == nullptr)	return;
-
-	for (int i = 0; i < e_num; i++)
-		enemy[i]->Update(player);
+	for (auto i : enemy)
+		i->Update(player);
 }
 
 
@@ -184,39 +163,78 @@ void EnemyMng::Draw()
 {
 	bossShot->Draw();
 
-	if (enemy == nullptr)	return;
-
-	for (int i = 0; i < e_num; i++)
-		enemy[i]->Draw();
+	for (auto i : enemy)
+		i->Draw();
 
 	if(DebugMode::isTest)
-		DrawFormatString(200, 200, GetColor(0, 255, 0), "敵の数：%d", ene_count);
+		DrawFormatString(200, 200, GetColor(0, 255, 0), "敵の数：%d", enemyCount);
+}
+
+
+void EnemyMng::Finalize()
+{
+	for (auto i : enemy)
+		delete i;
+	enemy.erase(std::begin(enemy), std::end(enemy));
+	enemy.clear();
+}
+
+
+void EnemyMng::setup(std::shared_ptr<BossChara> boss)
+{
+	mBoss = boss;
 }
 
 
 void EnemyMng::CountDownEneNum()
 {
-	ene_count--;
+	enemyCount--;
 
-	if (ene_count == 0)
+	if (enemyCount == 0)
+		BossStart(eStage::stage1);
+}
+
+
+void EnemyMng::BossStart(eStage stage)
+{
+	switch (stage)
 	{
-		Game::StartBoss();
-		// bossShot->ChangeShot();
+	case eStage::stage1:
+		mBoss->Start(eBoss_A);
+		bossShot->ChangeShot(eEnemyShot::ShotA);
+		break;
+
+	case eStage::stage2:
+		break;
+	
+	case eStage::stage3:
+		break;
+	
+	case eStage::stage4:
+		break;
+	
+	case eStage::stage5:
+		break;
+	
+	case eStage::stage6:
+		break;
+	
+	case eStage::stage0:
+		break;
+	default:	assert("EnemyMng::BossStart()");
 	}
+
 }
 
 
 bool EnemyMng::IsHit(const double & ColX, const double & ColY, const int& DAMAGE)
 {
-	if (enemy == nullptr)	return false;
-
 	bool isHit;
 
-	for (int i = 0; i < e_num; i++)
+	for(auto i : enemy)
 	{
-		isHit = enemy[i]->IsHit(ColX, ColY, DAMAGE);
-
-		if (isHit)	return isHit;
+		isHit = i->IsHit(ColX, ColY, DAMAGE);
+		if (isHit)	return true;
 	}
 
 	// ここまで来たということは当たっていないということ
@@ -226,16 +244,12 @@ bool EnemyMng::IsHit(const double & ColX, const double & ColY, const int& DAMAGE
 
 bool EnemyMng::IsHit(const int & ColCircle, const double & ColX, const double & ColY, const int & Damage)
 {
-	if (enemy == nullptr)
-		return false;
-
 	bool isHit;
 
-	for (int i = 0; i < e_num; i++)
+	for (auto i : enemy)
 	{
-		isHit = enemy[i]->IsHit(ColCircle, ColX, ColY, Damage);
-
-		if (isHit)	return isHit;
+		isHit = i->IsHit(ColCircle, ColX, ColY, Damage);
+		if (isHit)	return true;
 	}
 
 	// ここまで来たということは当たっていないということ
@@ -250,4 +264,39 @@ bool EnemyMng::IsHit(const int & ColCircle, const double & ColX, const double & 
 
 *********************************************/
 
-// EOF
+
+
+/*
+@brief	敵管理インターフェイス
+*/
+std::shared_ptr<EnemyMng> IEnemyMng::mEnemyMng;
+
+
+void IEnemyMng::set(std::shared_ptr<EnemyMng> enemyMng)
+{
+	mEnemyMng = enemyMng;
+}
+
+
+void IEnemyMng::Load(eStage stage)
+{
+	mEnemyMng->Load(stage);
+}
+
+
+void IEnemyMng::CountDownEneNum()
+{
+	mEnemyMng->CountDownEneNum();
+}
+
+
+bool IEnemyMng::IsHit(const double & ColX, const double & ColY, const int & DAMAGE)
+{
+	return mEnemyMng->IsHit(ColX, ColY, DAMAGE);
+}
+
+
+bool IEnemyMng::IsHit(const int & ColCircle, const double & ColX, const double & ColY, const int & Damage)
+{
+	return mEnemyMng->IsHit(ColCircle, ColX, ColY, Damage);
+}

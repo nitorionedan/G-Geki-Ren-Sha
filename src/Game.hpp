@@ -3,7 +3,7 @@
 #include "BaseScene.hpp"
 #include "ISceneChanger.hpp"
 
-#include "Score.hpp"
+#include "IScore.hpp"
 #include "Graphic.hpp"
 #include "Stage.hpp"
 #include "StatusBoard.hpp"
@@ -44,20 +44,17 @@ class Game : public BaseScene
 public:
 	Game::Game(ISceneChanger* changer);
 	~Game();
+	void Initialize();
 	void Update() override;     //更新処理をオーバーライド
 	void Draw() override;       //描画処理をオーバーライド
 	void GetPlayerPosition(double* x, double* y){}
 	void GetEnemyPosition(int index, double *x, double *y){}
 
-	static void AddScore(const int& point);
-	static void PlayQuake();
-	static void LoadEnemy(eStage stage);
 	static void Pause();
 	static void ItemDrop(double PosX, double PosY);
 	static void ItemDrop(double PosX, double PosY, eItem_type type);
 	static void StageCall();
 	static void GameOver();
-	static void StartBoss();
 	static bool IsPause();
 
 	// @brief	自機の円と他の点の当たり判定
@@ -74,10 +71,6 @@ private:
 	void Draw_StageMsg();
 	void Draw_Status();
 
-	static Score* score;
-	static Stage* stage;
-	static BossChara* boss;
-	static EnemyMng* enemyMng;
 	static ItemMng*	itemMng;
 	static bool f_pause;
 	static bool isMsg;
@@ -90,6 +83,9 @@ private:
 	std::shared_ptr<Pshot> pshot;
 	std::shared_ptr<Effector> effector;
 	std::shared_ptr<Bomb> bomb;
-
+	std::shared_ptr<Score> score;
+	std::shared_ptr<Stage> stage;
+	std::shared_ptr<BossChara> boss;
+	std::shared_ptr<EnemyMng> enemyMng;
 	// TEST
 };

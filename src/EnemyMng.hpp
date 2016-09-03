@@ -6,7 +6,7 @@
 #include "BossShotMgr.hpp"
 #include "BossChara.hpp"
 #include <vector>
-
+#include <string>
 
 struct tEnemyData
 {
@@ -44,9 +44,10 @@ public:
 	bool IsHit(const int& ColCircle, const double& ColX, const double& ColY, const int& Damage);
 
 private:
+	void GetAllEnemyNum(int* enemyNum, std::string fileName);
+
 	//std::vector<std::shared_ptr<Enemy>> enemy;				// G‹›“G
 	std::vector<Enemy*> enemy;									// G‹›“G
-
 	std::shared_ptr<BossShotMgr> bossShot;
 	std::shared_ptr<BossChara> mBoss;
 	int enemyCount;							// ¶‚«c‚Á‚Ä‚¢‚é“G‚Ì”

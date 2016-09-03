@@ -59,7 +59,8 @@ void Stage::StageSet(eStage estage)
 	// ‚Ü‚¸‘fŞ—p‚Ìƒƒ‚ƒŠ‚ğŠJ•ú‚µ‚Ü‚·
 	for (int &Gr_Handle : hg)
 	{
-		if(Gr_Handle != NULL)	DeleteGraph(Gr_Handle);
+		if(Gr_Handle != NULL)
+			DeleteGraph(Gr_Handle);
 	}
 
 	if (hs_bgm != NULL)	DeleteSoundMem(hs_bgm);
@@ -126,8 +127,10 @@ void Stage::Update()
 
 void Stage::Draw()
 {
-	for (auto &back : stage_back)	DrawRasterScroll(back.x, back.y, cycle, shake, hg[eBG_back], false);
-	for (auto &front : stage_fro)	DrawRasterScroll(front.x, front.y, cycle, shake, hg[eBG_front], false);
+	for (auto &back : stage_back)
+		DrawRasterScroll( (int)std::ceil(back.x), (int)std::ceil(back.y), cycle, shake, hg[eBG_back], false );
+	for (auto &front : stage_fro)
+		DrawRasterScroll( (int)std::ceil(front.x), (int)std::ceil(front.y), cycle, shake, hg[eBG_front], false );
 
 	// TEST -------------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
@@ -160,7 +163,7 @@ void Stage::Move()
 		front.y = static_cast<double>(WrapPos(static_cast<int>(front.y), 720, -240));
 	}
 
-	Quake();	// ‚Ô‚é‚Ô‚é
+	Quake();
 }
 
 
@@ -238,14 +241,10 @@ void Stage::Quake()
 	if (!c_quake->isLast()) return;		// U“®’â~
 
 	for (auto &back : stage_back)
-	{
 		back.x = 320.;
-	}
 	
 	for (auto &front : stage_fro)
-	{
 		front.x = 320.;
-	}
 	
 	c_quake->Reset();
 	f_quake = false;	// U“®‚ğ‚â‚ß‚é
@@ -254,12 +253,9 @@ void Stage::Quake()
 
 int Stage::WrapPos(int val, int max, int min)
 {
-	if (max <= min)
-	{
-		printfDx("ERROR : max < min");
-		return -1;
-	}
-	const int offset = (val - min) % (max - min);
+	assert(max > min && "Stage::WrapPos()");
+
+	const int& offset = (val - min) % (max - min);
 	return (offset >= 0) ? (offset + min) : (offset + max);
 }
 
@@ -281,7 +277,6 @@ void IStage::set(std::shared_ptr<Stage> stage)
 }
 
 
-void IStage::Load(eStage stage)
-{
-	mStage->StageSet(stage);
+void IStage::Load(){
+	mStage->StageSet( mStage->GetNowStage() );
 }

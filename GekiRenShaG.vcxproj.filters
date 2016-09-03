@@ -335,9 +335,6 @@
     <ClInclude Include="src\Graphic.hpp">
       <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
-    <ClInclude Include="src\Range.hpp">
-      <Filter>ヘッダー ファイル\System</Filter>
-    </ClInclude>
     <ClInclude Include="src\Vector2D.hpp">
       <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>

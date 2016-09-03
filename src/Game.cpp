@@ -3,6 +3,7 @@
 #include "DebugMode.hpp"
 #include "NullEnemyShot.hpp"
 #include "NullBoss.hpp"
+#include <cassert>
 
 
 bool Game::isMsg;
@@ -50,8 +51,8 @@ Game::~Game()
 
 void Game::Initialize()
 {
-	IEnemyMng::Load(eStage::stage1);
-	IStage::Load(eStage::stage1);
+	IEnemyMng::Load(IStage::GetNowStage());
+	IStage::Load();
 
 	f_pause = false;
 	isMsg = false;
@@ -182,7 +183,7 @@ void Game::Draw_StageMsg()
 	const int&    X_MSG = 290, Y_MSG = 240, SPACE_MSG = 16;
 	const double& EXRATE_MSG = 2.0;
 
-	switch (stage->nowStage)
+	switch (IStage::GetNowStage())
 	{
 	case eStage::stage1:	graphic->DrawMyString2(X_MSG - 20, Y_MSG, "OPENING!", SPACE_MSG, true, EXRATE_MSG);	break;
 	case eStage::stage2:	graphic->DrawMyString2(X_MSG, Y_MSG, "STAGE 2", SPACE_MSG, true, EXRATE_MSG);	break;

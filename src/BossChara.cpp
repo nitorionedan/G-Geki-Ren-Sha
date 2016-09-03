@@ -46,7 +46,7 @@ void BossChara::Start(eBoss_num num)
 	case eBoss_F:		break;
 	case eBoss_G:		break;
 	case eBoss_None:	mBoss = new NullBoss;	break;
-	default:			assert("BossChara::Start()");
+	default:			assert(!"BossChara::Start()");
 	}
 }
 

@@ -377,7 +377,7 @@ void Player::Rensha_Update()
 	case 2:	if (Stage::GetTime() % 12 == 0)	rensha--;	break;
 	case 3: if (Stage::GetTime() % 11 == 0)	rensha--;	break;
 	case 4: if (Stage::GetTime() % 10 == 0)	rensha--;	break;
-	default: assert("Player::Rensha_Update()");
+	default: assert(!"Player::Rensha_Update()");
 	}
 
 	/* シフトチェンジ判定 */

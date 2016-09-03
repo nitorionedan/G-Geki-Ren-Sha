@@ -1,11 +1,12 @@
 #include "DxLib.h"
 
 #include "Texture.hpp"
-
+#include <cassert>
 
 Texture::Texture(char * fileName)
 {
-	LoadGraph(fileName);
+	int tmp = LoadGraph(fileName);
+	assert(tmp != -1 && tmp != 0 && "Texture::Texture()");
 }
 
 

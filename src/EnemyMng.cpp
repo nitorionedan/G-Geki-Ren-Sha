@@ -30,13 +30,11 @@ void EnemyMng::Load(eStage stage)
 {
 	assert(stage == eStage::stage1 && "[EnemyMng::Load]Å@Sorry, I haven't been implement this stage XD\n");
 
-	// File name: Enemys table.
-	std::string fname;
-
 	if (!enemy.empty())
 		Finalize();
 
 	// Load enemys table.
+	std::string fname;
 	switch (stage)
 	{
 	case eStage::stage1: fname = "data/EnemyTable1.csv"; break;
@@ -46,25 +44,11 @@ void EnemyMng::Load(eStage stage)
 	case eStage::stage5: fname = "data/EnemyTable5.csv"; break;
 	case eStage::stage6: fname = "data/EnemyTable6.csv"; break;
 	case eStage::stage0: fname = "data/EnemyTable0.csv"; break;
-	default:	assert("EnemyMng::Load() : over of range");
+	default:	assert(!"EnemyMng::Load() : over of range");
 	}
 
 	/* count enemys num */
-	enemyCount = 0;
-	std::ifstream ifs_count(fname, std::ios::in);
-	assert(ifs_count.is_open() && "EnemyMng::Load()");
-	
-	while (!ifs_count.eof())
-	{
-		char tmp = ifs_count.get();
-		if (tmp == '\n')
-			enemyCount++;
-	}
-	enemyCount--;	// adjust enemy num
-
-	printfDx("%d\n", enemyCount);
-
-	ifs_count.close();
+	GetAllEnemyNum(&enemyCount, fname);
 
 	/* Create enemys data */
 	tEnemyData* ene_date;
@@ -191,10 +175,7 @@ void EnemyMng::CountDownEneNum()
 	enemyCount--;
 
 	if (enemyCount == 0)
-	{
-		BossStart(eStage::stage1);
-		printfDx("Ç≈Ç‹ÇµÇΩ\n");
-	}
+		BossStart(IStage::GetNowStage());
 }
 
 
@@ -224,7 +205,7 @@ void EnemyMng::BossStart(eStage stage)
 	
 	case eStage::stage0:
 		break;
-	default:	assert("EnemyMng::BossStart()");
+	default:	assert(!"EnemyMng::BossStart()");
 	}
 
 }
@@ -257,6 +238,23 @@ bool EnemyMng::IsHit(const int & ColCircle, const double & ColX, const double & 
 
 	// Ç±Ç±Ç‹Ç≈óàÇΩÇ∆Ç¢Ç§Ç±Ç∆ÇÕìñÇΩÇ¡ÇƒÇ¢Ç»Ç¢Ç∆Ç¢Ç§Ç±Ç∆
 	return false;
+}
+
+
+void EnemyMng::GetAllEnemyNum(int * enemyNum, std::string fileName)
+{
+	(*enemyNum) = 0;
+	std::ifstream ifs(fileName, std::ios::in);
+
+	while (!ifs.eof())
+	{
+		char tmp = ifs.get();
+		if (tmp == '\n')
+			(*enemyNum)++;
+	}
+	(*enemyNum)--;	// adjust enemy num
+
+	ifs.close();
 }
 
 

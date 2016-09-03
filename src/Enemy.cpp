@@ -420,7 +420,10 @@ void Enemy::Move_0()
 	if (IS_OUT)
 	{
 		if (pos.y <= -40)
+		{
 			isExist = false;
+			IEnemyMng::CountDownEneNum();
+		}
 	}
 }
 
@@ -436,7 +439,10 @@ void Enemy::Move_1()
 	AngleTarget(IPlayer::GetPos().x, IPlayer::GetPos().y);
 
 	if (pos.y > 490.)
+	{
 		isExist = false;
+		IEnemyMng::CountDownEneNum();
+	}
 }
 
 
@@ -448,7 +454,10 @@ void Enemy::Move_2()
 	pos.y += vspeed_y;
 
 	if (pos.y > 490.)
+	{
 		isExist = false;
+		IEnemyMng::CountDownEneNum();
+	}
 }
 
 
@@ -474,7 +483,10 @@ void Enemy::Move_4()
 	pos.x += vspeed_x * std::cos(c_move);
 
 	if (pos.y > 490.)
+	{
 		isExist = false;
+		IEnemyMng::CountDownEneNum();
+	}
 }
 
 
@@ -684,14 +696,14 @@ void Enemy::Damage(int damage)
 
 		if (pos.y < 0)
 		{
-			Game::ItemDrop(pos.x, pos.y + 60., eItem_B);
-			Game::ItemDrop(pos.x, pos.y + 60., eItem_P);
-			Game::ItemDrop(pos.x, pos.y + 60., eItem_S);
+			IItemMng::Create(Vector2D(pos.x, pos.y + 60), eItem::Bomber);
+			IItemMng::Create(Vector2D(pos.x, pos.y + 60), eItem::Power);
+			IItemMng::Create(Vector2D(pos.x, pos.y + 60), eItem::Shield);
 		}
 		else {
-			Game::ItemDrop(pos.x, pos.y + 20., eItem_B);
-			Game::ItemDrop(pos.x, pos.y + 20., eItem_P);
-			Game::ItemDrop(pos.x, pos.y + 20., eItem_S);
+			IItemMng::Create(Vector2D(pos.x, pos.y + 20), eItem::Bomber);
+			IItemMng::Create(Vector2D(pos.x, pos.y + 20), eItem::Power);
+			IItemMng::Create(Vector2D(pos.x, pos.y + 20), eItem::Shield);
 		}
 		break;
 
@@ -712,7 +724,6 @@ void Enemy::Damage(int damage)
 
 void Enemy::ItemDrop()
 {
-	// 1 / 25の確率でアイテムをランダムドロップ
-	int rand = GetRand(100);
-	if (rand < DROP_RATE)	Game::ItemDrop(pos.x, pos.y, eItem_P);
+	int rate = 100;
+	if (GetRand(rate--) < DROP_RATE)	IItemMng::Create(pos, eItem::Power);
 }

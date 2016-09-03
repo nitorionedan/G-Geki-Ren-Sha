@@ -1,15 +1,9 @@
-#include <DxLib.h>
 
+#include <DxLib.h>
 #include "Bomb.hpp"
-#include "Game.hpp"
 #include "EnemyMng.hpp"
 #include "IScore.hpp"
-
-
-static const int EFFECT_NUM = 10;
-
-BombEffect Bomb::effect[EFFECT_NUM];
-Vector2D Bomb::pos;
+#include <cassert>
 
 
 Bomb::Bomb()
@@ -18,7 +12,7 @@ Bomb::Bomb()
 {
 	sh = LoadSoundMem("SOUND/SE/danmatu.wav");
 
-	pos.SetVec(0., 0.);
+	pos = Vector2D::ZERO;
 	for (int i = 0; i < EFFECT_NUM; i++)
 	{
 		effect[i].rad = 0;
@@ -59,7 +53,6 @@ void Bomb::Draw()
 
 void Bomb::SetParam(Vector2D& pos, int& shiftLevel, int& bombNum)
 {
-	playerPos = pos;
 	this->shiftLevel = shiftLevel;
 	this->bombNum = bombNum;
 }
@@ -71,9 +64,9 @@ void Bomb::Fire()
 	if (bombNum == 0)	return;
 
 	isBomb = true;
-	// Game::DownBombNum();
-	// Game::ShiftReset();
-	pos.SetVec(playerPos.x, playerPos.y);
+	IPlayer::DownBombNum();
+	///IPlayer::ShiftReset();		// << パワーリセットしたいならはずす
+	pos = IPlayer::GetPos();
 
 	switch (shiftLevel)
 	{
@@ -165,4 +158,13 @@ void Bomb::MoveEffect()
 	}
 }
 
-// EOF
+
+// ============================================================
+std::shared_ptr<Bomb> IBomb::mBomb;
+
+
+void IBomb::set(std::shared_ptr<Bomb> bomb)
+{
+	mBomb = bomb;
+	assert(mBomb != nullptr && "IBomb::set()");
+}

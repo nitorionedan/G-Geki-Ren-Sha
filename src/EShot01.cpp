@@ -2,9 +2,9 @@
 
 #include "EShot01.hpp"
 #include "Graphics2D.hpp"
-#include "Game.hpp"
 #include "Shot.hpp"
 #include "DebugMode.hpp"
+#include "HitEffect.hpp"
 
 #include <cmath>
 
@@ -106,7 +106,11 @@ void EShot01::Move(const int & id)
 		pos[id].x, pos[id].y, IPlayer::GetPos().x, IPlayer::GetPos().y);
 
 	// “–‚½‚Á‚½‚çÁ‚·
-	if (IS_HIT)	isExist[id] = false;
+	if (IS_HIT)
+	{
+		isExist[id] = false;
+		IHitEffect::PlayAnime(pos[id]);
+	}
 
 	// ‰æ–ÊŠO‚ÅÁ‚·
 	if (Shot::SC_LIMIT_XL > pos[id].x ||

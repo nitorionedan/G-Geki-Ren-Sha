@@ -719,7 +719,7 @@ void Pshot::HitCheck()
 	for(auto& shot : Ashot)
 	{
 		if (!shot->f_exist)	continue;
-		const bool& IS_HIT = (Game::IsHitBoss(shot->x_pos, shot->y_pos, shot->atk) ||
+		const bool& IS_HIT = (IBossChara::HitCheck(shot->x_pos, shot->y_pos, shot->atk) ||
 							  IEnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk));
 		if (IS_HIT)	shot->f_exist = false;
 		if (IS_HIT)	PlaySoundMem(hs_hit, DX_PLAYTYPE_BACK);
@@ -729,7 +729,7 @@ void Pshot::HitCheck()
 	for (auto &shot : Bshot)
 	{
 		if (!shot->f_exist)	continue;
-		const bool& IS_HIT = (Game::IsHitBoss(shot->x_pos, shot->y_pos, shot->atk) ||
+		const bool& IS_HIT = (IBossChara::HitCheck(shot->x_pos, shot->y_pos, shot->atk) ||
 							  IEnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk));
 		if (IS_HIT)	shot->f_exist = false;
 		if (IS_HIT)	PlaySoundMem(hs_hit, DX_PLAYTYPE_BACK);
@@ -739,7 +739,7 @@ void Pshot::HitCheck()
 	for (auto &shot : Cshot)
 	{
 		if (!shot->f_exist)	continue;
-		const bool& IS_HIT = (Game::IsHitBoss(shot->x_pos, shot->y_pos, shot->atk) ||
+		const bool& IS_HIT = (IBossChara::HitCheck(shot->x_pos, shot->y_pos, shot->atk) ||
 							  IEnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk));
 		if (IS_HIT)	shot->f_exist = false;
 		if (IS_HIT)	PlaySoundMem(hs_hit, DX_PLAYTYPE_BACK);

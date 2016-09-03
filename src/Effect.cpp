@@ -32,4 +32,3 @@ void Effect::Draw(){
 void Effect::PlayAnime(const double & MyX, const double & MyY){
 	mEFTask->PlayAnime(MyX, MyY);
 }
-// EOF

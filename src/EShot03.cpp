@@ -2,9 +2,10 @@
 
 #include "EShot03.hpp"
 #include "DebugMode.hpp"
-#include "Game.hpp"
+#include "Shot.hpp"
 #include "HitEffect.hpp"
 #include "Graphics2D.hpp"
+#include "Effector.hpp"
 
 #include <cmath>
 
@@ -110,10 +111,11 @@ void EShot03::Move(const int & id)
 	// 当たり判定チェック
 	const bool& IS_HIT = Vector2D::CirclesCollision(HIT_RANGE, Player::HIT_RANGE,
 		pos[id].x, pos[id].y, IPlayer::GetPos().x, IPlayer::GetPos().y);
-	const bool& IS_HIT2 = Bomb::IsHit(HIT_RANGE, pos[id].x, pos[id].y);
+	const bool& IS_HIT2 = IBomb::IsHit(HIT_RANGE, pos[id].x, pos[id].y);
 
 	// 当たっら爆発
-	if (IS_HIT)	Effector::PlayAnime(pos[id].x, pos[id].y, eExplosion_small);
+	if (IS_HIT)
+		Effector::PlayAnime(pos[id].x, pos[id].y, eExplosion_small);
 
 	// 画面外で消す
 	if (Shot::SC_LIMIT_XL > pos[id].x ||

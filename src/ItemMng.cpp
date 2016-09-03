@@ -4,6 +4,7 @@
 #include "DebugMode.hpp"
 #include "Game.hpp"
 #include <cmath>
+#include <cassert>
 
 
 ItemMng::ItemMng()
@@ -63,11 +64,11 @@ void ItemMng::Draw()
 
 		switch (type[i])
 		{
-		case eItem_B:
+		case Bomber:
 			DrawAnime(pos[i].x, pos[i].y, 0.0, time[i], sizeof(gh_b) / sizeof(gh_b[0]), 3, gh_b);	break;
-		case eItem_P:
+		case Power:
 			DrawAnime(pos[i].x, pos[i].y, 0.0, time[i], sizeof(gh_p) / sizeof(gh_p[0]), 3, gh_p);	break;
-		case eItem_S:
+		case Shield:
 			DrawAnime(pos[i].x, pos[i].y, 0.0, time[i], sizeof(gh_s) / sizeof(gh_s[0]), 3, gh_s);	break;
 
 		default:
@@ -90,14 +91,14 @@ void ItemMng::Create(double PosX, double PosY)
 		Reset(PosX, PosY, i);
 
 		// ƒAƒCƒeƒ€‚ÌŽí—Þ‚ðŒˆ‚ß‚é
-		type[i] = static_cast<eItem_type>( GetRand(2) );
+		type[i] = static_cast<eItem>( GetRand(2) );
 
 		break;
 	}
 }
 
 
-void ItemMng::Create(double PosX, double PosY, eItem_type type)
+void ItemMng::Create(double PosX, double PosY, eItem type)
 {
 	for (int i = 0; i < NUM; i++)
 	{
@@ -141,15 +142,15 @@ void ItemMng::HitCheck(const int& id, std::shared_ptr<Player> player)
 	{
 		switch (type[id])
 		{
-		case eItem_B:
+		case Bomber:
 			player->AddBomb();
 			PlaySoundMem(sh_get, DX_PLAYTYPE_BACK);
 			break;
-		case eItem_P:
+		case Power:
 			player->Shift(true);
 			PlaySoundMem(sh_get, DX_PLAYTYPE_BACK);
 			break;
-		case eItem_S:
+		case Shield:
 			player->SetArm();
 			PlaySoundMem(sh_get, DX_PLAYTYPE_BACK);
 			break;
@@ -173,4 +174,16 @@ void ItemMng::Reset(double PosX, double PosY, int id)
 	vel[id].y = GetRand(1) + 2.;
 //	vang[id] = std::cos(GetRand(100));
 	vang[id] = GetRand(200) - 100;
+}
+
+
+
+// =======================================================
+std::shared_ptr<ItemMng> IItemMng::mItemMng;
+
+
+void IItemMng::set(std::shared_ptr<ItemMng> itemMng)
+{
+	mItemMng = itemMng;
+	assert(mItemMng != nullptr && "IItemMng::set()");
 }

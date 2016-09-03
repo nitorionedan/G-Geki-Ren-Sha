@@ -2,7 +2,7 @@
 
 #include "EShot04.hpp"
 #include "Graphics2D.hpp"
-#include "Game.hpp"
+#include "Shot.hpp"
 #include "DebugMode.hpp"
 #include "Bomb.hpp"
 #include "HitEffect.hpp"
@@ -110,10 +110,14 @@ void EShot04::Move(const int & id)
 	const bool& IS_HIT = Vector2D::CirclesCollision(HIT_RANGE, Player::HIT_RANGE,
 		pos[id].x, pos[id].y, IPlayer::GetPos().x, IPlayer::GetPos().y);
 
-	const bool& IS_HIT2 = Bomb::IsHit(HIT_RANGE, pos[id].x, pos[id].y);
+	const bool& IS_HIT2 = IBomb::IsHit(HIT_RANGE, pos[id].x, pos[id].y);
 
 	// “–‚½‚Á‚½‚çÁ‚·
-	if (IS_HIT || IS_HIT2)	isExist[id] = false;
+	if (IS_HIT || IS_HIT2)
+	{
+		isExist[id] = false;
+		IHitEffect::PlayAnime(pos[id]);
+	}
 
 	// ‰æ–ÊŠO‚ÅÁ‚·
 	if (Shot::SC_LIMIT_XL > pos[id].x ||

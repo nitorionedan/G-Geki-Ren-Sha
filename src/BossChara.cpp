@@ -49,3 +49,19 @@ void BossChara::Start(eBoss_num num)
 	default:			assert("BossChara::Start()");
 	}
 }
+
+
+//===================================================================
+std::shared_ptr<BossChara> IBossChara::mBossChara;
+
+
+void IBossChara::set(std::shared_ptr<BossChara> bossChara)
+{
+	mBossChara = bossChara;
+	assert(mBossChara != nullptr && "IBossChara::set()");
+}
+
+
+bool IBossChara::HitCheck(const double & ColX, const double & ColY, const int & DamagePoint){
+	return mBossChara->HitCheck(ColX, ColY, DamagePoint);
+}

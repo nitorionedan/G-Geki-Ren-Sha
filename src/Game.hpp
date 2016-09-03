@@ -9,11 +9,12 @@
 #include "StatusBoard.hpp"
 #include "Vector2D.hpp"
 #include "ItemMng.hpp"
+#include "Bomb.hpp"
+
 
 /* player */
 #include "Player.hpp"
 #include "Pshot.hpp"
-#include "Bomb.hpp"
 
 /* enemy */
 #include "BossA.hpp"
@@ -24,6 +25,7 @@
 /* other */
 #include "Effector.hpp"
 #include "Graphics2D.hpp"
+#include "HitEffect.hpp"
 
 #include <memory>
 #include <array>
@@ -51,28 +53,16 @@ public:
 	void GetEnemyPosition(int index, double *x, double *y){}
 	void Pause();
 
-	static void ItemDrop(double PosX, double PosY);
-	static void ItemDrop(double PosX, double PosY, eItem_type type);
 	static void StageCall();
 	static void GameOver();
 	const bool IsPause() const {
 		return f_pause;
 	}
 
-	// @brief	Ž©‹@‚Ì‰~‚Æ‘¼‚Ì“_‚Ì“–‚½‚è”»’è
-	bool IsHitPlayer(const double& myX, const double& myY);
-
-	// @brief	Ž©‹@‚Ì‰~‚Æ‘¼‚Ì‰~‚Ì“–‚½‚è”»’è
-	bool IsHitPlayer(const double& Range1, const double& Range2,
-		const double & X1, const double& Y1, const double& X2, const double& Y2);
-
-	static bool IsHitBoss(const double& myX, const double& myY, int& dmgPoint);
-
 private:
 	void Draw_StageMsg();
 	void Draw_Status();
 
-	static ItemMng*	itemMng;
 	static bool isMsg;
 	static bool isDead;
 
@@ -87,6 +77,8 @@ private:
 	std::shared_ptr<Stage> stage;
 	std::shared_ptr<BossChara> boss;
 	std::shared_ptr<EnemyMng> enemyMng;
+	std::shared_ptr<ItemMng> itemMng;
+	std::shared_ptr<HitEffect> hitEffect;
 	
 	bool f_pause;
 };

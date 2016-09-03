@@ -26,11 +26,9 @@ const float BossA::HIT_RANGE   = 60.f;
 const int BossA::MAX_HP        = 3000; // 4000
 
 eBossA_state BossA::state;
-VECTOR BossA::pos;
 int BossA::hp;
 int BossA::time;
 int BossA::hs_break;
-bool BossA::isDead;
 bool BossA::isExist;
 bool BossA::isHit;
 bool BossA::isWeak;
@@ -67,12 +65,12 @@ BossA::BossA()
 	MV1SetScale(hm, VGet(13.0f, 13.0f, 13.0f));	// ÉÇÉfÉãägëÂ
 
 	// static -----------------------------------------------------
+	pos = Vector2D::ZERO;
 	state = eBossA_Start;
 	hp = MAX_HP;
 	time   = 0;
 	pos.x	 = 400.0f;
 	pos.y	 = -100.0f;
-	pos.z	 = 0.0f;
 	isExist = true;
 	isHit  = false;
 	isDead   = false;
@@ -193,9 +191,6 @@ void BossA::Draw()
 int BossA::GetTime() { return time; }
 
 
-bool BossA::IsDead() { return isDead; }
-
-
 bool BossA::HitCheck(const double & ColX, const double & ColY, const int& DamagePoint)
 {
 	if (!isExist)	return false;
@@ -212,9 +207,6 @@ bool BossA::HitCheck(const double & ColX, const double & ColY, const int& Damage
 
 	return IS_HIT ? true : false;
 }
-
-
-VECTOR BossA::GetPos() { return pos; }
 
 
 void BossA::ChangeState(eBossA_state state_) { state = state_; }
@@ -348,7 +340,7 @@ bool BossA::isFine(){
 
 void BossA::HitCheck()
 {
-	const bool& IS_HIT = Bomb::IsHit(HIT_RANGE, pos.x, pos.y);
+	const bool& IS_HIT = IBomb::IsHit(HIT_RANGE, pos.x, pos.y);
 
 
 	if(IS_HIT && isWeak)
@@ -366,8 +358,8 @@ bool BossA::isOverLimit()
 	// âÊñ äOÇ…èoÇƒÇµÇ‹Ç¡ÇΩÇÁ
 	if (IS_OUT)
 	{
-		pos.x = std::min(std::max(pos.x, SC_LIMIT_XL), SC_LIMIT_XR);
-		pos.y = std::min(std::max(pos.y, SC_LIMIT_YT), SC_LIMIT_YB);
+		pos.x = std::min(std::max((float)pos.x, SC_LIMIT_XL), SC_LIMIT_XR);
+		pos.y = std::min(std::max((float)pos.y, SC_LIMIT_YT), SC_LIMIT_YB);
 	}
 
 	return IS_OUT;

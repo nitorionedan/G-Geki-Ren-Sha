@@ -191,7 +191,10 @@ void EnemyMng::CountDownEneNum()
 	enemyCount--;
 
 	if (enemyCount == 0)
+	{
 		BossStart(eStage::stage1);
+		printfDx("‚Å‚Ü‚µ‚½\n");
+	}
 }
 
 

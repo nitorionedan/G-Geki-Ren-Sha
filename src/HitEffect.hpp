@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Task.hpp"
 #include "Counter.hpp"
 #include "Vector2D.hpp"
 #include "EffectTask.hpp"
 
 #include <array>
+#include <memory>
 
 
 class HitEffect : public EffectTask
@@ -24,4 +24,19 @@ private:
 	std::array<double, 100> angle;
 	std::array<double, 100> exrate;
 	int gh_hit[4];
+};
+
+
+class IHitEffect 
+{
+public:
+	~IHitEffect() {}
+	static void set(std::shared_ptr<HitEffect> hitEffect);
+	static void PlayAnime(Vector2D& pos) {
+		mHitEffect->PlayAnime(pos.x, pos.y);
+	}
+
+private:
+	IHitEffect() { mHitEffect = nullptr; }
+	static std::shared_ptr<HitEffect> mHitEffect;
 };

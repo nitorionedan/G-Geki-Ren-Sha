@@ -2,7 +2,6 @@
 
 #include "ShotTask.hpp"
 #include "Vector2D.hpp"
-#include "Effect.hpp"
 
 #include <array>
 #include <memory>
@@ -47,7 +46,6 @@ private:
 	static const int ALL_NUM = 9;
 
 	int gh[12];
-	std::unique_ptr<Effect>	effect;
 	std::array<int, ALL_NUM> time;			// Œo‰ßŠÔ
 	std::array<Vector2D, ALL_NUM> pos;		// À•W
 	std::array<double, ALL_NUM> vspeed;		// ’e‚Ì‘¬‚³

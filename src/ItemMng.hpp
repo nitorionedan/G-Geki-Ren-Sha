@@ -5,11 +5,11 @@
 #include <array>
 
 
-enum eItem_type
+enum eItem
 {
-	eItem_B,
-	eItem_P,
-	eItem_S,
+	Bomber,
+	Power,
+	Shield,
 };
 
 
@@ -25,7 +25,7 @@ public:
 	void Create(double PosX, double PosY);
 
 	// @brief	アイテム指定ドロップ
-	void Create(double PosX, double PosY, eItem_type type);
+	void Create(double PosX, double PosY, eItem type);
 
 	static const int NUM = 10;
 
@@ -46,7 +46,7 @@ private:
 		gh_s[32];
 	int sh_get;
 
-	std::array<eItem_type, NUM> type;
+	std::array<eItem, NUM> type;
 	std::array<Vector2D, NUM> pos;
 	std::array<Vector2D, NUM> dir;
 	std::array<Vector2D, NUM> vel;
@@ -54,4 +54,23 @@ private:
 	std::array<double, NUM> vang;
 	std::array<bool, NUM> isExist;
 	std::array<bool, NUM> isDeleting;
+};
+
+
+class IItemMng 
+{
+public:
+	~IItemMng(){}
+	static void set(std::shared_ptr<ItemMng> itemMng);
+	static void Create(Vector2D pos) {
+		mItemMng->Create(pos.x, pos.y);
+	}
+	static void Create(Vector2D pos, eItem type) {
+		mItemMng->Create(pos.x, pos.y, type);
+	}
+
+private:
+	IItemMng() { mItemMng = nullptr; }
+
+	static std::shared_ptr<ItemMng> mItemMng;
 };

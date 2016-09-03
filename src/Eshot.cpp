@@ -1,12 +1,10 @@
-#include "DxLib.h"
-
+#include <DxLib.h>
 #include "Eshot.hpp"
-#include "BossA.hpp"
+#include "BossChara.hpp"
 #include "DebugMode.hpp"
 #include "Game.hpp"
 #include "Bomb.hpp"
 #include "HitEffect.hpp"
-
 #include <cmath>
 
 
@@ -48,7 +46,7 @@ Eshot::Eshot()
 
 Eshot::~Eshot()
 {
-	for (auto &shot : shotA)	delete shot;
+	for (auto &shot : shotA) delete shot;
 	DeleteGraph(hg_shotA);
 	DeleteGraph(hg_fireA);
 	DeleteSoundMem(hs_shotA);
@@ -73,7 +71,7 @@ void Eshot::Draw()
 	// 発射光
 	if (c_fire1->Remainder(A_INTERVAL) == 0 &&
 		s_isFire1 &&
-		!BossA::IsDead())
+		!IBossChara::IsDead())
 	{
 		DrawRotaGraph(x_fireA[0], y_fireA[0], 2.0, 0.0, hg_fireA, true);
 		DrawRotaGraph(x_fireA[1], y_fireA[1], 2.0, 0.0, hg_fireA, true);
@@ -118,13 +116,13 @@ void Eshot::Draw()
 
 void Eshot::SetFirePos()
 {
-	if (BossA::IsDead())	return; // 死んでいるならスルー
+	if (IBossChara::IsDead())	return; // 死んでいるならスルー
 
 	for(auto &shot : shotA)
 	{
 		if (shot->f_exist)	continue;
-		shot->x_pos = BossA::GetPos().x;
-		shot->y_pos = BossA::GetPos().y;
+		shot->x_pos = IBossChara::GetPos().x;
+		shot->y_pos = IBossChara::GetPos().y;
 	}
 }
 
@@ -132,14 +130,12 @@ void Eshot::SetFirePos()
 void Eshot::Fire()
 {
 	// 死んでいるならここで返す
-	if (BossA::IsDead())	return;						
+	if (IBossChara::IsDead())	return;						
 	
 	// 発射準備が整っていないならここで返す
 	if (s_isFire1 == false)	return;						
 
-
-	const bool IS_FIRE_FINISH = (loopCount > A_FIRE_NUM);
-
+	const bool& IS_FIRE_FINISH = (loopCount > A_FIRE_NUM);
 
 	// --------------------------------------------------------------------------------------------------------
 	if (atkState == eAttackState::Atk1)
@@ -162,14 +158,13 @@ void Eshot::Fire()
 
 			// 撃った弾の数を数える
 			shotCount++;
-
 			switch (shotCount)
 			{
 			case 1:
 				shotA[i]->f_exist = true;
 				shotA[i]->angle = loopCount * (-A_BASE_ANGLE / 4.0);			// 約22.5°ずつ
-				shotA[i]->x_pos = BossA::GetPos().x + std::cos(shotA[i]->angle) * 60.;
-				shotA[i]->y_pos = BossA::GetPos().y + std::sin(shotA[i]->angle) * 60.;
+				shotA[i]->x_pos = IBossChara::GetPos().x + std::cos(shotA[i]->angle) * 60.;
+				shotA[i]->y_pos = IBossChara::GetPos().y + std::sin(shotA[i]->angle) * 60.;
 				x_fireA[0] = shotA[i]->x_pos;
 				y_fireA[0] = shotA[i]->y_pos;
 				PlaySoundMem(hs_shotA, DX_PLAYTYPE_BACK);
@@ -178,8 +173,8 @@ void Eshot::Fire()
 			case 2:
 				shotA[i]->f_exist = true;
 				shotA[i]->angle = DX_PI + loopCount * (-A_BASE_ANGLE / 4.0);	// 反対側から約22.5°ずつ
-				shotA[i]->x_pos = BossA::GetPos().x + std::cos(shotA[i]->angle) * 60.;
-				shotA[i]->y_pos = BossA::GetPos().y + std::sin(shotA[i]->angle) * 60.;
+				shotA[i]->x_pos = IBossChara::GetPos().x + std::cos(shotA[i]->angle) * 60.;
+				shotA[i]->y_pos = IBossChara::GetPos().y + std::sin(shotA[i]->angle) * 60.;
 				x_fireA[1] = shotA[i]->x_pos;
 				y_fireA[1] = shotA[i]->y_pos;
 
@@ -207,7 +202,7 @@ void Eshot::Move(const Player& player)
 
 		const bool& IS_HIT = Vector2D::CirclesCollision(HIT_RANGE, Player::HIT_RANGE,
 							shot->x_pos, shot->y_pos, player.GetPos().x, player.GetPos().y);
-		const bool& IS_HIT2 = Bomb::IsHit(4, shot->x_pos, shot->y_pos);
+		const bool& IS_HIT2 = IBomb::IsHit(4, shot->x_pos, shot->y_pos);
 		const bool& IS_OUT = isOverLimit(shot->x_pos, shot->y_pos);
 
 		if (IS_HIT || IS_HIT2)
@@ -224,10 +219,11 @@ void Eshot::Move(const Player& player)
 
 bool Eshot::isOverLimit(const double X_POS, const double Y_POS)
 {
-	if (X_POS < SC_LIMIT_XL || SC_LIMIT_XR < X_POS || Y_POS < SC_LIMIT_YT || SC_LIMIT_YB < Y_POS) {
-		return true;
-	}
-	return false;
+	const bool& isOB = (X_POS < SC_LIMIT_XL ||
+						X_POS > SC_LIMIT_XR ||
+						Y_POS < SC_LIMIT_YT ||
+						Y_POS > SC_LIMIT_YB);
+	return isOB ? true : false;
 }
 
 

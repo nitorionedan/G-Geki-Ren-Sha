@@ -144,6 +144,12 @@ class IPlayer
 public:
 	~IPlayer(){}
 	static void set(std::shared_ptr<Player>);
+	static void DownBombNum() {
+		mPlayer->DownBombNum();
+	}
+	static void ShiftReset() {
+		mPlayer->ShiftReset();
+	}
 	static const Vector2D& GetPos() {
 		return mPlayer->GetPos();
 	}
@@ -152,6 +158,13 @@ public:
 	}
 	static const int GetShiftLevel() {
 		return mPlayer->GetShiftLevel();
+	}
+	static bool HitCheckCircle(Vector2D& pos) {
+		return mPlayer->HitCheckCircle(pos.x, pos.y);
+	}
+	static bool HitCheckCircl(const double & Range, const Vector2D& pos) {
+		return mPlayer->HitCheckCircle(Player::HIT_RANGE, Range,
+				mPlayer->GetPos().x, mPlayer->GetPos().y, pos.x, pos.y);
 	}
 
 private:

@@ -19,6 +19,7 @@
 
      // どこかに「超」「連」「射」が隠れているよ！探してみよう！
 */
+#define _CRTDBG_MAP_ALLOC
 #include "DxLib.h"
 
 #include "Keyboard.hpp"

@@ -2,7 +2,7 @@
 
 #include "EShot00.hpp"
 #include "Graphics2D.hpp"
-#include "Game.hpp"
+#include "Shot.hpp"
 #include "HitEffect.hpp"
 #include "Bomb.hpp"
 
@@ -14,7 +14,6 @@ EShot00::EShot00()
 	, FRAME_TIME(2)
 	, ALL_FRAME_TIME(ALL_FRAME_NUM * FRAME_TIME + 1) // 余りをもとめるため、１を足して調整
 	, HIT_RANGE(7)
-	, effect(new Effect(new HitEffect))
 {
 	time.fill(0);
 	rad.fill(0.);
@@ -42,8 +41,6 @@ void EShot00::Update(const double& PosX, const double& PosY)
 		time[i]++;
 		Move(i);
 	}
-
-	effect->Update();
 }
 
 
@@ -56,8 +53,6 @@ void EShot00::Draw()
 		// アニメーション
 		DrawAnime(pos[i].x, pos[i].y, vangle[i], time[i], ALL_FRAME_NUM, FRAME_TIME, gh);
 	}
-
-	effect->Draw();
 }
 
 
@@ -97,13 +92,13 @@ void EShot00::Move(const int & id)
 	// 当たり判定チェック
 	const bool& IS_HIT = Vector2D::CirclesCollision(HIT_RANGE, Player::HIT_RANGE,
 						pos[id].x, pos[id].y, IPlayer::GetPos().x, IPlayer::GetPos().y);
-	const bool& IS_HIT2 = Bomb::IsHit(HIT_RANGE, pos[id].x, pos[id].y);
+	const bool& IS_HIT2 = IBomb::IsHit(HIT_RANGE, pos[id].x, pos[id].y);
 
 	// 当たったら消す
 	if (IS_HIT || IS_HIT2)
 	{
 		isExist[id] = false;
-		effect->PlayAnime(pos[id].x, pos[id].y);
+		IHitEffect::PlayAnime(pos[id]);
 	}
 
 	// 画面外で消す

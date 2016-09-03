@@ -5,35 +5,39 @@
 #include "NullBoss.hpp"
 
 
-ItemMng* Game::itemMng;
 bool Game::isMsg;
 bool Game::isDead;
 
 
 Game::Game(ISceneChanger* changer)
 	: BaseScene(changer)
+	, bomb(new Bomb)
 	, graphic(new Graphic)
 	, board(new StatusBoard)
 	, c_msg(new Counter(100))
 	, player(new Player)
 	, pshot(new Pshot)
 	, effector(new Effector)
-	, bomb(new Bomb)
 	, score(new Score)
 	, boss(new BossChara(new NullBoss))
 	, enemyMng(new EnemyMng)
 	, stage(new Stage)
+	, itemMng(new ItemMng)
+	, hitEffect(new HitEffect)
 {
-	// static-----------------------------------------------------------------
-	itemMng = new ItemMng;
-
 	// these are must funcs
 	player->setup(bomb, pshot, stage);
 	enemyMng->setup(boss);
+
+	/* 自分のクラスで吸えばいいじゃん・・・ */
 	IScore::set(score);
 	IEnemyMng::set(enemyMng);
 	IStage::set(stage);
 	IPlayer::set(player);
+	IBossChara::set(boss);
+	IItemMng::set(itemMng);
+	IBomb::set(bomb);
+	IHitEffect::set(hitEffect);
 
 	Initialize();
 }
@@ -41,7 +45,6 @@ Game::Game(ISceneChanger* changer)
 
 Game::~Game()
 {
-	delete itemMng;
 }
 
 
@@ -79,6 +82,7 @@ void Game::Update()
 
 	// Effect
 	effector->Update();
+	hitEffect->Update();
 	
 	// Shot
 	pshot->Update();
@@ -126,10 +130,13 @@ void Game::Draw()
 
 	enemyMng->Draw();
 
+
 	itemMng->Draw();
 
 	// Character
 	player->Draw();
+
+	hitEffect->Draw();
 
 	// Shot
 	pshot->Draw();
@@ -157,16 +164,6 @@ void Game::Pause(){
 }
 
 
-void Game::ItemDrop(double PosX, double PosY){
-	itemMng->Create(PosX, PosY);
-}
-
-
-void Game::ItemDrop(double PosX, double PosY, eItem_type type){
-	itemMng->Create(PosX, PosY, type);
-}
-
-
 void Game::StageCall(){
 	isMsg = true;
 }
@@ -175,30 +172,6 @@ void Game::StageCall(){
 void Game::GameOver()
 {
 	isDead = true;
-}
-
-
-bool Game::IsHitPlayer(const double & myX, const double & myY)
-{
-	const bool& IS_HIT = player->HitCheckCircle(myX, myY);
-
-	return IS_HIT;
-}
-
-
-bool Game::IsHitPlayer(const double & Range1, const double & Range2, const double & X1, const double & Y1, const double & X2, const double & Y2)
-{
-	const bool& IS_HIT = player->HitCheckCircle(Range1, Range2, X1, Y1, X2, Y2);
-
-	return IS_HIT;
-}
-
-
-bool Game::IsHitBoss(const double& myX, const double& myY, int & dmgPoint)
-{
-	//const bool& IS_HIT = boss->HitCheck(myX, myY, dmgPoint);
-	//return IS_HIT;
-	return false;
 }
 
 

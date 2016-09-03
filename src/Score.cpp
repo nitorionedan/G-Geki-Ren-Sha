@@ -1,9 +1,8 @@
-#include "DxLib.h"
-
+#include <DxLib.h>
 #include "Score.hpp"
 #include "Keyboard.hpp"
 #include "DebugMode.hpp"
-
+#include "IScore.hpp"
 #include <fstream>
 
 

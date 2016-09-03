@@ -5,6 +5,7 @@
 #include "Counter.hpp"
 #include "EShot03.hpp"
 #include "Effect.hpp"
+#include "Vector2D.hpp"
 #include <memory>
 
 
@@ -26,6 +27,12 @@ public:
 
 	virtual void Update() override;
 	virtual void Draw() override;
+	virtual const Vector2D& GetPos() const override {
+		return pos;
+	}
+	virtual const bool IsDead() const override {
+		return isDead;
+	}
 
 	// @brief		当たり判定
 	// @param[in]	ColX, ColY	当たるモノの座標
@@ -41,10 +48,8 @@ public:
 	void End_Update();
 
 	// static ----------------
-	static VECTOR GetPos();
 	static int GetTime();
-	static bool IsDead();
-	static void Damage(const int& point);
+	void Damage(const int& point);
 
 	static const float	HIT_RANGE;
 
@@ -72,6 +77,7 @@ private:
 	std::unique_ptr<EShot03>	shot3;
 	std::shared_ptr<Effect>		bomber;
 
+	Vector2D pos;							// モデルのスクリーン座標
 	VECTOR	mPos;							// モデルのワールド座標
 	VECTOR	rota;							// モデルの回転値
 	VECTOR	startPos;						// スクリーンとワールド座標の線分
@@ -85,14 +91,13 @@ private:
 	float	angle;							// 体当たりの方向用
 	bool	isMove;							// 攻撃開始しているか？
 	bool	isEnd;							// 退場したか？
+	bool	isDead;							// 死んだか？
 
 	// static -----------------------------
 	static eBossA_state state;
-	static VECTOR	pos;					// モデルのスクリーン座標
 	static int		hp;			// 体力
 	static int		time;		// 生きている時間
 	static int		hs_break;						// シールド破損
-	static bool		isDead;		// 死んだか？
 	static bool		isHit;
 	static bool		isWeak;
 };

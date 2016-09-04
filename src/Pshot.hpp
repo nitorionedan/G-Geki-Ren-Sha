@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Bullet.hpp"
-#include "Counter.hpp"
 #include "Vector2D.hpp"
-#include "HitEffect.hpp"
-#include "Effect.hpp"
 #include <array>
 #include <memory>
+
+
+class Counter;
+class Bullet;
 
 
 enum eShot_Color
@@ -71,8 +71,6 @@ private:
 	const double ADD_FIRE_POS_Y;
 
 	std::unique_ptr<Counter> c_shot;				// 発射時間用カウンター
-//	std::unique_ptr<HitEffect> effect;
-	std::unique_ptr<Effect> effect;
 	std::array<Bullet*, 20>	Ashot;					// 青
 	std::array<Bullet*, 30>	Bshot;					// 橙
 	std::array<Bullet*, 30>	Cshot;					// 赤
@@ -93,4 +91,22 @@ private:
 	static std::array<Vector2D, 20>	s_Apos;
 	static std::array<Vector2D, 30>	s_Bpos;
 	static std::array<Vector2D, 30>	s_Cpos;
+};
+
+
+class IPshot
+{
+public:
+	~IPshot(){}
+	static void set(std::shared_ptr<Pshot> pshot);
+	static void SetParam(Vector2D& pos, int& shiftLevel) {
+		mPshot->SetParam(pos, shiftLevel);
+	}
+	static void ShiftReset() {
+		mPshot->ShiftReset();
+	}
+
+private:
+	IPshot() { mPshot = nullptr; }
+	static std::shared_ptr<Pshot> mPshot;
 };

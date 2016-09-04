@@ -3,32 +3,29 @@
 #include "BaseScene.hpp"
 #include "ISceneChanger.hpp"
 
-#include "IScore.hpp"
-#include "Graphic.hpp"
-#include "Stage.hpp"
-#include "StatusBoard.hpp"
-#include "Vector2D.hpp"
-#include "ItemMng.hpp"
-#include "Bomb.hpp"
+#include <memory>
 
 
 /* player */
-#include "Player.hpp"
-#include "Pshot.hpp"
+class Player;
+class Pshot;
+class Bomb;
 
 /* enemy */
-#include "BossA.hpp"
-#include "EshotMng.hpp"
-#include "EnemyMng.hpp"
-#include "BossChara.hpp"
+class EshotMng;
+class EnemyMng;
+class BossChara;
 
 /* other */
-#include "Effector.hpp"
-#include "Graphics2D.hpp"
-#include "HitEffect.hpp"
-
-#include <memory>
-#include <array>
+class Score;
+class ItemMng;
+class StatusBoard;
+class Stage;
+class Effector;
+class HitEffect;
+class Vector2D;
+class Counter;
+class Graphic;
 
 
 enum eColKind
@@ -49,15 +46,13 @@ public:
 	void Initialize();
 	void Update() override;     //更新処理をオーバーライド
 	void Draw() override;       //描画処理をオーバーライド
-	void GetPlayerPosition(double* x, double* y){}
-	void GetEnemyPosition(int index, double *x, double *y){}
 	void Pause();
-
-	static void StageCall();
-	static void GameOver();
 	const bool IsPause() const {
 		return f_pause;
 	}
+
+	static void StageCall();
+	static void GameOver();
 
 private:
 	void Draw_StageMsg();

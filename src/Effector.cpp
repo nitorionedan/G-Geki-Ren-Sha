@@ -1,4 +1,11 @@
 #include "Effector.hpp"
+#include "Effect.hpp"
+#include "PieceEffect.hpp"
+#include "Explosion.hpp"
+#include "ExplosionEffect.hpp"
+#include "ExplosionS.hpp"
+#include "Piece.hpp"
+#include "ChargeEffect.hpp"
 
 
 PieceEffect*	Effector::pieceef;

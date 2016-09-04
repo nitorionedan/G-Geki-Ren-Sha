@@ -1,22 +1,26 @@
 #include "DxLib.h"
 
 #include "BossA.hpp"
-#include "Game.hpp"
 #include "Keyboard.hpp"
 #include "DebugMode.hpp"
 #include "Eshot.hpp"
 #include "Vector2D.hpp"
 #include "Bomb.hpp"
 #include "IScore.hpp"
+#include "ChargeEffect.hpp"
+#include "ExplosionEffect.hpp"
+#include "Effector.hpp"
+#include "PieceEffect.hpp"
+#include "Game.hpp"
 
 #include <cmath>
 #include <algorithm>
 
-#define NOMINMAX
+#undef min
+#undef max
 
 
 static const int DEAD_TIME = 530;
-
 
 const float BossA::SC_LIMIT_XL = 78.f;
 const float BossA::SC_LIMIT_XR = 560.f;
@@ -322,7 +326,8 @@ void BossA::Dead_Update()
 	// WARNING！　＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
 	
 	// β版のときだけ、指定した時間にゲームオーバーにする。
-	if (count == 600)	Game::GameOver();
+	if (count == 600)
+		Game::GameOver();
 
 	// WARNING！　＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
 }

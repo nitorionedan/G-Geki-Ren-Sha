@@ -1,8 +1,32 @@
-#include <DxLib.h>
 #include "Game.hpp"
 #include "DebugMode.hpp"
+#include "IScore.hpp"
+
+/* player */
+#include "Player.hpp"
+#include "Pshot.hpp"
+#include "Bomb.hpp"
+
+/* enemy */
+#include "EshotMng.hpp"
 #include "NullEnemyShot.hpp"
+#include "EnemyMng.hpp"
+#include "BossChara.hpp"
 #include "NullBoss.hpp"
+
+/* other */
+#include "Score.hpp"
+#include "ItemMng.hpp"
+#include "StatusBoard.hpp"
+#include "Stage.hpp"
+#include "Effector.hpp"
+#include "Graphics2D.hpp"
+#include "Graphic.hpp"
+#include "HitEffect.hpp"
+#include "Vector2D.hpp"
+#include "Keyboard.hpp"
+
+#include <DxLib.h>
 #include <cassert>
 
 
@@ -26,11 +50,7 @@ Game::Game(ISceneChanger* changer)
 	, itemMng(new ItemMng)
 	, hitEffect(new HitEffect)
 {
-	// these are must funcs
-	player->setup(bomb, pshot, stage);
-	enemyMng->setup(boss);
-
-	/* 自分のクラスで吸えばいいじゃん・・・ */
+	/* インターフェイスクラス */
 	IScore::set(score);
 	IEnemyMng::set(enemyMng);
 	IStage::set(stage);
@@ -39,6 +59,7 @@ Game::Game(ISceneChanger* changer)
 	IItemMng::set(itemMng);
 	IBomb::set(bomb);
 	IHitEffect::set(hitEffect);
+	IPshot::set(pshot);
 
 	Initialize();
 }

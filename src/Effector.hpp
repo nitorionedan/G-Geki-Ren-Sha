@@ -1,13 +1,11 @@
-// エフェクト関連
-#include "Effect.hpp"
-#include "Explosion.hpp"
-#include "ExplosionEffect.hpp"
-#include "ExplosionS.hpp"
-#include "PieceEffect.hpp"
-#include "Piece.hpp"
-#include "ChargeEffect.hpp"
-
 #define EX_NUM 4
+
+
+class PieceEffect;
+class Effect;
+
+enum eExplosion_t;
+enum eSpread_t;
 
 
 class Effector

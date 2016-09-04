@@ -64,7 +64,6 @@ void Bomb::Fire()
 	if (bombNum == 0)	return;
 
 	isBomb = true;
-	IPlayer::DownBombNum();
 	///IPlayer::ShiftReset();		// << パワーリセットしたいならはずす
 	pos = IPlayer::GetPos();
 
@@ -167,4 +166,9 @@ void IBomb::set(std::shared_ptr<Bomb> bomb)
 {
 	mBomb = bomb;
 	assert(mBomb != nullptr && "IBomb::set()");
+}
+
+
+void IBomb::SetParam(Vector2D & pos, int & shiftLevel, int & bombNum){
+	mBomb->SetParam(pos, shiftLevel, bombNum);
 }

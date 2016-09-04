@@ -12,6 +12,7 @@
 #include "BossChara.hpp"
 #include "NullBoss.hpp"
 #include "BossA.hpp"
+#include "Stage.hpp"
 #include <cassert>
 
 
@@ -59,6 +60,22 @@ void IBossChara::set(std::shared_ptr<BossChara> bossChara)
 {
 	mBossChara = bossChara;
 	assert(mBossChara != nullptr && "IBossChara::set()");
+}
+
+
+void IBossChara::Start()
+{
+	switch (IStage::GetNowStage())
+	{
+	case eStage::stage1:	mBossChara->Start(eBoss_A);	break;
+	case eStage::stage2:	break;
+	case eStage::stage3:	break;
+	case eStage::stage4:	break;
+	case eStage::stage5:	break;
+	case eStage::stage6:	break;
+	case eStage::stage0:	break;
+	default:	assert(!"IBossChara::Start()");
+	}
 }
 
 

@@ -4,8 +4,10 @@
 #include "DebugMode.hpp"
 #include "Shot.hpp"
 #include "HitEffect.hpp"
+#include "ExplosionEffect.hpp"
 #include "Graphics2D.hpp"
 #include "Effector.hpp"
+#include "Bomb.hpp"
 
 #include <cmath>
 

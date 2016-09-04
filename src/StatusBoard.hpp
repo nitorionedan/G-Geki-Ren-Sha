@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Player.hpp"
 #include "Graphics2D.hpp"
-
 #include <array>
 
+
+class Player;
 
 
 /// ƒQ[ƒW‚Ìƒƒ‚ƒŠ”‚Í40‚ ‚è‚Ü‚·

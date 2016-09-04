@@ -29,11 +29,16 @@
 #include <memory>
 #include <time.h>
 
+#define SC_W 640
+#define SC_H 480
+
 
 static int  FrameStartTime;			// 60fps固定専用
 static int  FPS;
 static bool ScSizeFrag = false;		// 画面モード変更用
 static bool quit       = false;		// 強制終了フラグ
+static int GaussScreen, ColorScreen;
+static const int GauseRatio = 1000;
 
 void QuitGame();					// ゲーム終了伝達関数
 
@@ -60,8 +65,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 {
 	message_box();																				// ウィンドウスタイル質問
 	SetWindowIconID(444);
-	SetGraphMode(640, 480, 32), ChangeWindowMode(ScSizeFrag), DxLib_Init();						// ウィンドウ初期設定(VGA),DxLib起動
-	SetDrawScreen(DX_SCREEN_BACK);																// 裏画面処理
+	SetGraphMode(SC_W, SC_H, 32), ChangeWindowMode(ScSizeFrag), DxLib_Init();					// ウィンドウ初期設定(VGA),DxLib起動
 	SetMainWindowText("激連射");																// タイトルを設定
 	SetChangeScreenModeGraphicsSystemResetFlag(FALSE);											// 画面モード変更後、素材メモリをリセットしない
 	SetEmulation320x240(TRUE);																	// 320x240の解像度にする
@@ -71,10 +75,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	std::unique_ptr<SceneMng> sceneMng(new SceneMng);											// シーン管理
 	SRand((unsigned)time(NULL));																// 乱数シード
 	LoadPauseGraph("GRAPH/Cover.png");															// 非アクティブ状態時の画像
+	GaussScreen = MakeScreen(SC_W, SC_H, FALSE);
+	ColorScreen = MakeScreen(SC_W, SC_H, FALSE);
 
 	// ゲーム--------------------------------------------------------------------------------------
-	while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0 && !quit)
+	while (ProcessMessage() == 0 && SetDrawScreen(ColorScreen) == 0 && ClearDrawScreen() == 0 && !quit)
 	{
+		//GraphFilterBlt(ColorScreen, ColorScreen, DX_GRAPH_FILTER_GAUSS, 8, GauseRatio);
+
 		while (GetNowCount() - FrameStartTime < 1000 / FPS) {}									// 1/60 秒まで待つ
 		FrameStartTime = GetNowCount();															// 現在のカウントを保存
 
@@ -89,6 +97,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		sceneMng->Draw();																		// 現在のシーンを描画
 		DebugMode::Draw();
+
+		GraphFilter(ColorScreen, DX_GRAPH_FILTER_MONO, -60, 7);
+
+		SetDrawScreen(DX_SCREEN_BACK);
+		DrawGraph(0, 0, ColorScreen, FALSE);
+		ScreenFlip();
 	}
 	LoadPauseGraph(NULL);
 	DxLib_End();																				// ＤＸライブラリ使用の終了処理

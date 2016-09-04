@@ -82,6 +82,10 @@ class IBomb
 public:
 	~IBomb(){}
 	static void set(std::shared_ptr<Bomb> bomb);
+	static void SetParam(Vector2D& pos, int& shiftLevel, int& bombNum);
+	static void Fire() {
+		mBomb->Fire();
+	}
 	static bool IsHit(const int& ColCircle, const double& ColX, const double& ColY) {
 		return mBomb->IsHit(ColCircle, ColX, ColY);
 	}

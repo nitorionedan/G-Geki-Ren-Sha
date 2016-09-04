@@ -72,6 +72,7 @@ public:
 	static const Vector2D& GetPos() {
 		return mBossChara->GetPos();
 	}
+	static void Start();
 	static bool HitCheck(const double& ColX, const double& ColY, const int& DamagePoint);
 	static const bool IsDead() {
 		return mBossChara->IsDead();

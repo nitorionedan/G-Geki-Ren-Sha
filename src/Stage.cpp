@@ -29,6 +29,7 @@ Stage::Stage()
 	hg.at(eBG_back) = NULL;
 	hg.at(eBG_middle) = NULL;
 	hg.at(eBG_front) = NULL;
+	GaussScreen = MakeScreen(640, 480, FALSE);
 
 	stage_back.at(0).SetVec(320.0, 240.0);
 	stage_back.at(1).SetVec(320.0, -400.0); // pixサイズが例外的に 320 x 320　なので

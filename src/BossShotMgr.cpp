@@ -2,6 +2,7 @@
 #include "Eshot.hpp"
 #include "NullEnemyShot.hpp"
 #include "BossA.hpp"
+#include "Stage.hpp"
 
 
 BossShotMgr::BossShotMgr(EnemyShot* mEnemyShot)
@@ -25,14 +26,17 @@ void BossShotMgr::Draw(){
 void BossShotMgr::ChangeShot(eEnemyShot type)
 {
 	delete mEnemyShot;
-	switch (type)
+
+	switch (IStage::GetNowStage())
 	{
-	case eEnemyShot::ShotA :
-		mEnemyShot = (EnemyShot*) new Eshot;
-		break;
-	case eEnemyShot::None :
-		mEnemyShot = (EnemyShot*) new NullEnemyShot;
-		break;
+	case eStage::stage1:	mEnemyShot = (EnemyShot*) new Eshot;	break;
+	case eStage::stage2:	break;
+	case eStage::stage3:	break;
+	case eStage::stage4:	break;
+	case eStage::stage5:	break;
+	case eStage::stage6:	break;
+	case eStage::stage0:	break;
+	default:				mEnemyShot = (EnemyShot*) new NullEnemyShot;
 	}
 }
 // EOF

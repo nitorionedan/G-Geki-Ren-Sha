@@ -1,15 +1,18 @@
 #pragma once
 
-#include "Keyboard.hpp"
-#include "Graphic.hpp"
-#include "Range.hpp"
-#include "Counter.hpp"
 #include "Vector2D.hpp"
-#include "PieceEffect.hpp"
-#include "Bomb.hpp"
-#include "Pshot.hpp"
-#include "Stage.hpp"
 #include <memory>
+
+
+class Graphic;
+class Counter;
+//class Vector2D;
+class PieceEffect;
+class Bomb;
+class Pshot;
+class Stage;
+
+enum eSpread_t;
 
 
 // 入力したキーの方向
@@ -36,7 +39,6 @@ public:
 	~Player();
 	void Update();
 	void Draw();
-	void setup(std::shared_ptr<Bomb>, std::shared_ptr<Pshot>, std::shared_ptr<Stage>);
 	void Update_Start();
 	void Update_Game();
 	void Update_Dead();
@@ -45,10 +47,6 @@ public:
 	void Draw_Dead();
 	void SetStart();
 	void InputMng();	// 連射データ管理
-	void GetPos(double* x, double* y) {
-		*x = this->pos.x;
-		*y = this->pos.y;
-	}
 	const Vector2D& GetPos() const {
 		return pos;
 	}
@@ -107,18 +105,9 @@ private:
 	double const LimitScreenYT, LimitScreenYB;
 	double const Y_START;						// スタート地点
 
-	int	rensha;		// 連射ゲージ
-	bool isStart;		// スタート地点に到達したか？
-	bool isHit;			// 被弾したか？
-	bool isArm;			// アーム展開中か？
-	// ---------------------------
-
 	std::unique_ptr<Graphic> graphic;	// 文字画像
 	std::unique_ptr<Counter> c_start;	// スタート準備用カウンター
 	std::unique_ptr<Counter> c_dead;
-	std::shared_ptr<Bomb> mBomber;
-	std::shared_ptr<Pshot> mPshot;
-	std::shared_ptr<Stage> mStage;
 
 	eInputDir keydir;		// キー入力方向
 	ePlayerState state;		// プレイヤーの状態
@@ -134,8 +123,13 @@ private:
 	int	life;				// 残機
 	int	elapsedTime;		// 経過時間
 	int powlv;				// パワーレベル(シフトレベル)
+	int	rensha;		// 連射ゲージ
 	bool isDead;			// 死んでいるか？
 	bool isMuteki;			// 無敵か？
+	bool isStart;		// スタート地点に到達したか？
+	bool isHit;			// 被弾したか？
+	bool isArm;			// アーム展開中か？
+
 };
 
 

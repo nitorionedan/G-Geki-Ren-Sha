@@ -37,7 +37,6 @@ public:
 	void Update(const Player& player);
 	void Draw();
 	void Finalize();
-	void setup(std::shared_ptr<BossChara>);
 	void CountDownEneNum();
 	void BossStart(eStage stage);
 	bool IsHit(const double& ColX, const double& ColY, const int& DAMAGE);
@@ -49,7 +48,6 @@ private:
 	//std::vector<std::shared_ptr<Enemy>> enemy;				// G‹›“G
 	std::vector<Enemy*> enemy;									// G‹›“G
 	std::shared_ptr<BossShotMgr> bossShot;
-	std::shared_ptr<BossChara> mBoss;
 	int enemyCount;							// ¶‚«c‚Á‚Ä‚¢‚é“G‚Ì”
 	bool isBossZone;						// “G‚Ì”
 };

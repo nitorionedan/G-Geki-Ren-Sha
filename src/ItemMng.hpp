@@ -1,8 +1,12 @@
 #pragma once
 
 #include "Vector2D.hpp"
-#include "Player.hpp"
+
 #include <array>
+#include <memory>
+
+
+class Player;
 
 
 enum eItem

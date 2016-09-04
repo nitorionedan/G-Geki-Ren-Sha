@@ -1,4 +1,3 @@
-#include <DxLib.h>
 #include "Pshot.hpp"
 #include "Keyboard.hpp"
 #include "DebugMode.hpp"
@@ -6,12 +5,17 @@
 #include "Stage.hpp"
 #include "EnemyMng.hpp"
 #include "Game.hpp"
+#include "Counter.hpp"
+#include "Bullet.hpp"
+#include "Effect.hpp"
+#include "HitEffect.hpp"
 
+#include <DxLib.h>
 #include <algorithm>
 #include <cmath>
 
-#define NOMINMAX // 農民マックス！
-
+#undef min
+#undef max
 
 std::array<Vector2D, 20>	Pshot::s_Apos;
 std::array<Vector2D, 30>	Pshot::s_Bpos;
@@ -58,7 +62,6 @@ Pshot::Pshot()
 	, hs_shot(LoadSoundMem("SOUND/SE/pshot00.wav"))
 	, hs_hit(LoadSoundMem("SOUND/SE/damage01.wav"))
 	, c_shot(new Counter(30))
-	, effect(new Effect(new HitEffect))
 	, shiftLevel(0)
 	, mPlayer_x(0.0)
 	, mPlayer_y(0.0)
@@ -127,7 +130,6 @@ void Pshot::Update()
 	Input();												// 入力管理
 	Move();													// 動き計算
 	HitCheck();												// 当たり判定
-	effect->Update();										// エフェクト更新
 	Reset();												// 弾をリセット
 	ShotCount();											// 発射準備のカウント管理
 	CopyStaticMem();										// staticメンバに値をコピー
@@ -208,9 +210,6 @@ void Pshot::Draw()
 		}
 		break;
 	}
-
-	// ヒットしたときの効果
-	effect->Draw();
 
 	// TEST--------------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
@@ -319,9 +318,9 @@ void Pshot::SetFirePosition(const double X_POS, const double Y_POS)
 void Pshot::Fire()
 {
 	// Cshotの発射位置を調整
-	const double C_SHOT_XL  = ( mPlayer_x - 18.0 );
-	const double C_SHOT_XR	= ( mPlayer_x + 18.0 );
-	const double C_SHOT_Y	= ( mPlayer_y + 20.0 );
+	const double& C_SHOT_XL  = ( mPlayer_x - 18.0 );
+	const double& C_SHOT_XR	= ( mPlayer_x + 18.0 );
+	const double& C_SHOT_Y	= ( mPlayer_y + 20.0 );
 	for(auto &shot : Cshot)
 	{
 		if (shot->f_exist)	continue;
@@ -723,7 +722,7 @@ void Pshot::HitCheck()
 							  IEnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk));
 		if (IS_HIT)	shot->f_exist = false;
 		if (IS_HIT)	PlaySoundMem(hs_hit, DX_PLAYTYPE_BACK);
-		if (IS_HIT)	effect->PlayAnime(shot->x_pos, shot->y_pos);
+		if (IS_HIT)	IHitEffect::PlayAnime(Vector2D(shot->x_pos, shot->y_pos));
 	}
 	// -------------------------------------------------------------------------------
 	for (auto &shot : Bshot)
@@ -733,7 +732,7 @@ void Pshot::HitCheck()
 							  IEnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk));
 		if (IS_HIT)	shot->f_exist = false;
 		if (IS_HIT)	PlaySoundMem(hs_hit, DX_PLAYTYPE_BACK);
-		if (IS_HIT)	effect->PlayAnime(shot->x_pos, shot->y_pos);
+		if (IS_HIT)	IHitEffect::PlayAnime(Vector2D(shot->x_pos, shot->y_pos));
 	}
 	// -------------------------------------------------------------------------------
 	for (auto &shot : Cshot)
@@ -743,7 +742,7 @@ void Pshot::HitCheck()
 							  IEnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk));
 		if (IS_HIT)	shot->f_exist = false;
 		if (IS_HIT)	PlaySoundMem(hs_hit, DX_PLAYTYPE_BACK);
-		if (IS_HIT)	effect->PlayAnime(shot->x_pos, shot->y_pos);
+		if (IS_HIT)	IHitEffect::PlayAnime(Vector2D(shot->x_pos, shot->y_pos));
 	}
 }
 
@@ -824,4 +823,13 @@ void Pshot::CopyStaticMem()
 		s_Cpos[i].y = Cshot[i]->y_pos;
 	}
 
+}
+
+
+// ==============================================================
+std::shared_ptr<Pshot> IPshot::mPshot;
+
+
+void IPshot::set(std::shared_ptr<Pshot> pshot){
+	mPshot = pshot;
 }

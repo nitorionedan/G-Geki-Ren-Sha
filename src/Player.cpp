@@ -1,15 +1,24 @@
-#pragma warning(disable:4244)
-
-#include <DxLib.h>
 #include "Player.hpp"
 #include "DebugMode.hpp"
 #include "IScore.hpp"
-#include "Game.hpp"
 #include "Graphics2D.hpp"
+#include "Effector.hpp"
+#include "Keyboard.hpp"
+#include "Graphic.hpp"
+#include "Counter.hpp"
+#include "PieceEffect.hpp"
+#include "ExplosionEffect.hpp"
+#include "Bomb.hpp"
+#include "Pshot.hpp"
+#include "Stage.hpp"
+#include "Game.hpp"
+
+#include <DxLib.h>
 #include <algorithm>
 #include <cassert>
 
-#define NOMINMAX
+#undef max
+#undef min
 
 
 const int Player::MaxPowLevel = 4;
@@ -28,9 +37,6 @@ Player::Player()
 	, graphic(new Graphic)
 	, c_start(new Counter(150))
 	, c_dead(new Counter(90))
-	, mBomber(nullptr)
-	, mPshot(nullptr)
-	, mStage(nullptr)
 	, elapsedTime(0)
 	, keydir(eInputDir::Neutral)
 	, dead_ef(eSpread_SmallGrey)
@@ -81,16 +87,16 @@ void Player::Update()
 	isHit = false;
 
 	/* setting some params to PShot */
-	mPshot->SetParam(pos, powlv);
+	IPshot::SetParam(pos, powlv);
 
 	/* setting some params to bomber */
-	mBomber->SetParam(pos, powlv, bombNum);
+	IBomb::SetParam(pos, powlv, bombNum);
 
 	/* use bomb */
 	if(Keyboard::Instance()->isPush(KEY_INPUT_X) && bombNum > 0)
 	{
 		bombNum--;
-		mBomber->Fire();
+		IBomb::Fire();
 	}
 
 	// TEST------------------------------------------------------------------------------------
@@ -130,16 +136,6 @@ void Player::Draw()
 //	DrawFormatString(100, 100, GetColor(0, 255, 0), "Dで死にます");
 //	DrawFormatString(100, 120, GetColor(0, 255, 0), "Pでシフトアップ");
 //	DrawFormatString(100, 140, GetColor(0, 255, 0), "Oでシフトダウン");
-}
-
-
-void Player::setup(std::shared_ptr<Bomb> bomber,
-				   std::shared_ptr<Pshot> pshot,
-				   std::shared_ptr<Stage> stage)
-{
-	mBomber = bomber;
-	mPshot = pshot;
-	mStage = stage;
 }
 
 
@@ -473,7 +469,7 @@ bool Player::HitCheckCircle(const double & Range1, const double & Range2, const 
 		isMuteki = true;
 		vec.SetVec(std::cos(1.5 * GetRand(100)), 1.5 * std::cos(GetRand(100)));
 		Effector::PlaySpread(pos.x, pos.y, GetRand(100), dead_ef);
-		mStage->PlayQuake();
+		IStage::Quake();
 		PlaySoundMem(hs_dead, DX_PLAYTYPE_BACK);
 	}
 
@@ -481,7 +477,7 @@ bool Player::HitCheckCircle(const double & Range1, const double & Range2, const 
 }
 
 
-// ===================================================
+// IPlayer===================================================
 std::shared_ptr<Player> IPlayer::mPlayer;
 
 

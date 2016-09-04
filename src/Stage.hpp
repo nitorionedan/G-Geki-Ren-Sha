@@ -61,6 +61,7 @@ private:
 	eStage	nowStage;												// 現在のステージ
 	int    hs_bgm;													// BGM用ハンドル
 	int    hs_boss;													// BGM用ハンドル
+	int GaussScreen;
 	double cycle, shake;											// ラスタースクロール用 // [目標] 3.0, 400
 	bool   f_quake;													// シフトアップしたときの画面振動フラグ
 
@@ -81,6 +82,9 @@ public:
 	~IStage() {}
 	static void set(std::shared_ptr<Stage>);
 	static void Load();
+	static void Quake() {
+		mStage->PlayQuake();
+	}
 	static const eStage GetNowStage() {
 		return mStage->GetNowStage();
 	}

@@ -1,9 +1,13 @@
 #include "Enemy.hpp"
 #include "Graphics2D.hpp"
 #include "DebugMode.hpp"
-#include "Game.hpp"
 #include "EnemyMng.hpp"
 #include "IScore.hpp"
+#include "Effector.hpp"
+#include "ExplosionEffect.hpp"
+#include "PieceEffect.hpp"
+#include "ItemMng.hpp"
+#include "Keyboard.hpp"
 
 // Shots
 #include "EShot00.hpp"

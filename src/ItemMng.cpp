@@ -1,8 +1,10 @@
-#include <DxLib.h>
 #include "ItemMng.hpp"
 #include "Graphics2D.hpp"
 #include "DebugMode.hpp"
 #include "Game.hpp"
+#include "Player.hpp"
+
+#include <DxLib.h>
 #include <cmath>
 #include <cassert>
 

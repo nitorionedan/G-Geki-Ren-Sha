@@ -11,7 +11,6 @@
 
 EnemyMng::EnemyMng()
 	: bossShot(new BossShotMgr(new NullEnemyShot))
-	, mBoss(nullptr)
 {
 	enemy.reserve(100);
 
@@ -51,6 +50,7 @@ void EnemyMng::Load(eStage stage)
 	GetAllEnemyNum(&enemyCount, fname);
 
 	/* Create enemys data */
+
 	tEnemyData* ene_date;
 	ene_date = new tEnemyData[enemyCount];
 
@@ -164,12 +164,6 @@ void EnemyMng::Finalize()
 }
 
 
-void EnemyMng::setup(std::shared_ptr<BossChara> boss)
-{
-	mBoss = boss;
-}
-
-
 void EnemyMng::CountDownEneNum()
 {
 	enemyCount--;
@@ -181,33 +175,8 @@ void EnemyMng::CountDownEneNum()
 
 void EnemyMng::BossStart(eStage stage)
 {
-	switch (stage)
-	{
-	case eStage::stage1:
-		mBoss->Start(eBoss_A);
-		bossShot->ChangeShot(eEnemyShot::ShotA);
-		break;
-
-	case eStage::stage2:
-		break;
-	
-	case eStage::stage3:
-		break;
-	
-	case eStage::stage4:
-		break;
-	
-	case eStage::stage5:
-		break;
-	
-	case eStage::stage6:
-		break;
-	
-	case eStage::stage0:
-		break;
-	default:	assert(!"EnemyMng::BossStart()");
-	}
-
+	IBossChara::Start();
+	bossShot->ChangeShot(eEnemyShot::ShotA);
 }
 
 

@@ -96,6 +96,7 @@ public:
 private:
 	void Move();			// プレイヤーの動き
 	void Rensha_Update();
+	void Death();
 
 	static int const MaxPowLevel;				// シフトの限界値
 	static int const MAX_RENSHA;				// 連射ゲージの範囲
@@ -120,6 +121,7 @@ private:
 	int	bombNum;			// 現在のボム数
 	int	hg[3];				// 画像用ハンドル
 	int	hg_arm[12];			// シールド画像ハンドル
+	int Screen;
 	int	life;				// 残機
 	int	elapsedTime;		// 経過時間
 	int powlv;				// パワーレベル(シフトレベル)
@@ -129,7 +131,6 @@ private:
 	bool isStart;		// スタート地点に到達したか？
 	bool isHit;			// 被弾したか？
 	bool isArm;			// アーム展開中か？
-
 };
 
 

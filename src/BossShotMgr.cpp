@@ -10,13 +10,16 @@ BossShotMgr::BossShotMgr(EnemyShot* mEnemyShot)
 {
 }
 
+
 BossShotMgr::~BossShotMgr(){
 	delete mEnemyShot;
 }
 
+
 void BossShotMgr::Update(const Player& player){
 	mEnemyShot->Update(player);
 }
+
 
 void BossShotMgr::Draw(){
 	mEnemyShot->Draw();
@@ -29,14 +32,32 @@ void BossShotMgr::ChangeShot(eEnemyShot type)
 
 	switch (IStage::GetNowStage())
 	{
-	case eStage::stage1:	mEnemyShot = (EnemyShot*) new Eshot;	break;
+	case eStage::stage1:
+		mEnemyShot = (EnemyShot*)new Eshot;	
+		break;
 	case eStage::stage2:	break;
 	case eStage::stage3:	break;
 	case eStage::stage4:	break;
 	case eStage::stage5:	break;
 	case eStage::stage6:	break;
 	case eStage::stage0:	break;
-	default:				mEnemyShot = (EnemyShot*) new NullEnemyShot;
+	default:				mEnemyShot = (EnemyShot*)new NullEnemyShot;
 	}
 }
-// EOF
+
+
+
+// ===============================================================
+std::shared_ptr<BossShotMgr> IBossShotMgr::mBossShot;
+
+
+void IBossShotMgr::set(std::shared_ptr<BossShotMgr> bossShot)
+{
+	mBossShot = bossShot;
+}
+
+
+void IBossShotMgr::ChangeShot(eEnemyShot type)
+{
+	mBossShot->ChangeShot(type);
+}

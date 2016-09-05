@@ -1,5 +1,5 @@
 #include <DxLib.h>
-
+#include <cassert>
 #include "Config.hpp"
 #include "Game.hpp"
 #include "GameOver.hpp"
@@ -46,13 +46,15 @@ void SceneMng::Update()
 		case eScene_GameOver:
 			mScene = static_cast<BaseScene*> (new GameOver(this));
 			break;
+		default:	assert(!"SceneMng::Update()");
 		}
 		mNextScene = eScene_None;								// 次のシーン情報をクリア
 	}
 	mScene->Update();											// シーンの更新
 
 	// DEBUG ONLY
-	if (Keyboard::Instance()->isPush(KEY_INPUT_F1))	DebugMode::SwitchTest();
+	if (Keyboard::Instance()->isPush(KEY_INPUT_F1))
+		DebugMode::SwitchTest();
 }
 
 

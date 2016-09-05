@@ -90,8 +90,7 @@ void EShot00::Move(const int & id)
 	pos[id].y += vspeed[id] * std::sin(vangle[id]);
 
 	// 当たり判定チェック
-	const bool& IS_HIT = Vector2D::CirclesCollision(HIT_RANGE, Player::HIT_RANGE,
-						pos[id].x, pos[id].y, IPlayer::GetPos().x, IPlayer::GetPos().y);
+	const bool& IS_HIT = IPlayer::HitCheckCircl(HIT_RANGE, pos[id]);
 	const bool& IS_HIT2 = IBomb::IsHit(HIT_RANGE, pos[id].x, pos[id].y);
 
 	// 当たったら消す

@@ -67,6 +67,11 @@ Game::Game(ISceneChanger* changer)
 
 Game::~Game()
 {
+	stage->Finalize();
+
+#ifdef _DEBUG
+	printfDx("\n~Game");
+#endif
 }
 
 
@@ -128,14 +133,16 @@ void Game::Update()
 // TEST ----------------------------------------------
 	if (DebugMode::isTest == false)	return;
 
-	if (Keyboard::Instance()->isPush(KEY_INPUT_U))	mSceneChanger->ChangeScene(eScene_GameOver);
+	if (Keyboard::Instance()->isPush(KEY_INPUT_U))
+		mSceneChanger->ChangeScene(eScene_GameOver);
 
 	if(Keyboard::Instance()->isPush(KEY_INPUT_S))
 	{
 	//	PlayAnime(320, 240, eExplosion_big);
 	//	bomber->PlayAnime(BossA::GetPos().x, BossA::GetPos().y);
 	//	PlayAnime(100, 100, eExplosion_long);
-		itemMng->Create(100, 100);
+	//	itemMng->Create(100, 100);
+		IBossChara::Start();
 	}
 }
 

@@ -32,3 +32,16 @@ public:
 private:
 	EnemyShot* mEnemyShot;
 };
+
+
+class IBossShotMgr
+{
+public:
+	~IBossShotMgr() {}
+	static void set(std::shared_ptr<BossShotMgr> bossShot);
+	static void ChangeShot(eEnemyShot type);
+
+private:
+	IBossShotMgr() { mBossShot = nullptr; }
+	static std::shared_ptr<BossShotMgr> mBossShot;
+};

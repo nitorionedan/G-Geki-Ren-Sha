@@ -29,7 +29,8 @@ Stage::Stage()
 	hg.at(eBG_back) = NULL;
 	hg.at(eBG_middle) = NULL;
 	hg.at(eBG_front) = NULL;
-	GaussScreen = MakeScreen(640, 480, FALSE);
+	Screen = MakeScreen(640, 480, FALSE);
+	GaussSc = MakeScreen(640, 480, FALSE);
 
 	stage_back.at(0).SetVec(320.0, 240.0);
 	stage_back.at(1).SetVec(320.0, -400.0); // pixサイズが例外的に 320 x 320　なので
@@ -49,9 +50,17 @@ Stage::Stage()
 
 Stage::~Stage()
 {
-	for (int &Gr_Handle : hg)	DeleteGraph(Gr_Handle);
-	
-	if(hs_bgm != NULL)	DeleteSoundMem(hs_bgm);
+	for (auto Gr_Handle : hg)
+		DeleteGraph(Gr_Handle);
+	DeleteSoundMem(hs_bgm);
+}
+
+
+void Stage::Finalize()
+{
+	for (auto Gr_Handle : hg)
+		DeleteGraph(Gr_Handle);
+	DeleteSoundMem(hs_bgm);
 }
 
 
@@ -128,18 +137,24 @@ void Stage::Update()
 
 void Stage::Draw()
 {
+	SetDrawScreen(Screen);
+	ClearDrawScreen();
+
 	for (auto &back : stage_back)
 		DrawRasterScroll( (int)std::ceil(back.x), (int)std::ceil(back.y), cycle, shake, hg[eBG_back], false );
 	for (auto &front : stage_fro)
 		DrawRasterScroll( (int)std::ceil(front.x), (int)std::ceil(front.y), cycle, shake, hg[eBG_front], false );
 
+	SetDrawScreen(DX_SCREEN_BACK);
+	DrawGraph(0, 0, Screen, FALSE);
+
 	// TEST -------------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
 
 //	DrawFormatString(540, 20, GetColor(0, 255, 0), "TIME:%d sec", testTime);
-	DrawFormatString(520, 20, GetColor(0, 255, 0), "TIME:%d", s_time);
-//	DrawFormatString(520, 40, GetColor(0, 255, 0), "CYCLE:%lf", cycle);
-//	DrawFormatString(520, 60, GetColor(0, 255, 0), "SHAKE:%lf", shake);
+	//DrawFormatString(520, 20, GetColor(0, 255, 0), "TIME:%d", s_time);
+	DrawFormatString(520, 40, GetColor(0, 255, 0), "CYCLE:%lf", cycle); // 0.8 << good enough
+	DrawFormatString(520, 60, GetColor(0, 255, 0), "SHAKE:%lf", shake); // 70 << good enough
 }
 
 

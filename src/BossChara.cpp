@@ -13,6 +13,7 @@
 #include "NullBoss.hpp"
 #include "BossA.hpp"
 #include "Stage.hpp"
+#include "BossShotMgr.hpp"
 #include <cassert>
 
 
@@ -39,15 +40,27 @@ void BossChara::Start(eBoss_num num)
 	delete mBoss;
 	switch (num)
 	{
-	case eBoss_A:		mBoss = new BossA;	break;
-	case eBoss_B:		break;
-	case eBoss_C:		break;
-	case eBoss_D:		break;
-	case eBoss_E:		break;
-	case eBoss_F:		break;
-	case eBoss_G:		break;
-	case eBoss_None:	mBoss = new NullBoss;	break;
-	default:			assert(!"BossChara::Start()");
+	case eBoss_A:
+		mBoss = new BossA;
+		IBossShotMgr::ChangeShot(eEnemyShot::ShotA);
+		break;
+	case eBoss_B:
+		break;
+	case eBoss_C:
+		break;
+	case eBoss_D:
+		break;
+	case eBoss_E:
+		break;
+	case eBoss_F:	
+		break;
+	case eBoss_G:	
+		break;
+	case eBoss_None:
+		mBoss = new NullBoss;
+		IBossShotMgr::ChangeShot(eEnemyShot::None);
+		break;
+	default:	assert(!"BossChara::Start()");
 	}
 }
 

@@ -4,7 +4,9 @@
 #pragma once
 
 #include "Player.hpp"
+#include "Vector2D.hpp"
 #include <memory>
+
 
 class EnemyShot
 {

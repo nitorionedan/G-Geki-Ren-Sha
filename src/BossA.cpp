@@ -1,5 +1,3 @@
-#include "DxLib.h"
-
 #include "BossA.hpp"
 #include "Keyboard.hpp"
 #include "DebugMode.hpp"
@@ -11,8 +9,8 @@
 #include "ExplosionEffect.hpp"
 #include "Effector.hpp"
 #include "PieceEffect.hpp"
-#include "Game.hpp"
 
+#include <DxLib.h>
 #include <cmath>
 #include <algorithm>
 
@@ -56,17 +54,17 @@ BossA::BossA()
 	hs_break = LoadSoundMem("SOUND/SE/break00.wav");
 	hm		 = MV1LoadModel("GRAPH/MODEL/BossA_2.x");
 
-	mPos.x = 320.0f;
-	mPos.y = 300.0f;
-	mPos.z = -300.0f;
+	mPos.x = 320.f;
+	mPos.y = 300.f;
+	mPos.z = -300.f;
 
 	rota.x = 1.5f;
-	rota.y = 0.0f;
-	rota.z = 0.0f;
+	rota.y = 0;
+	rota.z = 0;
 
 	MV1SetRotationXYZ(hm, rota);				// 回転値を設定
 	MV1SetPosition(hm, mPos);					// 座標を設定
-	MV1SetScale(hm, VGet(13.0f, 13.0f, 13.0f));	// モデル拡大
+	MV1SetScale(hm, VGet(13.f, 13.f, 13.f));	// モデル拡大
 
 	// static -----------------------------------------------------
 	pos = Vector2D::ZERO;
@@ -322,14 +320,6 @@ void BossA::Dead_Update()
 	{
 		PlaySoundMem(pos.x, pos.y, DX_PLAYTYPE_BACK);
 	}
-
-	// WARNING！　＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
-	
-	// β版のときだけ、指定した時間にゲームオーバーにする。
-	if (count == 600)
-		Game::GameOver();
-
-	// WARNING！　＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
 }
 
 

@@ -49,6 +49,7 @@ Player::Player()
 	hs_shiftUp = LoadSoundMem("SOUND/SE/shiftup.mp3");
 	hs_shiftDown = LoadSoundMem("SOUND/SE/shiftdown.wav");
 	hs_dead = LoadSoundMem("SOUND/SE/explosion02.wav");
+	Screen = MakeScreen(640, 480, TRUE);
 
 	pos.SetVec(320.0, 520.0);
 	vec = Vector2D::ZERO;
@@ -69,6 +70,8 @@ Player::~Player()
 	DeleteSoundMem(hs_shiftUp);
 	DeleteSoundMem(hs_shiftDown);
 	DeleteSoundMem(hs_dead);
+
+	printfDx("\n~Player");
 }
 
 
@@ -227,9 +230,9 @@ void Player::Draw_Start()
 		//Drawä÷êî
 		switch (keydir)
 		{
-		case eInputDir::Left:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[0], true);	break;
+		case eInputDir::Left:		DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[0], true);	break;
 		case eInputDir::Neutral:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[1], true);	break;
-		case eInputDir::Right:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[2], true);	break;
+		case eInputDir::Right:		DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[2], true);	break;
 		}
 		
 		SetDrawBlendMode(DX_BLENDMODE_ADD, 200); //â¡éZçáê¨
@@ -237,9 +240,9 @@ void Player::Draw_Start()
 		//Drawä÷êîÇ≈è„Ç∆ìØÇ∂ï®ÇèdÇÀÇÈ
 		switch (keydir)
 		{
-		case eInputDir::Left:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[0], true);	break;
+		case eInputDir::Left:		DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[0], true);	break;
 		case eInputDir::Neutral:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[1], true);	break;
-		case eInputDir::Right:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[2], true);	break;
+		case eInputDir::Right:		DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[2], true);	break;
 		}
 		
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
@@ -248,9 +251,9 @@ void Player::Draw_Start()
 	{
 		switch (keydir)
 		{
-		case eInputDir::Left:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[0], true);	break;
+		case eInputDir::Left:		DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[0], true);	break;
 		case eInputDir::Neutral:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[1], true);	break;
-		case eInputDir::Right:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[2], true);	break;
+		case eInputDir::Right:		DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[2], true);	break;
 		}
 	}
 }
@@ -260,9 +263,9 @@ void Player::Draw_Game()
 {
 	switch (keydir)
 	{
-	case eInputDir::Left:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[0], true);	break;
+	case eInputDir::Left:		DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[0], true);	break;
 	case eInputDir::Neutral:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[1], true);	break;
-	case eInputDir::Right:	DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[2], true);	break;
+	case eInputDir::Right:		DrawRotaGraph(pos.x, pos.y, 2.0, 0.0, hg[2], true);	break;
 	}
 }
 
@@ -391,6 +394,19 @@ void Player::Rensha_Update()
 }
 
 
+void Player::Death()
+{
+	powlv = 0;
+	state = ePlayerState::Dead;
+	isHit = true;
+	isMuteki = true;
+	vec.SetVec(std::cos(1.5 * GetRand(100)), 1.5 * std::cos(GetRand(100)));
+	Effector::PlaySpread(pos.x, pos.y, GetRand(100), dead_ef);
+	IStage::Quake();
+	PlaySoundMem(hs_dead, DX_PLAYTYPE_BACK);
+}
+
+
 void Player::SetArm()
 {
 	if(isArm)
@@ -434,18 +450,10 @@ bool Player::HitCheckCircle(const double& ColX, const double& ColY)
 	if (state == ePlayerState::Dead)
 		return false;
 
-	const bool& IS_HIT = (Vector2D::CirclePointCollision(pos.x, pos.y + 9.0, ColX, ColY, HIT_RANGE));
+	const bool& IS_HIT = Vector2D::CirclePointCollision(pos.x, pos.y + 9.0, ColX, ColY, HIT_RANGE);
 
 	if(IS_HIT && state == ePlayerState::Game)
-	{
-		powlv = 0;
-		state = ePlayerState::Dead;
-		isHit = true;
-		isMuteki = true;
-		vec.SetVec(std::cos(1.5 * GetRand(100)), 1.5 * std::cos(GetRand(100)));
-		Effector::PlaySpread(pos.x, pos.y, GetRand(100), dead_ef);
-		PlaySoundMem(hs_dead, DX_PLAYTYPE_BACK);
-	}
+		Death();
 
 	return IS_HIT;
 }
@@ -456,22 +464,14 @@ bool Player::HitCheckCircle(const double & Range1, const double & Range2, const 
 	if (state == ePlayerState::Dead)
 		return false;
 
-	const bool& IS_HIT = (Vector2D::CirclesCollision(Range1, Range2, X1, Y1, X2, Y2));
+	const bool& IS_HIT = Vector2D::CirclesCollision(Range1, Range2, X1, Y1, X2, Y2);
 
 	// ÉAÅ[ÉÄÇîçÇ™Ç∑
-	if (IS_HIT)	isArm = false;
+	if (IS_HIT && isArm)
+		isArm = false;
 
-	if(IS_HIT && state == ePlayerState::Game)
-	{
-		powlv = 0;
-		state = ePlayerState::Dead;
-		isHit = true;
-		isMuteki = true;
-		vec.SetVec(std::cos(1.5 * GetRand(100)), 1.5 * std::cos(GetRand(100)));
-		Effector::PlaySpread(pos.x, pos.y, GetRand(100), dead_ef);
-		IStage::Quake();
-		PlaySoundMem(hs_dead, DX_PLAYTYPE_BACK);
-	}
+	if (IS_HIT && state == ePlayerState::Game)
+		Death();
 
 	return IS_HIT;
 }

@@ -13,6 +13,7 @@ EnemyMng::EnemyMng()
 	: bossShot(new BossShotMgr(new NullEnemyShot))
 {
 	enemy.reserve(100);
+	IBossShotMgr::set(bossShot);
 
 	enemyCount = 0;
 	isBossZone = false;
@@ -176,7 +177,6 @@ void EnemyMng::CountDownEneNum()
 void EnemyMng::BossStart(eStage stage)
 {
 	IBossChara::Start();
-	bossShot->ChangeShot(eEnemyShot::ShotA);
 }
 
 

@@ -37,8 +37,7 @@ static int  FrameStartTime;			// 60fps固定専用
 static int  FPS;
 static bool ScSizeFrag = false;		// 画面モード変更用
 static bool quit       = false;		// 強制終了フラグ
-static int GaussScreen, ColorScreen;
-static const int GauseRatio = 1000;
+static const int GauseRatio = 500;
 
 void QuitGame();					// ゲーム終了伝達関数
 
@@ -75,14 +74,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	std::unique_ptr<SceneMng> sceneMng(new SceneMng);											// シーン管理
 	SRand((unsigned)time(NULL));																// 乱数シード
 	LoadPauseGraph("GRAPH/Cover.png");															// 非アクティブ状態時の画像
-	GaussScreen = MakeScreen(SC_W, SC_H, FALSE);
-	ColorScreen = MakeScreen(SC_W, SC_H, FALSE);
 
 	// ゲーム--------------------------------------------------------------------------------------
-	while (ProcessMessage() == 0 && SetDrawScreen(ColorScreen) == 0 && ClearDrawScreen() == 0 && !quit)
+	while (ProcessMessage() == 0 && SetDrawScreen(DX_SCREEN_BACK) == 0 && ClearDrawScreen() == 0 && !quit)
 	{
-		//GraphFilterBlt(ColorScreen, ColorScreen, DX_GRAPH_FILTER_GAUSS, 8, GauseRatio);
-
 		while (GetNowCount() - FrameStartTime < 1000 / FPS) {}									// 1/60 秒まで待つ
 		FrameStartTime = GetNowCount();															// 現在のカウントを保存
 
@@ -98,10 +93,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		sceneMng->Draw();																		// 現在のシーンを描画
 		DebugMode::Draw();
 
-		GraphFilter(ColorScreen, DX_GRAPH_FILTER_MONO, -60, 7);
-
-		SetDrawScreen(DX_SCREEN_BACK);
-		DrawGraph(0, 0, ColorScreen, FALSE);
 		ScreenFlip();
 	}
 	LoadPauseGraph(NULL);

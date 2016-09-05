@@ -28,7 +28,7 @@ EShot03::EShot03()
 
 EShot03::~EShot03()
 {
-	for (int i = 0; i < sizeof(gh) / sizeof(gh[0]); i++)
+	for (int i = 0; i < _countof(gh); i++)
 		DeleteGraph(gh[i]);
 }
 
@@ -39,9 +39,9 @@ void EShot03::Update(const double & PosX, const double & PosY)
 	{
 		if (!isExist[i])
 		{
-			pos[i].SetVec(PosX, PosY);	 continue;
+			pos[i] = Vector2D(PosX, PosY);
+			continue;
 		}
-
 		time[i]++;
 		ang[i] -= 0.2;
 		Move(i);
@@ -77,7 +77,8 @@ void EShot03::Fire(const double & SPEED, const double & ANGLE)
 
 		isExist[i] = true;
 		vspeed[i] = SPEED;
-		vangle[i] = ANGLE;	break;
+		vangle[i] = ANGLE;
+		break;
 	}
 }
 
@@ -91,16 +92,16 @@ void EShot03::Fire(const double & PosX, const double & PosY, const double & SPEE
 		isExist[i] = true;
 		pos[i].SetVec(PosX, PosY);
 		vspeed[i] = SPEED;
-		vangle[i] = ANGLE;	break;
+		vangle[i] = ANGLE;
+		break;
 	}
 }
 
 
 bool EShot03::IsHit(const double & ColX, const double & ColY, const double & ColR)
 {
-	const bool& IS_HIT = Vector2D::CirclesCollision(HIT_RANGE, ColR, pos[0].x, pos[0].y, ColX, ColY + 9.);
-
-	return IS_HIT;
+	 return Vector2D::CirclesCollision(HIT_RANGE, ColR,
+						pos[0].x, pos[0].y, ColX, ColY + 9.);
 }
 
 
@@ -111,8 +112,7 @@ void EShot03::Move(const int & id)
 	pos[id].y += vspeed[id] * std::sin(vangle[id]);
 
 	// 当たり判定チェック
-	const bool& IS_HIT = Vector2D::CirclesCollision(HIT_RANGE, Player::HIT_RANGE,
-		pos[id].x, pos[id].y, IPlayer::GetPos().x, IPlayer::GetPos().y);
+	const bool& IS_HIT = IPlayer::HitCheckCircl(HIT_RANGE, pos[id]);
 	const bool& IS_HIT2 = IBomb::IsHit(HIT_RANGE, pos[id].x, pos[id].y);
 
 	// 当たっら爆発

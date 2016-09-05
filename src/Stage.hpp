@@ -33,6 +33,7 @@ class Stage	: public Graphics2D
 public:
 	Stage();
 	~Stage();
+	void Finalize();
 	void Update();
 	void Draw();
 	void StageSet(eStage estage);
@@ -61,7 +62,7 @@ private:
 	eStage	nowStage;												// 現在のステージ
 	int    hs_bgm;													// BGM用ハンドル
 	int    hs_boss;													// BGM用ハンドル
-	int GaussScreen;
+	int Screen, GaussSc;
 	double cycle, shake;											// ラスタースクロール用 // [目標] 3.0, 400
 	bool   f_quake;													// シフトアップしたときの画面振動フラグ
 

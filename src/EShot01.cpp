@@ -50,7 +50,8 @@ void EShot01::Draw()
 		if (!isExist[i])	continue;
 
 		// アニメーション
-		DrawAnime(pos[i].x, pos[i].y, vangle[i] - DX_PI / 2, time[i], ALL_FRAME_NUM, FRAME_TIME, gh);
+		DrawAnime(pos[i].x, pos[i].y, 2., vangle[i] - DX_PI / 2, time[i], ALL_FRAME_NUM, FRAME_TIME, gh);
+
 
 		if (!DebugMode::isTest)	continue;
 

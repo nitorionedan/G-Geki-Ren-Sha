@@ -118,7 +118,7 @@ void Player::Draw()
 	if (isArm)
 	{
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
-		DrawAnime(pos.x, pos.y + 4., 0., sizeof(hg_arm) / sizeof(hg_arm[0]), 4, hg_arm);
+		DrawAnime(pos.x, pos.y + 4., 2., 0., _countof(hg_arm), 4, hg_arm);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 

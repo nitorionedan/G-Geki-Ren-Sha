@@ -9,7 +9,6 @@
 #ifndef DEF_IMAGE_HPP
 #define DEF_IMAGE_HPP
 
-
 #include "DxLib.h"
 #include "Graphics2D.hpp"
 

@@ -2,7 +2,6 @@
 
 #include "ShotTask.hpp"
 #include "Vector2D.hpp"
-
 #include <array>
 #include <memory>
 
@@ -32,12 +31,6 @@ public:
 private:
 	// @param[in]	id	添え字番号
 	void Move(const int& id);
-
-	// @brief	アニメーション再生関数・改
-//	void DrawAnime(const double& PosX, const double& PosY, const double& ANGLE, const int& TIME, const int& FRAME_NUM, const int& TIME_FRAME, int Gr_Handle[]);
-
-	// @biref	時間を全て同じにするためのアニメーション再生関数
-//	void DrawAnime(const double& PosX, const double& PosY, const double& ANGLE, const int& FRAME_NUM, const int& TIME_FRAME, int Gr_Handle[]);
 
 	const int ALL_FRAME_NUM;	// アニメーションの総枚数
 	const int FRAME_TIME;		// １コマの表示時間（フレーム数）

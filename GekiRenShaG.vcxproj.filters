@@ -165,9 +165,6 @@
     <ClCompile Include="src\SceneMng.cpp">
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
-    <ClCompile Include="src\Graphics2D.cpp">
-      <Filter>ソース ファイル\System</Filter>
-    </ClCompile>
     <ClCompile Include="src\Graphic.cpp">
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
@@ -212,6 +209,12 @@
     </ClCompile>
     <ClCompile Include="src\Piece.cpp">
       <Filter>ソース ファイル\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics2D.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Image.cpp">
+      <Filter>ソース ファイル\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -320,9 +323,6 @@
     <ClInclude Include="src\EshotMng.hpp">
       <Filter>ヘッダー ファイル\Enemy\Zako</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics2D.hpp">
-      <Filter>ヘッダー ファイル\System</Filter>
-    </ClInclude>
     <ClInclude Include="src\ISceneChanger.hpp">
       <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
@@ -406,6 +406,12 @@
     </ClInclude>
     <ClInclude Include="src\BossShotMgr.hpp">
       <Filter>ヘッダー ファイル\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics2D.hpp">
+      <Filter>ヘッダー ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Image.hpp">
+      <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

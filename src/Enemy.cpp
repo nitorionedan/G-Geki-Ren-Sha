@@ -240,12 +240,12 @@ void Enemy::Draw()
 		case 1:
 			break;
 		case 2:
-			DrawAnime(pos.x, pos.y, angle, elapsedTime, sizeof(gh_ene02) / sizeof(gh_ene02[0]), 2, gh_ene02);
+			DrawAnime(pos.x, pos.y, 2., angle, elapsedTime, _countof(gh_ene02), 2, gh_ene02);
 			break;
 		case 3:
 			break;
 		case 4:
-			DrawAnime(pos.x, pos.y, 0.0, elapsedTime, sizeof(gh_ene04) / sizeof(gh_ene04[0]), 8, gh_ene04);
+			DrawAnime(pos.x, pos.y, 2., 0., elapsedTime, _countof(gh_ene04), 8, gh_ene04);
 			if (s_time == stop_time ||
 				s_time == stop_time + 20 ||
 				s_time == stop_time + 40)

@@ -176,3 +176,49 @@ void DrawAnime(const double & PosX, const double & PosY, const double& ExRate, c
 		break;
 	}
 }
+
+
+int DrawRasterScroll(const int & X, const int & Y, const double & Cycle, const double & Shake, const int & Time, const int & GrHandle, const bool & isVertical)
+{
+	int Width = 0, Height = 0;					// Images width & height
+	static int result = 0;						// Return only variable
+
+	GetGraphSize(GrHandle, &Width, &Height);
+
+	if(isVertical)
+	{
+		for (int I = 0; I < Height; ++I)
+		{
+			const int& DestX = X - Width / 2 + std::cos((I + Time) / 180. * DX_PI * Cycle) * Shake;
+			const int& DestY = Y - Height / 2 + I;
+
+			result = DrawRectGraph
+				(
+					DestX, DestY,
+					0, I,
+					Width, 1,
+					GrHandle,
+					TRUE, FALSE
+					);
+		}
+	}
+	else
+	{
+		for (int I = 0; I < Width; ++I)
+		{
+			const int& DestX = X - Width / 2 + I;
+			const int& DestY = Y - Height / 2 + std::cos((I + Time) / 180. * DX_PI * Cycle) * Shake;
+
+			result = DrawRectGraph
+				(
+					DestX, DestY,
+					I, 0,
+					1, Height,
+					GrHandle,
+					TRUE, FALSE
+					);
+		}
+	}
+
+	return result;
+}

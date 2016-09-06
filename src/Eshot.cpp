@@ -200,8 +200,7 @@ void Eshot::Move(const Player& player)
 		shot->x_pos += std::cos(shot->angle) * A_SPEED;
 		shot->y_pos += std::sin(shot->angle) * A_SPEED;
 
-		const bool& IS_HIT = Vector2D::CirclesCollision(HIT_RANGE, Player::HIT_RANGE,
-							shot->x_pos, shot->y_pos, player.GetPos().x, player.GetPos().y);
+		const bool& IS_HIT = IPlayer::HitCheckCircl(HIT_RANGE, Vector2D(shot->x_pos, shot->y_pos));
 		const bool& IS_HIT2 = IBomb::IsHit(4, shot->x_pos, shot->y_pos);
 		const bool& IS_OUT = isOverLimit(shot->x_pos, shot->y_pos);
 

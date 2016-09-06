@@ -67,11 +67,11 @@ void ItemMng::Draw()
 		switch (type[i])
 		{
 		case Bomber:
-			DrawAnime(pos[i].x, pos[i].y, 0.0, time[i], sizeof(gh_b) / sizeof(gh_b[0]), 3, gh_b);	break;
+			DrawAnime(pos[i].x, pos[i].y, 2., 0., time[i], sizeof(gh_b) / sizeof(gh_b[0]), 3, gh_b);	break;
 		case Power:
-			DrawAnime(pos[i].x, pos[i].y, 0.0, time[i], sizeof(gh_p) / sizeof(gh_p[0]), 3, gh_p);	break;
+			DrawAnime(pos[i].x, pos[i].y, 2., 0., time[i], sizeof(gh_p) / sizeof(gh_p[0]), 3, gh_p);	break;
 		case Shield:
-			DrawAnime(pos[i].x, pos[i].y, 0.0, time[i], sizeof(gh_s) / sizeof(gh_s[0]), 3, gh_s);	break;
+			DrawAnime(pos[i].x, pos[i].y, 2., 0., time[i], sizeof(gh_s) / sizeof(gh_s[0]), 3, gh_s);	break;
 
 		default:
 			break;

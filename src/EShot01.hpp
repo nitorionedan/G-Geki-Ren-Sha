@@ -2,11 +2,12 @@
 
 #include "ShotTask.hpp"
 #include "Vector2D.hpp"
+#include "Graphics2D.hpp"
 
 #include <array>
 
 
-class EShot01 : public ShotTask
+class EShot01 : public ShotTask, Graphics2D
 {
 public:
 	EShot01();

@@ -54,7 +54,7 @@ void EShot04::Draw()
 		if (!isExist[i])	continue;
 
 		// アニメーション
-		DrawAnime(pos[i].x, pos[i].y, ang[i], time[i], ALL_FRAME_NUM, FRAME_TIME, gh);
+		DrawAnime(pos[i].x, pos[i].y, 2., ang[i], time[i], ALL_FRAME_NUM, FRAME_TIME, gh);
 
 		if (!DebugMode::isTest)	continue;
 

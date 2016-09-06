@@ -46,7 +46,6 @@ void BossShotMgr::ChangeShot(eEnemyShot type)
 }
 
 
-
 // ===============================================================
 std::shared_ptr<BossShotMgr> IBossShotMgr::mBossShot;
 

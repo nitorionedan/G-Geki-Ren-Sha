@@ -51,7 +51,7 @@ void EShot00::Draw()
 		if (!isExist[i])	continue;
 
 		// アニメーション
-		DrawAnime(pos[i].x, pos[i].y, vangle[i], time[i], ALL_FRAME_NUM, FRAME_TIME, gh);
+		DrawAnime(pos[i].x, pos[i].y, 2., vangle[i], time[i], _countof(gh), FRAME_TIME, gh);
 	}
 }
 

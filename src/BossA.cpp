@@ -25,7 +25,7 @@ const float BossA::SC_LIMIT_XR = 560.f;
 const float BossA::SC_LIMIT_YT = 74.f;
 const float BossA::SC_LIMIT_YB = 406.f;
 const float BossA::HIT_RANGE   = 60.f;
-const int BossA::MAX_HP        = 3000; // 4000
+const int BossA::MAX_HP        = 1500; // 3000 << too many
 
 eBossA_state BossA::state;
 int BossA::hp;
@@ -106,7 +106,7 @@ void BossA::Update()
 
 	rota.z += 0.03f;												// モデルを回転
 	startPos = ConvScreenPosToWorldPos(VGet(pos.x, pos.y, 0.5f));	// スクリーン座標からワールド座標へ
-	mPos = startPos;												// モデルをスクリーン座標にあてがる
+	mPos = startPos;												// モデル座標をスクリーン座標系に調節
 
 	isHit = false;
 
@@ -124,18 +124,14 @@ void BossA::Update()
 
 	if (state != eBossA_Start)
 	{
-		const bool& IS_HIT = Vector2D::CirclesCollision(HIT_RANGE, Player::HIT_RANGE,
-			pos.x, pos.y, IPlayer::GetPos().x, IPlayer::GetPos().y);
+		const bool& IS_HIT = IPlayer::HitCheckCircl(HIT_RANGE, pos);
 		if (IS_HIT)	Damage(10);
 	}
 
 	/* エフェクト系 */
 	bomber->Update(pos.x, pos.y);
 
-	// ====================================================================================================
 	/*
-
-
 	if (!isMove)
 	{
 		s_isHit = false;
@@ -160,9 +156,16 @@ void BossA::Update()
 
 void BossA::Draw()
 {
-	if(isHit)	SetLightDifColor(GetColorF(0.f, 1.f, 1.f, 1.f));	// 緑
-	if(isWeak && (time % 12) >= 10)	SetLightDifColor(GetColorF(1.f, 0.f, 0.f, 1.f));
-	if(c_atk1->GetNowcount() == 50)	SetLightDifColor(GetColorF(1.f, 1.f, 0.f, 1.f));	// 色変更
+	if(isHit)
+		SetLightDifColor(CyanF);	// 緑
+	
+	const bool& Is_flashing = (isWeak && (time % 12) >= 10);
+	if(Is_flashing)
+		SetLightDifColor(RedF);
+
+	const bool&  PreliminaryActionFlag = (c_atk1->GetNowcount() == 50);
+	if(PreliminaryActionFlag)
+		SetLightDifColor(YellowF);	// 色変更
 
 	MV1SetRotationXYZ(hm, rota);	// 回転値設定
 	MV1SetPosition(hm, mPos);		// 座標を設定

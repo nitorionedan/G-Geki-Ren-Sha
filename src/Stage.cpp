@@ -114,7 +114,7 @@ void Stage::Update()
 	if (s_time == 0)
 	{
 //		ChangeVolumeSoundMem(255, hs_bgm);
-		PlaySoundMem(hs_bgm, DX_PLAYTYPE_LOOP);
+		//PlaySoundMem(hs_bgm, DX_PLAYTYPE_LOOP);
 	}
 
 	// ŽžŠÔŒo‰ß
@@ -146,6 +146,7 @@ void Stage::Draw()
 		DrawRasterScroll( (int)std::ceil(front.x), (int)std::ceil(front.y), cycle, shake, hg[eBG_front], false );
 
 	SetDrawScreen(DX_SCREEN_BACK);
+	::DrawRasterScroll(320, 240, 0.8, 70, s_time, Screen, true);
 	DrawGraph(0, 0, Screen, FALSE);
 
 	// TEST -------------------------------------------------------------------

@@ -1,6 +1,12 @@
 /// ボスキャラはこのクラスを継承する
 #pragma once
+#include  <DxLib.h>
 #include "Player.hpp"
+
+
+static COLOR_F const CyanF = GetColorF(0.f, 1.f, 1.f, 1.f);
+static COLOR_F const RedF = GetColorF(1.f, 0.f, 0.f, 1.f);
+static COLOR_F const YellowF = GetColorF(1.f, 1.f, 0.f, 1.f);
 
 
 class BossTask

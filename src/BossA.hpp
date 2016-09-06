@@ -1,6 +1,5 @@
 #pragma once
 
-#include <DxLib.h>
 #include "BossTask.hpp"
 #include "Counter.hpp"
 #include "EShot03.hpp"

@@ -7,8 +7,8 @@
 #include <cmath>
 #include <cassert>
 
-#define NOMINMAX
-
+#undef min
+#undef max
 
 const double Stage::SPEED_BACK		= 1.;
 const double Stage::SPEED_MIDDLE	= 3.;
@@ -146,8 +146,23 @@ void Stage::Draw()
 		DrawRasterScroll( (int)std::ceil(front.x), (int)std::ceil(front.y), cycle, shake, hg[eBG_front], false );
 
 	SetDrawScreen(DX_SCREEN_BACK);
-	::DrawRasterScroll(320, 240, 0.8, 70, s_time, Screen, true);
-	DrawGraph(0, 0, Screen, FALSE);
+	//::DrawRasterScroll(320, 240, 0.8, 70, s_time, Screen, true);
+	
+
+
+	int Width, Height;
+	GetGraphSize(Screen, &Width, &Height);
+	for (int I = 0; I < Height; ++I)
+	{
+		DrawRectGraph(
+				0, 0,
+				0, I,
+				Width, 1,
+				Screen,
+				TRUE, FALSE);
+	}
+
+
 
 	// TEST -------------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;

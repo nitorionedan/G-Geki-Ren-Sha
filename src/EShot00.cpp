@@ -1,4 +1,4 @@
-#include "DxLib.h"
+#include <DxLib.h>
 
 #include "EShot00.hpp"
 #include "Graphics2D.hpp"

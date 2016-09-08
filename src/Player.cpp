@@ -194,8 +194,7 @@ void Player::Update_Dead()
 			Effector::PlayAnime(pos.x - 39., pos.y + 27., eExplosion_small);
 	}
 
-	pos.x += vec.x;
-	pos.y += vec.y;
+	pos += vec;
 
 	if(c_dead->isLast())
 	{
@@ -380,16 +379,15 @@ void Player::Rensha_Update()
 	}
 
 	/* シフトチェンジ判定 */
-	switch (rensha)
+	if(rensha == 0)
 	{
-	case 0:	// 最低値
-		if(powlv != 0)
+		if (powlv != 0)
 			Shift(false);
-		break;
-	case 40: // 最大値
+	}
+	else if(rensha == 40)
+	{
 		if (powlv != 4)
 			Shift(true);
-		break;
 	}
 }
 

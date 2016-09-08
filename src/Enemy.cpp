@@ -21,7 +21,7 @@
 #include <cassert>
 
 #undef max // ざけんなこのカス必要ねえんだよ！
-#undef min // What's the fuck!
+#undef min // wtf
 
 
 Enemy::Enemy(int type, int stype, int m_pattern, int s_pattern, int in_time, int stop_time, int shot_time, int out_time, int x_pos, int y_pos, int s_speed, int hp, int item)
@@ -101,16 +101,9 @@ Enemy::Enemy(int type, int stype, int m_pattern, int s_pattern, int in_time, int
 	// 速度
 	switch (m_pattern)
 	{
-	case 0:
-		vspeed_x = 2.;
-		vspeed_y = 4.;
-		break;
-	case 1:
-		break;
-	case 2:
-		vspeed_x = 2.;
-		vspeed_y = 0.1;
-		break;
+	case 0:	vSpeed.SetVec(2., 4.);	break;
+	case 1:	break;
+	case 2:	vSpeed.SetVec(2., 0.1);	break;
 	case 3:
 		break;
 	case 4:
@@ -136,8 +129,7 @@ Enemy::Enemy(int type, int stype, int m_pattern, int s_pattern, int in_time, int
 	case 5:	break;
 	case 6:	break;
 	case 7:	break;
-
-	default: printfDx("Enemy.cpp:ERROR");	break;
+	default: assert(!"Enemy.cpp:ERROR");	break;
 	}
 
 	gh_shot00 = LoadGraph("GRAPH/GAME/Eshot/efire0.png");
@@ -230,7 +222,8 @@ void Enemy::Draw()
 			SetDrawBright(255, 0, 0);
 		}
 
-		if (isDamage)	SetDrawBlendMode(DX_BLENDMODE_INVSRC, 255);
+		if (isDamage)
+			SetDrawBlendMode(DX_BLENDMODE_INVSRC, 255);
 
 		switch (type)
 		{
@@ -350,8 +343,7 @@ void Enemy::Move()
 	case 7:	Move_7();	break;
 	}
 
-	const bool& IS_HIT = Vector2D::CirclesCollision(hitRange, Player::HIT_RANGE,
-						pos.x, pos.y, IPlayer::GetPos().x, IPlayer::GetPos().y);
+	const bool& IS_HIT = IPlayer::HitCheckCircl(hitRange, pos);
 	if (IS_HIT)	Damage(1);
 }
 
@@ -369,51 +361,53 @@ void Enemy::Move_0()
 		if (IPlayer::GetPos().y - 60.0 > pos.y || pos.y >= 320.)
 		{
 			// 減速
-//			vspeed_y -= 0.02;
-			vspeed_y = (IPlayer::GetPos().y - 60. - pos.y) * BRAKE;
+			vSpeed.y = (IPlayer::GetPos().y - 60. - pos.y) * BRAKE;
 		}
 
 		// 降りる
-		if (isMove)	pos.y += vspeed_y;
+		if (isMove)	pos.y += vSpeed.y;
 
 		// 横移動：左から右
 		if (pos.x < IPlayer::GetPos().x - 10. && isMove)
 		{
-			vspeed_x = (IPlayer::GetPos().x - 20. - pos.x) * BRAKE;
-			pos.x += vspeed_x;
+			vSpeed.x = (IPlayer::GetPos().x - 20. - pos.x) * BRAKE;
+			pos.x += vSpeed.x;
 		}
 
 		// 横移動２：右から左
 		if (pos.x > IPlayer::GetPos().x + 10. && isMove)
 		{
-			pos.x -= vspeed_x;
-			vspeed_x *= 0.99999999;
+			pos.x -= vSpeed.x;
+			vSpeed.x *= 0.99999999;
 		}
 
 		// 速度を負にしない
-		if (vspeed_x < 0.)
+		if (vSpeed.x < 0.)
 		{
-			vspeed_x = 0.;
+			vSpeed.x = 0.;
 			isMove = false;
 		}
-		if (vspeed_y < 0.)	vspeed_y = 0.;
+		if (vSpeed.y < 0.)	vSpeed.y = 0.;
 
 	}
 
 	// 自機に向く
-	if (elapsedTime < out_time)	AngleTarget(IPlayer::GetPos().x, IPlayer::GetPos().y);
+	if (elapsedTime < out_time)
+		AngleTarget(IPlayer::GetPos().x, IPlayer::GetPos().y);
 
 	// スピード変更
-	if (elapsedTime == out_time)	vspeed_y = 0.;
+	if (elapsedTime == out_time)
+		vSpeed.y = 0.;
 
-	// 帰る
+	// 帰る（笑）
 	if (elapsedTime >= out_time)
 	{
 		// 加速
-		if (vspeed_y > -SPEED_0)	vspeed_y -= 0.05;
+		if (vSpeed.y > -SPEED_0)
+			vSpeed.y -= 0.05;
 
 		// 移動
-		pos.y += vspeed_y;
+		pos.y += vSpeed.y;
 
 		// 方向転換のつもり（納得いかない動きなので修正する計画）
 		if (angle >= 0.)	angle += 0.02;
@@ -434,10 +428,9 @@ void Enemy::Move_0()
 
 void Enemy::Move_1()
 {
-	vspeed_x = std::cos(elapsedTime / 30.) * 8. * std::sin(elapsedTime / 10.) * std::cos(elapsedTime / 10.);
+	vSpeed.x = std::cos(elapsedTime / 30.) * 8. * std::sin(elapsedTime / 10.) * std::cos(elapsedTime / 10.);
 
-	pos.x += vspeed_x;
-	pos.y += vspeed_y;
+	pos += vSpeed;
 
 	// 自機に向く
 	AngleTarget(IPlayer::GetPos().x, IPlayer::GetPos().y);
@@ -452,10 +445,9 @@ void Enemy::Move_1()
 
 void Enemy::Move_2()
 {
-	vspeed_x = 0.;
-	vspeed_y = 2.;
+	vSpeed.SetVec(0., 2.);
 
-	pos.y += vspeed_y;
+	pos += vSpeed;
 
 	if (pos.y > 490.)
 	{
@@ -475,16 +467,15 @@ void Enemy::Move_4()
 	static float c_move = 0.f;
 	c_move += 0.01f;
 
-	vspeed_x = 0.7;
-	vspeed_y = 0.2;
+	vSpeed.SetVec(0.7, 0.2);
 
 	if (s_time < stop_time ||
 		s_time > stop_time + 40)
 	{
-		pos.y += vspeed_y;
+		pos.y += vSpeed.y;
 	}
 
-	pos.x += vspeed_x * std::cos(c_move);
+	pos.x += vSpeed.x * std::cos(c_move);
 
 	if (pos.y > 490.)
 	{

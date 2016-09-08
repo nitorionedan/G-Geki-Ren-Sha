@@ -161,6 +161,9 @@ public:
 		return mPlayer->HitCheckCircle(Player::HIT_RANGE, Range,
 				mPlayer->GetPos().x, mPlayer->GetPos().y, pos.x, pos.y);
 	}
+	static const bool IsDead(){
+		return mPlayer->IsDead();
+	}
 
 private:
 	IPlayer() { mPlayer = nullptr; }

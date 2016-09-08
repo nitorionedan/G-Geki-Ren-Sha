@@ -79,7 +79,7 @@ Pshot::Pshot()
 	hg2.at(eShot_Orange)	= LoadGraph("GRAPH/GAME/tama_2.png");
 	hg2.at(eShot_Red)		= LoadGraph("GRAPH/GAME/shot2_2.png");
 
-	ChangeVolumeSoundMem(110, hs_shot);
+	ChangeVolumeSoundMem(90, hs_shot);
 	ChangeVolumeSoundMem(135, hs_hit);
 
 	for (auto& shot : Ashot)	shot->atk = 2;

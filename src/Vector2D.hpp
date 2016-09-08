@@ -4,7 +4,7 @@
 class Vector2D
 {
 public:
-	Vector2D(double x, double y);
+	explicit Vector2D(double x, double y);
 	Vector2D() {}
 
 	void SetVec(const double& x, const double& y) {

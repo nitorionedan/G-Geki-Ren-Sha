@@ -93,10 +93,8 @@ private:
 	int s_time;
 	double angle;		// 向き
 	double vangle;
-	double vspeed_x;	// ｘ方向のベクトル
-	double vspeed_y;	// ｙ方向
 	double hitRange;	// 当たり範囲
-	Vector2D hitSRange;
+	Vector2D hitSRange, vSpeed;
 	Vector2D pos;		// 座標
 	bool isExist;		// 存在しているか？
 	bool isMove;		// 動いているか？

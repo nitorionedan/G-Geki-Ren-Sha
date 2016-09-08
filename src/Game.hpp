@@ -15,6 +15,7 @@ class Bomb;
 class EshotMng;
 class EnemyMng;
 class BossChara;
+class EneShotCreater;
 
 /* other */
 class Score;
@@ -74,6 +75,7 @@ private:
 	std::shared_ptr<EnemyMng> enemyMng;
 	std::shared_ptr<ItemMng> itemMng;
 	std::shared_ptr<HitEffect> hitEffect;
+	std::shared_ptr<EneShotCreater> eneShotFactory;
 	
 	bool f_pause;
 };

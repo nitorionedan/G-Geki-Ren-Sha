@@ -10,7 +10,7 @@
 
 
 EShot00::EShot00()
-	: ALL_FRAME_NUM(sizeof(gh) / sizeof(gh[0]))
+	: ALL_FRAME_NUM(_countof(gh))
 	, FRAME_TIME(2)
 	, ALL_FRAME_TIME(ALL_FRAME_NUM * FRAME_TIME + 1) // ó]ÇËÇÇ‡Ç∆ÇﬂÇÈÇΩÇﬂÅAÇPÇë´ÇµÇƒí≤êÆ
 	, HIT_RANGE(7)
@@ -24,7 +24,7 @@ EShot00::EShot00()
 
 EShot00::~EShot00()
 {
-	for (int i = 0; i < _countof(gh); i++)
+	for (int i = 0; i < ALL_FRAME_NUM; i++)
 		DeleteGraph(gh[i]);
 }
 
@@ -35,7 +35,8 @@ void EShot00::Update(const double& PosX, const double& PosY)
 	{
 		if (!isExist[i])
 		{
-			pos[i].SetVec(PosX, PosY);	 continue;
+			pos[i].SetVec(PosX, PosY);
+			continue;
 		}
 	
 		time[i]++;

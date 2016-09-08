@@ -147,20 +147,20 @@ void Stage::Draw()
 
 	SetDrawScreen(DX_SCREEN_BACK);
 	//::DrawRasterScroll(320, 240, 0.8, 70, s_time, Screen, true);
-	
+	DrawGraph(0, 0, Screen, TRUE);
 
 
-	int Width, Height;
-	GetGraphSize(Screen, &Width, &Height);
-	for (int I = 0; I < Height; ++I)
-	{
-		DrawRectGraph(
-				0, 0,
-				0, I,
-				Width, 1,
-				Screen,
-				TRUE, FALSE);
-	}
+	//int Width, Height;
+	//GetGraphSize(Screen, &Width, &Height);
+	//for (int I = 0; I < Height; ++I)
+	//{
+	//	DrawRectGraph(
+	//			0, 0,
+	//			0, I,
+	//			Width, 1,
+	//			Screen,
+	//			TRUE, FALSE);
+	//}
 
 
 

@@ -1,9 +1,12 @@
 #pragma once
+
 #include "EneShotMove.hpp"
 
 
-class EneShotStraight : public EneShotMove
+class EneShotSniper : public EneShotMove
 {
 public:
+	EneShotSniper(){}
+	~EneShotSniper(){}
 	virtual void Move(EneShotCreater::EneShot* pEShot) override;
 };

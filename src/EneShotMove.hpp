@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Vector2D.hpp"
+#include "EneShotCreater.hpp"
 
 
 class EneShotMove
 {
 public:
-	virtual void Move(Vector2D* pPos) = 0;
+	virtual void Move(EneShotCreater::EneShot* pEShot) = 0;
 };

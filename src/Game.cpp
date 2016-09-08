@@ -13,6 +13,7 @@
 #include "EnemyMng.hpp"
 #include "BossChara.hpp"
 #include "NullBoss.hpp"
+#include "EneShotCreater.hpp"
 
 /* other */
 #include "Score.hpp"
@@ -49,6 +50,7 @@ Game::Game(ISceneChanger* changer)
 	, stage(new Stage)
 	, itemMng(new ItemMng)
 	, hitEffect(new HitEffect)
+	, eneShotFactory(new EneShotCreater)
 {
 	/* インターフェイスクラス */
 	IScore::set(score);
@@ -60,6 +62,7 @@ Game::Game(ISceneChanger* changer)
 	IBomb::set(bomb);
 	IHitEffect::set(hitEffect);
 	IPshot::set(pshot);
+	IEneShotCreater::set(eneShotFactory);
 
 	Initialize();
 }
@@ -113,7 +116,8 @@ void Game::Update()
 	
 	// Shot
 	pshot->Update();
-	
+	eneShotFactory->Update();
+
 	// Bomber
 	bomb->Update();
 
@@ -158,7 +162,7 @@ void Game::Draw()
 	effector->Draw();
 
 	enemyMng->Draw();
-
+	eneShotFactory->Draw();
 
 	itemMng->Draw();
 

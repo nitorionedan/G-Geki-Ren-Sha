@@ -23,41 +23,51 @@ enum class eEneShotMove
 	straight,
 	follow,
 	accel,
+	sniper,
+	snipeMiss,
 };
 
 
 class EneShotCreater
 {
+public:
 	class EneShot
 	{
 	public:
-		explicit EneShot(eEneShot shotType, EneShotMove* moveType, Vector2D firstPos);
+		EneShot(eEneShot shotType, eEneShotMove moveType, Vector2D firstPos, double speed);
 		~EneShot();
 		void Update(EneShotCreater* pEneShotCreater);
-		void Draw(const int& GrHandle);
+		void Draw(EneShotCreater* pEneShotCreater);
+		bool HitCheck();
 
 		EneShotMove* mMove;
+		Vector2D pos;
+		double speed, angle;
+
 	private:
-		EneShot();
+		EneShot(){}
 		void Initialize();
 
-		Vector2D pos;
 		eEneShot shotType;
+		int elapsedTime;
+		double hitRange;
 	};
+
+private:
+	static const double BD_LEFT;
+	static const double BD_RIGHT;
+	static const double BD_TOP;
+	static const double BD_BOTTOM;
 
 public:
 	EneShotCreater();
 	~EneShotCreater();
 	void Update();
 	void Draw();
+	void Fire(eEneShot shotType, eEneShotMove moveType, Vector2D& firstPos, double& speed);
 
 private:
-	void Initialize();
-	void Move();
-	void CheckCollider();
-	void Fire(eEneShot shotType, eEneShotMove moveType, Vector2D& firstPos);
-
-	std::vector<std::unique_ptr<EneShot>> mEneShot;
+	std::vector<std::shared_ptr<EneShot>> mEneShot;
 	int gh_power[24],
 		gh_ball[14],
 		gh_long[5],
@@ -68,4 +78,12 @@ private:
 
 class IEneShotCreater
 {
+public:
+	~IEneShotCreater(){}
+	static void set(std::shared_ptr<EneShotCreater> eneShotCreater);
+	static void Fire(eEneShot shotType, eEneShotMove moveType, Vector2D& firstPos, double& speed);
+
+private:
+	IEneShotCreater() { mEShotCreater = nullptr; }
+	static std::shared_ptr<EneShotCreater> mEShotCreater;
 };

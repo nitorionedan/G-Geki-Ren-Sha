@@ -14,6 +14,7 @@
 #include "EShot01.hpp"
 #include "EShot02.hpp"
 #include "Eshot04.hpp"
+#include "EneShotCreater.hpp" // TODO: attention
 
 #include <DxLib.h>
 #include <algorithm>
@@ -511,9 +512,11 @@ void Enemy::Fire_0()
 		double addAng = (GetRand(3) / 15.);
 
 		if (dir == 0)
-			shot->Fire(s_speed, ANGLE - addAng);
+			//shot->Fire(s_speed, ANGLE - addAng);
+			IEneShotCreater::Fire(eEneShot::ball, eEneShotMove::straight, pos, (double&)s_speed);
 		else
-			shot->Fire(s_speed, ANGLE + addAng);
+			//shot->Fire(s_speed, ANGLE + addAng);
+			IEneShotCreater::Fire(eEneShot::ball, eEneShotMove::straight, pos, (double&)s_speed);
 	}
 
 	if (elapsedTime == 50)

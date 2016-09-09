@@ -30,6 +30,8 @@
 #include <DxLib.h>
 #include <cassert>
 
+static VECTOR const DefLightPos = VGet(100.f, 100.f, 200.f);
+static int 	Screen;
 
 bool Game::isMsg;
 bool Game::isDead;
@@ -63,6 +65,8 @@ Game::Game(ISceneChanger* changer)
 	IHitEffect::set(hitEffect);
 	IPshot::set(pshot);
 	IEneShotCreater::set(eneShotFactory);
+
+	Screen = MakeScreen(640, 480, TRUE);
 
 	Initialize();
 }
@@ -153,6 +157,12 @@ void Game::Update()
 
 void Game::Draw()
 {
+	static int time = 0;
+	time++;
+
+	SetDrawScreen(Screen);
+	ClearDrawScreen();
+
 	// Back Ground
 	stage->Draw();
 
@@ -186,9 +196,28 @@ void Game::Draw()
 
 	score->Draw();
 
+	SetDrawScreen(DX_SCREEN_BACK);
+
+	//DrawRasterScroll(320, 240, 600, 100, time, Screen, TRUE); // << super noise
+
+	int CircleX = 320;
+	int CircleAngle = 0;
+	// 画面を歪ませて描画
+	DrawCircleScreen(
+		CircleX, 240,	// 中心座標
+		80.0f + sin(CircleAngle * DX_PI_F / 180.0f) * 15.0f,	// 内側の円のサイズ
+		200.0f + sin(CircleAngle * 2 * DX_PI_F / 180.0f) * 50.0f,	// 外側の円のサイズ
+		48.0f,	// 内側に引き込まれるドット数
+		Screen);
+
 	// TEST-----------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
 
+	VECTOR tpos = VGet(320.f, 240.f, 0.f);
+	tpos = ConvScreenPosToWorldPos(tpos);
+	SetLightDirection(tpos);
+	DrawSphere3D(tpos, 10.f, 4, GetColor(255, 0, 0), GetColor(255, 255, 255), TRUE);
+	SetLightDirection(DefLightPos);
 }
 
 

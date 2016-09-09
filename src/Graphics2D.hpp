@@ -92,3 +92,14 @@ void DrawAnime(const double& PosX, const double& PosY, const double& ExRate, con
 
 
 int DrawRasterScroll(const int & X, const int & Y, const double & Cycle, const double & Shake, const int & Time, const int & GrHandle, const bool & isVertical);
+
+
+// 画面を歪ませながら描画する関数（外部サイトからほぼ引用）
+void DrawCircleScreen(
+	int CenterX,			// 円の中心座標X
+	int CenterY,			// 円の中心座標Y
+	float InRadius,			// 内側の円のサイズ
+	float OutRadius,		// 外側の円のサイズ
+	float Absorption,		// 内側の円に引き込まれるドット数
+	int ScreenHandle		// 画面グラフィックハンドル
+	);

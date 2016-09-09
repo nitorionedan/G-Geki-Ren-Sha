@@ -137,18 +137,10 @@ void Stage::Update()
 
 void Stage::Draw()
 {
-	SetDrawScreen(Screen);
-	ClearDrawScreen();
-
 	for (auto &back : stage_back)
 		DrawRasterScroll( (int)std::ceil(back.x), (int)std::ceil(back.y), cycle, shake, hg[eBG_back], false );
 	for (auto &front : stage_fro)
 		DrawRasterScroll( (int)std::ceil(front.x), (int)std::ceil(front.y), cycle, shake, hg[eBG_front], false );
-
-	SetDrawScreen(DX_SCREEN_BACK);
-	//::DrawRasterScroll(320, 240, 0.8, 70, s_time, Screen, true);
-	DrawGraph(0, 0, Screen, TRUE);
-
 
 	//int Width, Height;
 	//GetGraphSize(Screen, &Width, &Height);
@@ -161,8 +153,6 @@ void Stage::Draw()
 	//			Screen,
 	//			TRUE, FALSE);
 	//}
-
-
 
 	// TEST -------------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;

@@ -156,6 +156,9 @@ void BossA::Update()
 
 void BossA::Draw()
 {
+	const bool& Is_NoGuard = (isHit && !isWeak);
+	MV1SetWireFrameDrawFlag(hm, !Is_NoGuard);
+
 	if(isHit)
 		SetLightDifColor(CyanF);	// 緑
 	
@@ -173,11 +176,8 @@ void BossA::Draw()
 
 	SetLightDifColor(GetColorF(1.f, 1.f, 1.f, 1.f));	// 元の色
 
-	if (isHit && !isWeak)
-	{
+	if (Is_NoGuard)
 		DrawRotaGraph(pos.x, pos.y, 2.5, GetRand(100), hg_shield, true);
-		//DrawRotaGraph(pos.x, pos.y, 2.5, 0.0, hg_shield, true); // 回転しない
-	}
 
 	/* エフェクト関連 */
 	bomber->Draw();

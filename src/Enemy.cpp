@@ -510,13 +510,13 @@ void Enemy::Fire_0()
 	{
 		int dir = GetRand(1);
 		double addAng = (GetRand(3) / 15.);
-
+		double tspeed = s_speed;
 		if (dir == 0)
-			//shot->Fire(s_speed, ANGLE - addAng);
-			IEneShotCreater::Fire(eEneShot::ball, eEneShotMove::straight, pos, (double&)s_speed);
+			shot->Fire(s_speed, ANGLE - addAng);
+			//TODO: IEneShotCreater::Fire(eEneShot::ball, eEneShotMove::straight, pos, tspeed);
 		else
-			//shot->Fire(s_speed, ANGLE + addAng);
-			IEneShotCreater::Fire(eEneShot::ball, eEneShotMove::straight, pos, (double&)s_speed);
+			shot->Fire(s_speed, ANGLE + addAng);
+			//TODO: IEneShotCreater::Fire(eEneShot::ball, eEneShotMove::straight, pos, tspeed);
 	}
 
 	if (elapsedTime == 50)

@@ -69,7 +69,7 @@ public:
 private:
 	std::vector<std::shared_ptr<EneShot>> mEneShot;
 	int gh_power[24],
-		gh_ball[14],
+		gh_ball[12],
 		gh_long[5],
 		gh_big[4],
 		gh_suriken[10];

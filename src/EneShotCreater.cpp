@@ -73,8 +73,6 @@ void EneShotCreater::Draw()
 {
 	for (auto i : mEneShot)
 		i->Draw(this);
-
-	DrawFormatString(200, 200, GetColor(0, 255, 0), "size : %d", mEneShot.size());
 }
 
 

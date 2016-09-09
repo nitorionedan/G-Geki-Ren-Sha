@@ -151,6 +151,9 @@
     <ClInclude Include="src\Tutorial.hpp" />
     <ClInclude Include="src\Vector2D.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="data\EnemyTable1.csv" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3CA41C6D-6EB7-4187-B131-D12DFA6DB4FB}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

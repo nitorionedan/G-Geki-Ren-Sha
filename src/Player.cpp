@@ -90,13 +90,14 @@ void Player::Update()
 	isHit = false;
 
 	/* setting some params to PShot */
-	IPshot::SetParam(pos, powlv);
+	IPshot::SetParam(pos, powlv); // TODO: refactoring
 
 	/* setting some params to bomber */
-	IBomb::SetParam(pos, powlv, bombNum);
+	IBomb::SetParam(pos, powlv, bombNum); // TODO: refactoring
 
-	/* use bomb */
-	if(Keyboard::Instance()->isPush(KEY_INPUT_X) && bombNum > 0)
+	/* do bomb */
+	const bool& canBomb = (Keyboard::Instance()->isPush(KEY_INPUT_X) && bombNum > 0 && isDead == false);
+	if (canBomb)
 	{
 		bombNum--;
 		IBomb::Fire();
@@ -114,7 +115,7 @@ void Player::Update()
 
 void Player::Draw()
 {
-	// アーム
+	/* Arm */
 	if (isArm)
 	{
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
@@ -122,7 +123,7 @@ void Player::Draw()
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 
-	// 自機
+	/* player */
 	switch (state)
 	{
 	case ePlayerState::Start: Draw_Start();	break;
@@ -137,8 +138,6 @@ void Player::Draw()
 	DrawCircle(pos.x, pos.y + 9, HIT_RANGE, GetColor(0, 255, 0), false);
 //	DrawFormatString(100, 100, GetColor(0, 255, 0), "rensha = %d", s_rensha);
 //	DrawFormatString(100, 100, GetColor(0, 255, 0), "Dで死にます");
-//	DrawFormatString(100, 120, GetColor(0, 255, 0), "Pでシフトアップ");
-//	DrawFormatString(100, 140, GetColor(0, 255, 0), "Oでシフトダウン");
 }
 
 
@@ -398,6 +397,7 @@ void Player::Death()
 	state = ePlayerState::Dead;
 	isHit = true;
 	isMuteki = true;
+	isDead = true;
 	vec.SetVec(std::cos(1.5 * GetRand(100)), 1.5 * std::cos(GetRand(100)));
 	Effector::PlaySpread(pos.x, pos.y, GetRand(100), dead_ef);
 	IStage::Quake();

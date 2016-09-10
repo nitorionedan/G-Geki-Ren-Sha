@@ -204,7 +204,7 @@ void Game::Draw()
 	int CircleAngle = 0;
 	// 画面を歪ませて描画
 	DrawCircleScreen(
-		CircleX, 240,	// 中心座標
+		320, 240,	// 中心座標
 		80.0f + sin(CircleAngle * DX_PI_F / 180.0f) * 15.0f,	// 内側の円のサイズ
 		200.0f + sin(CircleAngle * 2 * DX_PI_F / 180.0f) * 50.0f,	// 外側の円のサイズ
 		48.0f,	// 内側に引き込まれるドット数

@@ -259,16 +259,14 @@ void DrawCircleScreen(int CenterX, int CenterY, float InRadius, float OutRadius,
 	Angle = 0.0f;
 	for (i = 0; i < CIRCLE_ANGLE_VERTEX_NUM; i++, Angle += DX_PI_F * 2.0f / CIRCLE_ANGLE_VERTEX_NUM)
 	{
-		AngleSinTable[i] = (float)sin((double)Angle);
-		AngleCosTable[i] = (float)cos((double)Angle);
+		AngleSinTable[i] = static_cast<float>( sin((double)Angle) );
+		AngleCosTable[i] = static_cast<float>( cos((double)Angle) );
 	}
 
 	// 内側の盛り上がっているように見せる箇所で使用する Cos テーブルを作成する
 	Angle = 0.0f;
 	for (i = 0; i < CIRCLE_RADIUS_VERTEX_NUM; i++, Angle += (DX_PI_F / 2.0f) / (CIRCLE_RADIUS_VERTEX_NUM - 1))
-	{
-		InCircleCosTable[i] = (float)cos((double)Angle);
-	}
+		InCircleCosTable[i] = static_cast<float>( cos((double)Angle) );
 
 	// ポリゴン頂点インデックスの準備
 	Ind = Index;
@@ -295,7 +293,6 @@ void DrawCircleScreen(int CenterX, int CenterY, float InRadius, float OutRadius,
 
 	// バイリニア補間描画にする
 	SetDrawMode(DX_DRAWMODE_BILINEAR);
-
 
 	// 外側のドーナツ部分を描画
 
@@ -337,7 +334,6 @@ void DrawCircleScreen(int CenterX, int CenterY, float InRadius, float OutRadius,
 	// 歪んだドーナツの描画
 	DrawPrimitiveIndexed2D(Vertex, sizeof(Vertex) / sizeof(VERTEX2D), Index, sizeof(Index) / sizeof(WORD), DX_PRIMTYPE_TRIANGLELIST, ScreenHandle, FALSE);
 
-
 	// 内側の盛り上がっているように見える部分を描画
 
 	// Cosテーブルにしたがってテクスチャ座標をずらす
@@ -372,6 +368,7 @@ void DrawCircleScreen(int CenterX, int CenterY, float InRadius, float OutRadius,
 	}
 
 	// 中心の盛り上がって見える部分を描画
-	DrawPrimitiveIndexed2D(Vertex, sizeof(Vertex) / sizeof(VERTEX2D), Index, sizeof(Index) / sizeof(WORD), DX_PRIMTYPE_TRIANGLELIST, ScreenHandle, FALSE);
+	//DrawPrimitiveIndexed2D(Vertex, sizeof(Vertex) / sizeof(VERTEX2D), Index, sizeof(Index) / sizeof(WORD), DX_PRIMTYPE_TRIANGLELIST, ScreenHandle, FALSE);
+	
 	SetDrawMode(DX_DRAWMODE_NEAREST);
 }

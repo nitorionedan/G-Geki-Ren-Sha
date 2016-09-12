@@ -52,7 +52,7 @@ BossA::BossA()
 	hs_big = LoadSoundMem("SOUND/SE/eshot03.wav");
 	hs_exp = LoadSoundMem("SOUND/SE/explosion03.mp3");
 	hs_break = LoadSoundMem("SOUND/SE/break00.wav");
-	hm		 = MV1LoadModel("GRAPH/MODEL/BossA_2.x");
+	hm = MV1LoadModel("GRAPH/MODEL/BossA_2.x");
 
 	mPos.x = 320.f;
 	mPos.y = 300.f;

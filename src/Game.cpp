@@ -141,10 +141,10 @@ void Game::Update()
 // TEST ----------------------------------------------
 	if (DebugMode::isTest == false)	return;
 
-	if (Keyboard::Instance()->isPush(KEY_INPUT_U))
+	if (Keyboard::Instance()->isDown(KEY_INPUT_Q) && Keyboard::Instance()->isDown(KEY_INPUT_W))
 		mSceneChanger->ChangeScene(eScene_GameOver);
 
-	if(Keyboard::Instance()->isPush(KEY_INPUT_S))
+	if(Keyboard::Instance()->isPush(KEY_INPUT_F2))
 	{
 		IBossChara::Start();
 		IStage::SkipTo(1000);

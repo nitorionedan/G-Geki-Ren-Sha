@@ -7,6 +7,7 @@
 #include "Field.hpp"
 #include "NullStage.hpp"
 #include "OpeningStage.hpp"
+#include "Stage1.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -27,8 +28,6 @@ Stage::Stage()
 	Screen = MakeScreen(640, 480, FALSE);
 	
 	// LoadStage(*.dat);		// TODO: こういう風にロードしたい 
-
-	StageSet(nowStage);			// 現在のステージを設定
 
 	pos.SetVec(320., 240.);
 	cycle = 0.;
@@ -63,7 +62,7 @@ void Stage::StageSet(eStage estage)
 	{
 	case eStage::opening:
 		hs_bgm = LoadSoundMem("SOUND/s0.wav");
-		mField = static_cast<Field*>(new OpenigStage);
+		mField = static_cast<Field*>(new Stage1);
 		break;
 
 	case eStage::stage1 :

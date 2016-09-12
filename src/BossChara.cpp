@@ -1,9 +1,6 @@
 //------------------------------------------------------------------------------
 /// @file
-/// @brief    BossChara.hppの実装
-/// @author   PG班 矢風！
-///
-/// @copyright  Copyright 2016 Shohei.Y
+/// @brief		BossChara.hppの実装
 /// @attention  このファイルの利用は、同梱のREADMEにある
 ///             利用条件に従ってください
 
@@ -28,10 +25,8 @@ BossChara::~BossChara(){
 }
 
 
-bool BossChara::HitCheck(const double& ColX, const double& ColY, const int& DamagePoint)
-{
-	const bool& IS_HIT = mBoss->HitCheck(ColX, ColY, DamagePoint);
-	return  IS_HIT ? true : false;
+bool BossChara::HitCheck(const double& ColX, const double& ColY, const int& DamagePoint){
+	return mBoss->HitCheck(ColX, ColY, DamagePoint) ? true : false;
 }
 
 
@@ -80,7 +75,8 @@ void IBossChara::Start()
 {
 	switch (IStage::GetNowStage())
 	{
-	case eStage::stage1:	mBossChara->Start(eBoss_A);	break;
+	case eStage::opening: mBossChara->Start(eBoss_A); break;
+	case eStage::stage1:	break;
 	case eStage::stage2:	break;
 	case eStage::stage3:	break;
 	case eStage::stage4:	break;

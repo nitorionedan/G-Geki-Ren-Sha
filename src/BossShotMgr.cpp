@@ -3,6 +3,7 @@
 #include "NullEnemyShot.hpp"
 #include "BossA.hpp"
 #include "Stage.hpp"
+#include <cassert>
 
 
 BossShotMgr::BossShotMgr(EnemyShot* mEnemyShot)
@@ -30,18 +31,26 @@ void BossShotMgr::ChangeShot(eEnemyShot type)
 {
 	delete mEnemyShot;
 
-	switch (IStage::GetNowStage())
+	switch (type)
 	{
-	case eStage::stage1:
-		mEnemyShot = (EnemyShot*)new Eshot;	
+	case eEnemyShot::ShotA:
+		mEnemyShot = (EnemyShot*)new Eshot;
 		break;
-	case eStage::stage2:	break;
-	case eStage::stage3:	break;
-	case eStage::stage4:	break;
-	case eStage::stage5:	break;
-	case eStage::stage6:	break;
-	case eStage::stage0:	break;
-	default:				mEnemyShot = (EnemyShot*)new NullEnemyShot;
+	case eEnemyShot::ShotB:
+		break;
+	case eEnemyShot::ShotC:
+		break;
+	case eEnemyShot::ShotD:
+		break;
+	case eEnemyShot::ShotE:
+		break;
+	case eEnemyShot::ShotF:
+		break;
+	case eEnemyShot::ShotZ:
+		break;
+	case eEnemyShot::None:
+		break;
+	default: assert(!"BossShotMgr::ChangeShot()");
 	}
 }
 

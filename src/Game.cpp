@@ -146,11 +146,8 @@ void Game::Update()
 
 	if(Keyboard::Instance()->isPush(KEY_INPUT_S))
 	{
-	//	PlayAnime(320, 240, eExplosion_big);
-	//	bomber->PlayAnime(BossA::GetPos().x, BossA::GetPos().y);
-	//	PlayAnime(100, 100, eExplosion_long);
-	//	itemMng->Create(100, 100);
 		IBossChara::Start();
+		IStage::SkipTo(1000);
 	}
 }
 
@@ -159,6 +156,10 @@ void Game::Draw()
 {
 	static int time = 0;
 	time++;
+
+	/*static float c_tmp = 0.f;
+	c_tmp += 0.01f;
+	float tmp = std::sin(c_tmp) * 300;*/
 
 	SetDrawScreen(Screen);
 	ClearDrawScreen();
@@ -197,18 +198,21 @@ void Game::Draw()
 	score->Draw();
 
 	SetDrawScreen(DX_SCREEN_BACK);
+	DrawGraph(0, 0, Screen, TRUE);
 
 	//DrawRasterScroll(320, 240, 600, 100, time, Screen, TRUE); // << super noise
 
-	int CircleX = 320;
-	int CircleAngle = 0;
-	// 画面を歪ませて描画
-	DrawCircleScreen(
-		320, 240,	// 中心座標
-		80.0f + sin(CircleAngle * DX_PI_F / 180.0f) * 15.0f,	// 内側の円のサイズ
-		200.0f + sin(CircleAngle * 2 * DX_PI_F / 180.0f) * 50.0f,	// 外側の円のサイズ
-		48.0f,	// 内側に引き込まれるドット数
-		Screen);
+	//int CircleX = 320;
+	//int CircleAngle = 0;
+	//// 画面を歪ませて描画
+	//DrawCircleScreen(
+	//	320, 240,	// 中心座標
+	//	//80.0f + sin(CircleAngle * DX_PI_F / 180.0f) * 15.0f,	// 内側の円のサイズ
+	//	tmp,
+	//	//200.0f + sin(CircleAngle * 2 * DX_PI_F / 180.0f) * 50.0f,	// 外側の円のサイズ
+	//	0.f,
+	//	0.f,	// 内側に引き込まれるドット数
+	//	Screen);
 
 	// TEST-----------------------------------------------------------
 	if (DebugMode::isTest == false)	return;

@@ -143,6 +143,8 @@ void Player::Draw()
 
 void Player::Update_Start()
 {
+	isDead = false;
+
 	const bool& isStartPosition = (pos.y == Y_START);
 
 	c_start->Update();

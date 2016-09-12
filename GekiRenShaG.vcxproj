@@ -62,6 +62,7 @@
     <ClCompile Include="src\Keyboard.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Menu.cpp" />
+    <ClCompile Include="src\OpeningStage.cpp" />
     <ClCompile Include="src\Particle.cpp" />
     <ClCompile Include="src\Piece.cpp" />
     <ClCompile Include="src\PieceEffect.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="src\Explosion.hpp" />
     <ClInclude Include="src\ExplosionEffect.hpp" />
     <ClInclude Include="src\ExplosionS.hpp" />
+    <ClInclude Include="src\Field.hpp" />
     <ClInclude Include="src\Game.hpp" />
     <ClInclude Include="src\GameOver.hpp" />
     <ClInclude Include="src\Graphic.hpp" />
@@ -130,6 +132,8 @@
     <ClInclude Include="src\Menu.hpp" />
     <ClInclude Include="src\NullBoss.hpp" />
     <ClInclude Include="src\NullEnemyShot.hpp" />
+    <ClInclude Include="src\NullStage.hpp" />
+    <ClInclude Include="src\OpeningStage.hpp" />
     <ClInclude Include="src\Particle.hpp" />
     <ClInclude Include="src\Piece.hpp" />
     <ClInclude Include="src\PieceEffect.hpp" />

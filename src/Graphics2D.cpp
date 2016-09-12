@@ -332,13 +332,15 @@ void DrawCircleScreen(int CenterX, int CenterY, float InRadius, float OutRadius,
 	}
 
 	// 歪んだドーナツの描画
-	DrawPrimitiveIndexed2D(Vertex, sizeof(Vertex) / sizeof(VERTEX2D), Index, sizeof(Index) / sizeof(WORD), DX_PRIMTYPE_TRIANGLELIST, ScreenHandle, FALSE);
+	SetDrawBlendMode(DX_BLENDMODE_INVSRC, 255);
+	DrawPrimitiveIndexed2D(Vertex, _countof(Vertex), Index, _countof(Index), DX_PRIMTYPE_TRIANGLELIST, ScreenHandle, FALSE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// 内側の盛り上がっているように見える部分を描画
 
 	// Cosテーブルにしたがってテクスチャ座標をずらす
 	Vert = Vertex;
-	for (i = 0; i < CIRCLE_ANGLE_VERTEX_NUM; i++)
+	for (i = 0; i < CIRCLE_ANGLE_VERTEX_NUM; ++i)
 	{
 		// 使用する Sin, Cos の値をセット
 		Sin = AngleSinTable[i];
@@ -370,5 +372,6 @@ void DrawCircleScreen(int CenterX, int CenterY, float InRadius, float OutRadius,
 	// 中心の盛り上がって見える部分を描画
 	//DrawPrimitiveIndexed2D(Vertex, sizeof(Vertex) / sizeof(VERTEX2D), Index, sizeof(Index) / sizeof(WORD), DX_PRIMTYPE_TRIANGLELIST, ScreenHandle, FALSE);
 	
+	// ぼやけるのでニアレストに戻す
 	SetDrawMode(DX_DRAWMODE_NEAREST);
 }

@@ -28,7 +28,7 @@ EnemyMng::~EnemyMng()
 
 void EnemyMng::Load(eStage stage)
 {
-	assert(stage == eStage::stage1 && "[EnemyMng::Load]Å@Sorry, I haven't been implement this stage XD\n");
+	assert(stage == eStage::opening && "[EnemyMng::Load]Å@Sorry, I haven't been implement this stage XD\n");
 
 	if (!enemy.empty())
 		Finalize();
@@ -37,6 +37,7 @@ void EnemyMng::Load(eStage stage)
 	std::string fname;
 	switch (stage)
 	{
+	case eStage::opening: fname = "data/EnemyTableOP.csv"; break;
 	case eStage::stage1: fname = "data/EnemyTable1.csv"; break;
 	case eStage::stage2: fname = "data/EnemyTable2.csv"; break;
 	case eStage::stage3: fname = "data/EnemyTable3.csv"; break;

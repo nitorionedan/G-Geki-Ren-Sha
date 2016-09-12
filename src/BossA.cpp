@@ -198,30 +198,23 @@ int BossA::GetTime() { return time; }
 
 bool BossA::HitCheck(const double & ColX, const double & ColY, const int& DamagePoint)
 {
-	if (!isExist)	return false;
+	if (state == eBossA_Dead)
+		return false;
 
 	const bool& IS_HIT = (Vector2D::CirclePointCollision(pos.x, pos.y, ColX, ColY, HIT_RANGE));
 	
-	if (IS_HIT)	isHit = true;
-	
 	if (IS_HIT)
 	{
+		isHit = true;
 		Damage(DamagePoint);
 		IScore::AddScore(1);
 	}
 
-	return IS_HIT ? true : false;
+	return IS_HIT;
 }
 
 
 void BossA::ChangeState(eBossA_state state_) { state = state_; }
-
-
-void BossA::GetPosition(double* x, double* y)
-{
-	*x = this->pos.x;
-	*y = this->pos.y;
-}
 
 
 void BossA::Start_Update()

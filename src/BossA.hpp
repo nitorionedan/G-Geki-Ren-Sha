@@ -38,7 +38,6 @@ public:
 	// @param[in]	DamagePoint	ダメージ値
 	// @attention	円形と点の当たり判定方式
 	bool HitCheck(const double& ColX, const double& ColY, const int& DamagePoint) override;
-	void GetPosition(double* x, double *y);
 	
 	void Start_Update();
 	void Normal_Update();

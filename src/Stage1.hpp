@@ -65,7 +65,6 @@ private:
 	void IniObj(Object_t *Ob, int ImgHandle, int ImgSize, int ImgX1, int ImgY1, int ImgX2, int ImgY2, float LargeX, float LargeY,
 		int Type, float FromZ, float FadeFromZ, float FadeToZ, float ToZ, float GraphX, float GraphY, int Obchild_Max);
 	void CalcObject();
-	void SwapObChild(ObChild_t* Ob1, ObChild_t* Ob2);
 	void SortObject();
 
 	View_t t_left_view;

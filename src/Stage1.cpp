@@ -44,31 +44,6 @@ void Stage1::Initialize()
 {
 	::z = 0.f;
 
-	/*t_left_view.large_x = 48.f;
-	t_left_view.large_y = 60.f;
-	t_left_view.isVertical = false;
-	t_left_view.center.x = 220.f;
-	t_left_view.center.y = 240.f;
-	t_left_view.center.z = 0.f;
-	t_left_view.u = 0.763671875f;
-	t_left_view.v = 1.f;
-	t_left_view.from_z      = 400;
-	t_left_view.fade_from_z = 100;
-	t_left_view.fade_to_z   = -100;
-	t_left_view.to_z        = -400;
-
-	int j = 0;
-	for(auto& i : t_left_view.vertex)
-	{
-		i.r = 255;
-		i.b = 255;
-		i.g = 255;
-		i.a = 255;
-		i.u = t_left_view.u * t_vtpm[j].u;
-		i.v = t_left_view.v * t_vtpm[j].v;
-		++j;
-	}*/
-
 	/*
 	int ImgHandle   : 画像ハンドル
 	int ImgSize     : 画像サイズ
@@ -97,76 +72,6 @@ void Stage1::Initialize()
 
 void Stage1::Update()
 {
-	//t_left_view.center.z = ::z;
-
-	//if (CheckHitKey(KEY_INPUT_Z) > 0)
-	//	::z += 1.4f;
-	//if (CheckHitKey(KEY_INPUT_Y) > 0)
-	//	::z -= 1.4f;
-
-	//// vertical or horizontal
-	//if(t_left_view.isVertical)
-	//{
-	//	int j = 0;
-	//	for(auto& i : t_left_view.vertex)
-	//	{
-	//		i.pos.x = t_left_view.center.x + t_left_view.large_x * t_vtpm[j].x;
-	//		i.pos.y = t_left_view.center.y + t_left_view.large_y * t_vtpm[j].y;
-	//		i.pos.z = t_left_view.center.z;
-	//		++j;
-	//	}
-	//}
-	//else
-	//{
-	//	int j = 0;
-	//	for (auto& i : t_left_view.vertex)
-	//	{
-	//		i.pos.x = t_left_view.center.x;
-	//		i.pos.y = t_left_view.center.y + t_left_view.large_y * t_vtpm[j].y;
-	//		i.pos.z = t_left_view.center.z + t_left_view.large_x * t_vtpm[j].x;
-	//		++j;
-	//	}
-	//}
-
-	/*
-	z
-	Object.FromZ        200
-	z
-	Object.FadeFromZ    100
-	z
-	Object.FadeToZ     -100
-	z
-	Object.ToZ         -200
-	z
-	*/
-	//if (t_left_view.from_z - t_left_view.fade_from_z <= 0.f)
-	//	assert(!"Stage1::Update()");
-	//else if(t_left_view.fade_to_z - t_left_view.to_z <= 0.f)
-	//	assert(!"Stage1::Update()");
-	//else
-	//{
-	//	for(auto& i : t_left_view.vertex)
-	//	{
-	//		float z = i.pos.z;
-
-	//		//位置が描画する範囲より遠かったら透過0
-	//		if (z < t_left_view.to_z)
-	//			i.a = 0;
-	//		//(近づいている場合)フェードインする位置だったら
-	//		else if (t_left_view.to_z < z && z <= t_left_view.fade_to_z)
-	//			i.a = static_cast<unsigned char>(255.f / (t_left_view.fade_to_z - t_left_view.to_z) * (z - t_left_view.to_z));
-	//		//通常描画する位置なら
-	//		else if (t_left_view.fade_to_z <= z && z <= t_left_view.fade_from_z)
-	//			i.a = 255;
-	//		//(近づいてる場合)フェードアウトする位置だったら
-	//		else if (t_left_view.fade_from_z <= z && z < t_left_view.from_z)
-	//			i.a = static_cast<unsigned char>(255.f / (t_left_view.from_z - t_left_view.fade_from_z) * (t_left_view.from_z - z));
-	//		//描画する範囲より近かったら透過0
-	//		else if (t_left_view.from_z < z)
-	//			i.a = 0.f;
-	//	}
-	//}
-
 	CalcObject();
 	SortObject();
 }
@@ -174,9 +79,6 @@ void Stage1::Update()
 
 void Stage1::Draw()
 {
-	//DrawPolygon3D(t_left_view.vertex, 2, t_left_view.img, TRUE);
-	//DrawFormatString(0, 30, GetColor(255, 0, 255), "z =%f", t_left_view.center.z);
-
 	/// SetDrawArea(FX, FY, FX + FMX, FY + FMY);
 	SetDrawMode(DX_DRAWMODE_BILINEAR); // make smooth polygon
 	for(auto Ob : Object)
@@ -184,8 +86,6 @@ void Stage1::Draw()
 		for (int s = 0; s < Ob.childMax; ++s)
 			DrawPolygon3D(Ob.child[s].Vertex, 2, Ob.img, TRUE);
 	}
-	int num = 1;
-	DrawFormatString(30, 30, GetColor(255, 0, 0), "Object[%d].child[%d].Vertex[%d].a : %u", num, num, num, static_cast<unsigned int>(Object[num].child[num].Vertex[num].a));
 	SetDrawMode(DX_DRAWMODE_NEAREST); // reset default
 	/// SetDrawArea(0, 0, 640, 480);
 }
@@ -238,11 +138,13 @@ void Stage1::IniObj(Object_t * Ob, int ImgHandle, int ImgSize, int ImgX1, int Im
 		Ob->child[s].center.y = GraphY;
 		Ob->child[s].center.z = Ob->toZ - Ob->zWidth + Ob->zWidth * s;
 
-		for (int i = 0; i < VertexNum; ++i)
+		int i = 0;
+		for(auto& Vertex : Ob->child[s].Vertex)
 		{
-			Ob->child[s].Vertex[i].r = Ob->child[s].Vertex[i].g = Ob->child[s].Vertex[i].b = Ob->child[s].Vertex[i].a = 255;
-			Ob->child[s].Vertex[i].u = ou1 + ou2 * t_vtpm[i].u;
-			Ob->child[s].Vertex[i].v = ov1 + ov2 * t_vtpm[i].v;
+			Vertex.r = Vertex.g = Vertex.b = Vertex.a = 255;
+			Vertex.u = ou1 + ou2 * t_vtpm[i].u;
+			Vertex.v = ov1 + ov2 * t_vtpm[i].v;
+			++i;
 		}
 	}
 }
@@ -255,27 +157,33 @@ void Stage1::CalcObject()
 		for (int s = 0; s < Object[t].childMax; ++s)
 		{
 			Object[t].child[s].center.z -= 3;
+
 			for (int i = 0; i < VertexNum; ++i)
 			{
+				VECTOR& pos = Object[t].child[s].Vertex[i].pos;
+				VECTOR& center = Object[t].child[s].center;
+
 				switch (Object[t].type)
 				{
 				case 0: // horizontal
-					Object[t].child[s].Vertex[i].pos.x = Object[t].child[s].center.x + Object[t].largeX * t_vtpm[i].x;
-					Object[t].child[s].Vertex[i].pos.y = Object[t].child[s].center.y + Object[t].largeY * t_vtpm[i].y;
-					Object[t].child[s].Vertex[i].pos.z = Object[t].child[s].center.z;
+					pos.x = center.x + Object[t].largeX * t_vtpm[i].x;
+					pos.y = center.y + Object[t].largeY * t_vtpm[i].y;
+					pos.z = center.z;
 					break;
 
 				case 1: // vertical (wall)
-					Object[t].child[s].Vertex[i].pos.x = Object[t].child[s].center.x;
-					Object[t].child[s].Vertex[i].pos.y = Object[t].child[s].center.y + Object[t].largeY * t_vtpm[i].y;
-					Object[t].child[s].Vertex[i].pos.z = Object[t].child[s].center.z + Object[t].zWidth / 2 * t_vtpm[i].x;
+					pos.x = center.x;
+					pos.y = center.y + Object[t].largeY * t_vtpm[i].y;
+					pos.z = center.z + Object[t].zWidth / 2 * t_vtpm[i].x;
 					break;
 				
 				case 2: // vertical (floor)
-					Object[t].child[s].Vertex[i].pos.x = Object[t].child[s].center.x + Object[t].largeX * t_vtpm[i].x;
-					Object[t].child[s].Vertex[i].pos.y = Object[t].child[s].center.y;
-					Object[t].child[s].Vertex[i].pos.z = Object[t].child[s].center.z + Object[t].zWidth / 2 * t_vtpm[i].y;
+					pos.x = center.x + Object[t].largeX * t_vtpm[i].x;
+					pos.y = center.y;
+					pos.z = center.z + Object[t].zWidth / 2 * t_vtpm[i].y;
 					break;
+
+				default: assert(!"Object[?].type is abnormal");
 				}
 			}
 		}
@@ -291,29 +199,35 @@ void Stage1::CalcObject()
 				for (int i = 0; i < VertexNum; ++i)
 				{
 					float z = Object[t].child[s].Vertex[i].pos.z;
+					unsigned char& alpha = Object[t].child[s].Vertex[i].a;
+					const bool& Is_far = ( z < Object[t].toZ );
+					const bool& Is_fadeIn = ( Object[t].toZ < z && z <= Object[t].fadeToZ );
+					const bool& Is_renderRange = ( Object[t].fadeToZ <= z && z <= Object[t].fadeFromZ );
+					const bool& Is_fadeOut = ( Object[t].fadeFromZ <= z && z < Object[t].fromZ );
+					const bool& Is_near = ( Object[t].fromZ < z );
 
-					/* 位置が描画する範囲より遠かったら透過０ */
-					if (z < Object[t].toZ)
-						Object[t].child[s].Vertex[i].a = 0;
-					/* （近づいている場合）フェードインする位置だったら */
-					else if (Object[t].toZ < z && z <= Object[t].fadeToZ)
-						Object[t].child[s].Vertex[i].a = static_cast<unsigned char>(255.f / Object[t].fadeToZ - Object[t].toZ) * (z - Object[t].toZ);
-					/* 通常描画する位置なら */
-					else if (Object[t].fadeToZ <= z && z <= Object[t].fadeFromZ)
-						Object[t].child[s].Vertex[i].a = 255;
-					/* （近づいてくる場合）フェードアウトする位置だったら */
-					else if (Object[t].fromZ < z)
-						Object[t].child[s].Vertex[i].a = 0;
+					if (Is_far)	// 位置が描画する範囲より遠かったら透過０ 
+						alpha = 0;
+					else if (Is_fadeIn) //（近づいている場合）フェードインする位置だったら
+						alpha = static_cast<unsigned char>( 255.f / (Object[t].fadeToZ - Object[t].toZ) * (z - Object[t].toZ) );					
+					else if (Is_renderRange) // 通常描画する位置なら
+						alpha = 255;
+					else if (Is_fadeOut) //（近づいてくる場合）フェードアウトする位置だったら
+						alpha = static_cast<unsigned char>(255.f / (Object[t].fromZ - Object[t].fadeFromZ) * (Object[t].fromZ - z));
+					else if (Is_near)
+						alpha = 0;
 				}
 
-				// 近づいて見えなくなったら
-				if(Object[t].child[s].center.z < Object[t].toZ - Object[t].zWidth * 0.5f)
+				const bool& Is_imvisibleNear = ( Object[t].child[s].center.z < Object[t].toZ - Object[t].zWidth * 0.5f );
+				const bool& Is_imvisibleFar = ( Object[t].child[s].center.z > Object[t].fromZ + Object[t].zWidth * 0.5f );
+				
+				if (Is_imvisibleNear) // 近づいて見えなくなったら
 				{
 					// 一番向こう側へ
 					float sub = (Object[t].toZ - Object[t].zWidth * 0.5f) - Object[t].child[s].center.z;
 					Object[t].child[s].center.z = Object[t].fromZ + Object[t].zWidth * 0.5f - sub;
 				}
-				else if (Object[t].child[s].center.z > Object[t].fromZ + Object[t].zWidth * 0.5f)
+				else if (Is_imvisibleFar) // 遠ざかって見えなくなったら
 				{
 					// 一番こちら側へ
 					float sub = Object[t].child[s].center.z - (Object[t].fromZ + Object[t].zWidth * 0.5f);
@@ -322,11 +236,6 @@ void Stage1::CalcObject()
 			}
 		}
 	}
-}
-
-
-void Stage1::SwapObChild(ObChild_t * Ob1, ObChild_t * Ob2){
-	std::swap(*Ob1, *Ob2);
 }
 
 
@@ -339,7 +248,7 @@ void Stage1::SortObject()
 			for (int j = i + 1; j < Object[t].childMax; ++j)
 			{
 				if (Object[t].child[i].center.z < Object[t].child[j].center.z)
-					SwapObChild(&Object[t].child[i], &Object[t].child[j]);
+					std::swap(Object[t].child[i], Object[t].child[j]);
 			}
 		}
 	}

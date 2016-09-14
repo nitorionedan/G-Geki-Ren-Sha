@@ -4,6 +4,8 @@
 #include "Graphics2D.hpp"
 #include "Vector2D.hpp"
 #include <memory>
+#include <string>
+
 
 class Field;
 
@@ -37,7 +39,10 @@ public:
 	const eStage GetNowStage() const {
 		return nowStage;
 	}
-	static int GetTime();
+	static const int GetTime() {
+		return s_time;
+	}
+	
 
 private:
 	void Quake(); // ステージを揺らす

@@ -161,9 +161,6 @@ void Game::Draw()
 	c_tmp += 0.01f;
 	float tmp = std::sin(c_tmp) * 300;*/
 
-	SetDrawScreen(Screen);
-	ClearDrawScreen();
-
 	// Back Ground
 	stage->Draw();
 
@@ -196,9 +193,6 @@ void Game::Draw()
 	Draw_Status();
 
 	score->Draw();
-
-	SetDrawScreen(DX_SCREEN_BACK);
-	DrawGraph(0, 0, Screen, TRUE);
 
 	//DrawRasterScroll(320, 240, 600, 100, time, Screen, TRUE); // << super noise
 

@@ -53,6 +53,7 @@ BossA::BossA()
 	hs_exp = LoadSoundMem("SOUND/SE/explosion03.mp3");
 	hs_break = LoadSoundMem("SOUND/SE/break00.wav");
 	hm = MV1LoadModel("GRAPH/MODEL/BossA_2.x");
+	Screen = MakeScreen(640, 480, TRUE);
 
 	mPos.x = 320.f;
 	mPos.y = 300.f;

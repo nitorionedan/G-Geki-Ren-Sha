@@ -90,6 +90,7 @@ private:
 	bool	isMove;							// 攻撃開始しているか？
 	bool	isEnd;							// 退場したか？
 	bool	isDead;							// 死んだか？
+	int Screen;
 
 	// static -----------------------------
 	static eBossA_state state;

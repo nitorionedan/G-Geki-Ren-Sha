@@ -69,5 +69,6 @@ private:
 
 	View_t t_left_view;
 	Object_t Object[ObjectNumMax];
-	int gh[2];
+	int gh[2], Screen;
+	int ObjectNum;
 };

@@ -5,7 +5,6 @@
 #include "IScore.hpp"
 #include <fstream>
 
-
 const int Score::digit = 8;
 
 
@@ -23,13 +22,65 @@ Score::Score()
 	, f_exist(true)
 {
 	LoadScore();	// ハイスコアデータをロードするよ
-	score = 0;
+	
+	Initialize();
+
+	printfDx("Score()\n");
 }
 
 
 Score::~Score()
 {
 	SaveScore();
+	FILE* rankingFile;
+	fopen_s(&rankingFile, "data/ranking.txt", "wb");
+	fwrite(&tRanking, sizeof(tRanking), 1, rankingFile);
+	fclose(rankingFile);
+	printfDx("~Score()\n");
+}
+
+
+void Score::Initialize()
+{
+	score = 0;
+
+	/* crete files */
+	FILE* rankingFile;
+	if ( error = fopen_s(&rankingFile, "data/ranking.txt", "wb") != 0 )
+	{
+		printfDx("file open error\n再起動してね。(^^)/~~\n");
+
+		/* init ranking */
+		tRanking.score[0] = 111111;
+		tRanking.score[1] = 111110;
+		tRanking.score[2] = 111100;
+		tRanking.score[3] = 111000;
+		tRanking.score[4] = 110000;
+		tRanking.score[5] = 100000;
+		tRanking.name[0] = "YOSSIN";
+		tRanking.name[1] = "ZUN";
+		tRanking.name[2] = "DIXQ";
+		tRanking.name[3] = "JIRURUN";
+		tRanking.name[4] = "ENDLESS SHIRAFU";
+		tRanking.name[5] = "YADEN";
+		for (int i = 0; i < _countof(tRanking.date); ++i)
+			GetDateTime(&tRanking.date[i]);
+		fwrite(&tRanking, sizeof(tRanking), 1, rankingFile);
+	}
+	else // successful
+	{
+		printfDx("successful\n");
+
+		// データをロード
+		fread(&tRanking, sizeof(tRanking), 1, fp);
+	}
+
+	fclose(rankingFile);
+
+	for (int i = 0; i < 6; ++i)
+		printfDx("%d, name = %s, score = %d\n", i, tRanking.name[i].c_str(), tRanking.score[i]);
+
+	tRanking.name[0] = "YADEN";
 }
 
 

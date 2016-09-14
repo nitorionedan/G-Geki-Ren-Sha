@@ -3,6 +3,7 @@
 */
 
 #include "Stage1.hpp"
+#include "Graphics2D.hpp"
 #include <cassert>
 #include <algorithm>
 
@@ -18,7 +19,6 @@ namespace
 		{ 1.f, 1.f, 1.f, 0.f }
 	};
 	float z;
-	int ObjectNum;
 }
 
 
@@ -27,6 +27,7 @@ Stage1::Stage1()
 	int i = t_left_view.img = LoadGraph("GRAPH/mydat/img/kabe.png");
 	gh[0] = LoadGraph("GRAPH/mydat/img/tex.png");
 	gh[1] = LoadGraph("GRAPH/mydat/img/kabe.png");
+	Screen = MakeScreen(640, 480, TRUE);
 
 	Initialize();
 }
@@ -79,6 +80,10 @@ void Stage1::Update()
 
 void Stage1::Draw()
 {
+	int tmpScreen = GetDrawScreen();
+	SetDrawScreen(Screen);
+	ClearDrawScreen();
+
 	/// SetDrawArea(FX, FY, FX + FMX, FY + FMY);
 	SetDrawMode(DX_DRAWMODE_BILINEAR); // make smooth polygon
 	for(auto Ob : Object)
@@ -88,6 +93,10 @@ void Stage1::Draw()
 	}
 	SetDrawMode(DX_DRAWMODE_NEAREST); // reset default
 	/// SetDrawArea(0, 0, 640, 480);
+
+	SetDrawScreen(tmpScreen);
+	//DrawGraph(0, 0, Screen, TRUE);
+	DrawCircleScreen(320, 240, 200.f, 400.f, 50.f, Screen);
 }
 
 
@@ -220,18 +229,19 @@ void Stage1::CalcObject()
 
 				const bool& Is_imvisibleNear = ( Object[t].child[s].center.z < Object[t].toZ - Object[t].zWidth * 0.5f );
 				const bool& Is_imvisibleFar = ( Object[t].child[s].center.z > Object[t].fromZ + Object[t].zWidth * 0.5f );
+				VECTOR& center = Object[t].child[s].center;
 				
 				if (Is_imvisibleNear) // ‹ß‚Ã‚¢‚ÄŒ©‚¦‚È‚­‚È‚Á‚½‚ç
 				{
 					// ˆê”ÔŒü‚±‚¤‘¤‚Ö
-					float sub = (Object[t].toZ - Object[t].zWidth * 0.5f) - Object[t].child[s].center.z;
-					Object[t].child[s].center.z = Object[t].fromZ + Object[t].zWidth * 0.5f - sub;
+					float sub = (Object[t].toZ - Object[t].zWidth * 0.5f) - center.z;
+					center.z = Object[t].fromZ + Object[t].zWidth * 0.5f - sub;
 				}
 				else if (Is_imvisibleFar) // ‰“‚´‚©‚Á‚ÄŒ©‚¦‚È‚­‚È‚Á‚½‚ç
 				{
 					// ˆê”Ô‚±‚¿‚ç‘¤‚Ö
-					float sub = Object[t].child[s].center.z - (Object[t].fromZ + Object[t].zWidth * 0.5f);
-					Object[t].child[s].center.z = Object[t].toZ - Object[t].zWidth * 0.5f + sub;
+					float sub = center.z - (Object[t].fromZ + Object[t].zWidth * 0.5f);
+					center.z = Object[t].toZ - Object[t].zWidth * 0.5f + sub;
 				}
 			}
 		}
@@ -241,6 +251,7 @@ void Stage1::CalcObject()
 
 void Stage1::SortObject()
 {
+	/* Z sort */
 	for (int t = 0; t < ObjectNum; ++t)
 	{
 		for (int i = 0; i < Object[t].childMax; ++i)

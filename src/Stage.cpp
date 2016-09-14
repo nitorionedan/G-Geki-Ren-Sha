@@ -1,4 +1,3 @@
-#include <DxLib.h>
 #include "Stage.hpp"
 #include "Keyboard.hpp"
 #include "DebugMode.hpp"
@@ -9,6 +8,7 @@
 #include "OpeningStage.hpp"
 #include "Stage1.hpp"
 
+#include <DxLib.h>
 #include <algorithm>
 #include <cmath>
 #include <cassert>
@@ -62,10 +62,12 @@ void Stage::StageSet(eStage estage)
 	{
 	case eStage::opening:
 		hs_bgm = LoadSoundMem("SOUND/s0.wav");
-		mField = static_cast<Field*>(new Stage1);
+		mField = static_cast<Field*>(new OpenigStage);
 		break;
 
 	case eStage::stage1 :
+		hs_bgm = LoadSoundMem("SOUND/s0.wav"); // TODO: change bgm
+		mField = static_cast<Field*>(new Stage1);
 		break;
 
 	case eStage::stage2 :
@@ -204,11 +206,6 @@ void Stage::Quake()
 
 void Stage::SkipTo(int Time){
 	s_time = Time;
-}
-
-
-int Stage::GetTime(){
-	return s_time;
 }
 
 

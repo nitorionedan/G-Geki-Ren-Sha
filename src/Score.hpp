@@ -2,22 +2,36 @@
 
 #include "Task.hpp"
 #include "Graphic.hpp"
-
 #include <memory>
+#include <DxLib.h>
+#include <string>
+
+constexpr int RankingNum = 6;
+constexpr char* RankingFile = "data/rkg.txt";
 
 
 class Score : public Task
 {
+	struct t_Ranking
+	{
+		int score[RankingNum];
+		std::string name[RankingNum];
+		DATEDATA date[RankingNum];
+	};
+
 public:
 	Score();
 	~Score();
+	void Initialize();
 	void Update() override;
 	void Draw() override;
 	void IsShowScore(const bool& IsShow);
 	void ShowResult();
 	void AddScore(const int& point);
-
 	int secBonus; // 毎秒加算スコア // なしの方向で(^^;
+	const t_Ranking& GetRanking() {
+		return tRanking;
+	}
 
 private:
 	void LoadScore();				// セーブファイルロード
@@ -36,7 +50,9 @@ private:
 	int val_score;
 	int val_hiscore;
 	int x_num;
-
+	int fileHandle;
 	int c_secscore;					// 毎秒加算スコア用カウンター
 	bool f_exist;					// 存在しているか？
+
+	t_Ranking tRanking;
 };

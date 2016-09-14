@@ -25,15 +25,12 @@ Score::Score()
 	LoadScore();	// ハイスコアデータをロードするよ
 	
 	Initialize();
-
-	printfDx("Score()\n");
 }
 
 
 Score::~Score()
 {
 	SaveScore();
-	printfDx("~Score()\n");
 }
 
 
@@ -41,15 +38,56 @@ void Score::Initialize()
 {
 	score = 0;
 
-	/* read ranking file */
-	HANDLE hFile = CreateFile("data/rkg.txt", GENERIC_ALL, 0, NULL,
-		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	
-	/* failed */
-	if (hFile == INVALID_HANDLE_VALUE)
-	{
-		assert(!"????");
+	std::ifstream ifs(RankingFile);
+	int col = 0;
 
+	if(ifs.is_open())
+	{
+		std::string buf;
+		
+		while (!ifs.eof())
+		{
+			char tmpChar = ifs.get();
+			
+			if (tmpChar == EOF)
+				break;
+
+			if(tmpChar == '\n')
+			{
+				++col;
+				buf.clear();
+				continue;
+			}
+
+			if (tmpChar == ',')
+			{
+				switch (col)
+				{
+				case 0:
+					tRanking.date[col].Year = std::stoi(buf.c_str());
+					break;
+				case 1:
+					tRanking.date[col].Mon = std::stoi(buf.c_str());
+					break;
+				case 2:
+					tRanking.date[col].Day = std::stoi(buf.c_str());
+					break;
+				case 3:
+					tRanking.score[col] = std::stoi(buf.c_str());
+					break;
+				case 4:
+					tRanking.name[col] = std::stoi(buf.c_str());
+					break;
+				}
+				buf.clear();
+			}
+			buf += tmpChar;
+		}
+	}
+	else // file open failed
+	{
+		ifs.close();
+		
 		/* init ranking */
 		tRanking.score[0] = 111111;
 		tRanking.score[1] = 111110;
@@ -63,31 +101,32 @@ void Score::Initialize()
 		tRanking.name[3] = "JIRURUN";
 		tRanking.name[4] = "ENDLESS SHIRAFU";
 		tRanking.name[5] = "YADEN";
+
 		for (int i = 0; i < _countof(tRanking.date); ++i)
 			GetDateTime(&tRanking.date[i]);
 
-		/* write */
-		t_Ranking* lp_tRanking = &tRanking;
-		DWORD dwWritten;
-		WriteFile(hFile, (LPCVOID)lp_tRanking, sizeof(tRanking), &dwWritten, NULL);
+		std::ofstream ofs(RankingFile);
+		
+		for (int i = 0; i < RankingNum; i++)
+		{
+			ofs << "year=" << tRanking.date[i].Year << ",";
+			ofs << "month=" << tRanking.date[i].Mon << ",";
+			ofs << "day=" << tRanking.date[i].Day << ",";
+			ofs << "score=" << tRanking.score[i] << ",";
+			ofs << "name=" << tRanking.name[i] << ",\n";
+		}
+
+		ofs.close();
 	}
-	else
-	{
-		/* read */
-		t_Ranking* lp_tRanking = &tRanking;
-		DWORD dwRead;
-		ReadFile(hFile, (LPVOID)lp_tRanking, sizeof(tRanking), &dwRead, NULL);
-	}
 
-	CloseHandle(hFile);
 
-	for (int i = 0; i < 6; ++i)
-		printfDx("%d, name = %s, score = %d\n", i, tRanking.name[i].c_str(), tRanking.score[i]);
 
-	tRanking.name[0] = "YADEN";
+	/* TEST */
+	for (int i = 0; i < RankingNum; ++i)
+		printfDx("%d, name = %s\n", i, tRanking.name[i]);
 
-	for (int i = 0; i < 6; ++i)
-		printfDx("%d, name = %s, score = %d\n", i, tRanking.name[i].c_str(), tRanking.score[i]);
+	for(auto& name : tRanking.name)
+		name = "YADEN";
 }
 
 
@@ -143,13 +182,17 @@ void Score::SaveScore()
 		fclose(fp);
 	}
 
-	/* read ranking file */
-	HANDLE hFile = CreateFile("data/rkg.txt", GENERIC_WRITE, 0, NULL,
-		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	DWORD dwWritten;
-	t_Ranking* lp_tRanking = &tRanking;
-	WriteFile(hFile, (LPCVOID)lp_tRanking, sizeof(t_Ranking), &dwWritten, NULL);
-	CloseHandle(hFile);
+	/* ranking save */
+	std::ofstream ofs(RankingFile);
+	for (int i = 0; i < RankingNum; i++)
+	{
+		ofs << "year=" << tRanking.date[i].Year << ",";
+		ofs << "month=" << tRanking.date[i].Mon << ",";
+		ofs << "day=" << tRanking.date[i].Day << ",";
+		ofs << "score=" << tRanking.score[i] << ",";
+		ofs << "name=" << tRanking.name[i] << ",\n";
+	}
+	ofs.close();
 }
 
 

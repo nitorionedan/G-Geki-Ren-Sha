@@ -4,6 +4,7 @@
 #include "DebugMode.hpp"
 #include "IScore.hpp"
 #include <fstream>
+#include <cassert>
 
 const int Score::digit = 8;
 
@@ -32,10 +33,6 @@ Score::Score()
 Score::~Score()
 {
 	SaveScore();
-	FILE* rankingFile;
-	fopen_s(&rankingFile, "data/ranking.txt", "wb");
-	fwrite(&tRanking, sizeof(tRanking), 1, rankingFile);
-	fclose(rankingFile);
 	printfDx("~Score()\n");
 }
 
@@ -44,11 +41,14 @@ void Score::Initialize()
 {
 	score = 0;
 
-	/* crete files */
-	FILE* rankingFile;
-	if ( error = fopen_s(&rankingFile, "data/ranking.txt", "wb") != 0 )
+	/* read ranking file */
+	HANDLE hFile = CreateFile("data/rkg.txt", GENERIC_ALL, 0, NULL,
+		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	
+	/* failed */
+	if (hFile == INVALID_HANDLE_VALUE)
 	{
-		printfDx("file open error\n再起動してね。(^^)/~~\n");
+		assert(!"????");
 
 		/* init ranking */
 		tRanking.score[0] = 111111;
@@ -65,28 +65,35 @@ void Score::Initialize()
 		tRanking.name[5] = "YADEN";
 		for (int i = 0; i < _countof(tRanking.date); ++i)
 			GetDateTime(&tRanking.date[i]);
-		fwrite(&tRanking, sizeof(tRanking), 1, rankingFile);
+
+		/* write */
+		t_Ranking* lp_tRanking = &tRanking;
+		DWORD dwWritten;
+		WriteFile(hFile, (LPCVOID)lp_tRanking, sizeof(tRanking), &dwWritten, NULL);
 	}
-	else // successful
+	else
 	{
-		printfDx("successful\n");
-
-		// データをロード
-		fread(&tRanking, sizeof(tRanking), 1, fp);
+		/* read */
+		t_Ranking* lp_tRanking = &tRanking;
+		DWORD dwRead;
+		ReadFile(hFile, (LPVOID)lp_tRanking, sizeof(tRanking), &dwRead, NULL);
 	}
 
-	fclose(rankingFile);
+	CloseHandle(hFile);
 
 	for (int i = 0; i < 6; ++i)
 		printfDx("%d, name = %s, score = %d\n", i, tRanking.name[i].c_str(), tRanking.score[i]);
 
 	tRanking.name[0] = "YADEN";
+
+	for (int i = 0; i < 6; ++i)
+		printfDx("%d, name = %s, score = %d\n", i, tRanking.name[i].c_str(), tRanking.score[i]);
 }
 
 
 void Score::Update()
 {
-	if(Keyboard::Instance()->isPush(KEY_INPUT_Y))	clsDx();
+	if (Keyboard::Instance()->isPush(KEY_INPUT_Y))	clsDx();
 	if (val_score != score)				val_score = score;
 	if (val_hiscore != hi_score)		val_hiscore = hi_score;
 	if (score > hi_score)				hi_score = score;
@@ -127,6 +134,7 @@ void Score::AddScore(const int& point){
 
 void Score::SaveScore()
 {
+	/* high score */
 	if ((error = fopen_s(&fp, name, "wb")) != 0)
 		printfDx("ファイルオープンエラー\n再起動してね。(^^)/~~\n");
 	else
@@ -134,6 +142,14 @@ void Score::SaveScore()
 		fwrite(&hi_score, sizeof(hi_score), 1, fp);
 		fclose(fp);
 	}
+
+	/* read ranking file */
+	HANDLE hFile = CreateFile("data/rkg.txt", GENERIC_WRITE, 0, NULL,
+		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	DWORD dwWritten;
+	t_Ranking* lp_tRanking = &tRanking;
+	WriteFile(hFile, (LPCVOID)lp_tRanking, sizeof(t_Ranking), &dwWritten, NULL);
+	CloseHandle(hFile);
 }
 
 

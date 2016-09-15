@@ -101,11 +101,11 @@ void Score::SaveRanking()
 	std::ofstream ofs(RankingFile);
 	for (auto ranking : tRanking)
 	{
-		ofs << "score=" << ranking.score << ",";
-		ofs << "name=" << ranking.name << ",";
-		ofs << "year=" << ranking.date.Year << ",";
-		ofs << "month=" << ranking.date.Mon << ",";
-		ofs << "day=" << ranking.date.Day << ",";
+		ofs << "score=" << ranking.score     << ",";
+		ofs << "name="  << ranking.name      << ",";
+		ofs << "year="  << ranking.date.Year << ",";
+		ofs << "month=" << ranking.date.Mon  << ",";
+		ofs << "day="   << ranking.date.Day  << ",";
 		ofs << "\n";
 	}
 	ofs.close();
@@ -277,8 +277,8 @@ void Score::LoadRanking()
 
 	FileRead_close(hFile);
 
-	for (int i = 0; i < RankingNum; ++i)
-		printfDx("%d : score = %d\n", i, tRanking[i].score);
+	/*for (int i = 0; i < RankingNum; ++i)
+		printfDx("%d : score = %d\n", i, tRanking[i].score);*/
 }
 
 

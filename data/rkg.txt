@@ -1,4 +1,4 @@
-score=112715,name=YOSSIN,year=2016,month=9,day=15,
+score=250801,name=YOSSIN,year=2016,month=9,day=15,
 score=111110,name=ZUN,year=2016,month=9,day=15,
 score=111100,name=DIXQ,year=2016,month=9,day=15,
 score=111000,name=ENDLESS SHIRAFU,year=2016,month=9,day=15,

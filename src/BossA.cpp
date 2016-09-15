@@ -48,12 +48,20 @@ BossA::BossA()
 	, isMove(false)
 	, isEnd(false)
 {
+
+	int i = 0, j = 0;
+
 	hg_shield = LoadGraph("GRAPH/GAME/ENEMY/Shield.png");
 	hs_big = LoadSoundMem("SOUND/SE/eshot03.wav");
 	hs_exp = LoadSoundMem("SOUND/SE/explosion03.mp3");
 	hs_break = LoadSoundMem("SOUND/SE/break00.wav");
 	hm = MV1LoadModel("GRAPH/MODEL/BossA_2.x");
+	hmWeaking = MV1LoadModel("GRAPH/MODEL/BossA_2.x");
 	Screen = MakeScreen(640, 480, TRUE);
+
+	i = hm;
+	j = hmWeaking;
+	printfDx("i:%d, j:%d\n", i, j);
 
 	mPos.x = 320.f;
 	mPos.y = 300.f;
@@ -66,6 +74,9 @@ BossA::BossA()
 	MV1SetRotationXYZ(hm, rota);				// 回転値を設定
 	MV1SetPosition(hm, mPos);					// 座標を設定
 	MV1SetScale(hm, VGet(13.f, 13.f, 13.f));	// モデル拡大
+	MV1SetRotationXYZ(hmWeaking, rota);				// 回転値を設定
+	MV1SetPosition(hmWeaking, mPos);					// 座標を設定
+	MV1SetScale(hmWeaking, VGet(13.f, 13.f, 13.f));	// モデル拡大
 
 	// static -----------------------------------------------------
 	pos = Vector2D::ZERO;
@@ -81,6 +92,7 @@ BossA::BossA()
 
 	startPos = ConvScreenPosToWorldPos(VGet(pos.x, pos.y, 0.5f));	// スクリーン座標からワールド座標へ
 	mPos = startPos;												// モデルをスクリーン座標にあてがる
+	MV1SetWireFrameDrawFlag(hmWeaking, TRUE);
 }
 
 
@@ -91,6 +103,7 @@ BossA::~BossA()
 	DeleteSoundMem(hs_exp);
 	DeleteSoundMem(hs_break);
 	MV1DeleteModel(hm);
+	MV1DeleteModel(hmWeaking);
 }
 
 
@@ -123,7 +136,8 @@ void BossA::Update()
 
 	HitCheck();
 
-	if (state != eBossA_Start)
+	// player's collision
+	if (state != eBossA_Normal)
 	{
 		const bool& IS_HIT = IPlayer::HitCheckCircl(HIT_RANGE, pos);
 		if (IS_HIT)	Damage(10);
@@ -157,9 +171,6 @@ void BossA::Update()
 
 void BossA::Draw()
 {
-	const bool& Is_NoGuard = (isHit && !isWeak);
-	MV1SetWireFrameDrawFlag(hm, !Is_NoGuard);
-
 	if(isHit)
 		SetLightDifColor(CyanF);	// 緑
 	
@@ -170,13 +181,23 @@ void BossA::Draw()
 	const bool&  PreliminaryActionFlag = (c_atk1->GetNowcount() == 50);
 	if(PreliminaryActionFlag)
 		SetLightDifColor(YellowF);	// 色変更
-
-	MV1SetRotationXYZ(hm, rota);	// 回転値設定
-	MV1SetPosition(hm, mPos);		// 座標を設定
-	MV1DrawModel(hm);				// 3Dオブジェクト描画
+	
+	if (isWeak)
+	{
+		MV1SetRotationXYZ(hmWeaking, rota);	// 回転値設定
+		MV1SetPosition(hmWeaking, mPos);		// 座標を設定
+		MV1DrawModel(hmWeaking);
+	}
+	else
+	{
+		MV1SetRotationXYZ(hm, rota);	// 回転値設定
+		MV1SetPosition(hm, mPos);		// 座標を設定
+		MV1DrawModel(hm);
+	}
 
 	SetLightDifColor(GetColorF(1.f, 1.f, 1.f, 1.f));	// 元の色
 
+	const bool& Is_NoGuard = (isHit && !isWeak);
 	if (Is_NoGuard)
 		DrawRotaGraph(pos.x, pos.y, 2.5, GetRand(100), hg_shield, true);
 

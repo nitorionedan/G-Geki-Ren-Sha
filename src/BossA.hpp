@@ -80,6 +80,7 @@ private:
 	VECTOR	rota;							// モデルの回転値
 	VECTOR	startPos;						// スクリーンとワールド座標の線分
 	int		hm;								// モデリングデータ用ハンドル
+	int		hmWeaking;						// 死にかけ用モデル
 	int		hg_shield;						// シールド
 	int		hs_big;							// 巨弾
 	int		hs_exp;							// 大爆発

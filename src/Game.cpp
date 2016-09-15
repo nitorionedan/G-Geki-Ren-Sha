@@ -211,11 +211,11 @@ void Game::Draw()
 	// TEST-----------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
 
-	VECTOR tpos = VGet(320.f, 240.f, 0.f);
+	/*VECTOR tpos = VGet(320.f, 240.f, 0.f);
 	tpos = ConvScreenPosToWorldPos(tpos);
 	SetLightDirection(tpos);
 	DrawSphere3D(tpos, 10.f, 4, GetColor(255, 0, 0), GetColor(255, 255, 255), TRUE);
-	SetLightDirection(DefLightPos);
+	SetLightDirection(DefLightPos);*/
 }
 
 

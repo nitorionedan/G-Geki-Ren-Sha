@@ -137,7 +137,7 @@ void BossA::Update()
 	HitCheck();
 
 	// player's collision
-	if (state != eBossA_Normal)
+	if (state == eBossA_Normal)
 	{
 		const bool& IS_HIT = IPlayer::HitCheckCircl(HIT_RANGE, pos);
 		if (IS_HIT)	Damage(10);

@@ -14,9 +14,9 @@ class Score : public Task
 {
 	struct t_Ranking
 	{
-		int score[RankingNum];
-		std::string name[RankingNum];
-		DATEDATA date[RankingNum];
+		int score;
+		std::string name;
+		DATEDATA date;
 	};
 
 public:
@@ -29,13 +29,15 @@ public:
 	void ShowResult();
 	void AddScore(const int& point);
 	int secBonus; // 毎秒加算スコア // なしの方向で(^^;
-	const t_Ranking& GetRanking() {
+	/*const t_Ranking& GetRanking() {
 		return tRanking;
-	}
+	}*/
 
 private:
 	void LoadScore();				// セーブファイルロード
+	void LoadRanking();
 	void SaveScore();
+	void SaveRanking();
 	void DeleteScore();				// セーブデータ削除
 
 	std::unique_ptr<Graphic> graphic;
@@ -51,8 +53,8 @@ private:
 	int val_hiscore;
 	int x_num;
 	int fileHandle;
-	int c_secscore;					// 毎秒加算スコア用カウンター
-	bool f_exist;					// 存在しているか？
+	int c_secscore;	// 毎秒加算スコア用カウンター
+	bool f_exist;	// 存在しているか？
 
-	t_Ranking tRanking;
+	t_Ranking tRanking[RankingNum];
 };

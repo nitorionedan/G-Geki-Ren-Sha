@@ -36,6 +36,8 @@ public:
 	void AllClear ();								// 全クリ用
 	void PlayQuake();
 	void SkipTo(int Time);
+	void Fadein();
+	void Fadeout();
 	const eStage GetNowStage() const {
 		return nowStage;
 	}
@@ -55,7 +57,9 @@ private:
 	int    hs_boss;													// BGM用ハンドル
 	int Screen;
 	double cycle, shake;											// ラスタースクロール用 // [目標] 3.0, 400
-	bool   f_quake;													// シフトアップしたときの画面振動フラグ
+	bool f_quake;													// シフトアップしたときの画面振動フラグ
+	bool fadeinFlag;
+	bool fadeoutFlag;
 
 	// static ------------
 	static int s_time;		// ステージの経過時間

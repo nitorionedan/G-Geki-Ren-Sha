@@ -98,7 +98,7 @@ void Score::SaveScore()
 
 void Score::SaveRanking()
 {
-	std::ofstream ofs(RankingFile);
+	std::ofstream ofs(RankingFile, std::ios::binary);
 	for (auto ranking : tRanking)
 	{
 		ofs << "score=" << ranking.score     << ",";
@@ -277,8 +277,8 @@ void Score::LoadRanking()
 
 	FileRead_close(hFile);
 
-	/*for (int i = 0; i < RankingNum; ++i)
-		printfDx("%d : score = %d\n", i, tRanking[i].score);*/
+	//for (int i = 0; i < RankingNum; ++i)
+	//	printfDx("%d : score = %d\n", i, tRanking[i].score);
 }
 
 

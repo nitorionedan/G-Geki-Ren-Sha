@@ -48,20 +48,13 @@ BossA::BossA()
 	, isMove(false)
 	, isEnd(false)
 {
-
-	int i = 0, j = 0;
-
 	hg_shield = LoadGraph("GRAPH/GAME/ENEMY/Shield.png");
 	hs_big = LoadSoundMem("SOUND/SE/eshot03.wav");
 	hs_exp = LoadSoundMem("SOUND/SE/explosion03.mp3");
 	hs_break = LoadSoundMem("SOUND/SE/break00.wav");
-	hm = MV1LoadModel("GRAPH/MODEL/BossA_2.x");
-	hmWeaking = MV1LoadModel("GRAPH/MODEL/BossA_2.x");
+	hm = MV1LoadModel("GRAPH/MODEL/BossA_3.x");
+	hmWeaking = MV1LoadModel("GRAPH/MODEL/BossA_3.x");
 	Screen = MakeScreen(640, 480, TRUE);
-
-	i = hm;
-	j = hmWeaking;
-	printfDx("i:%d, j:%d\n", i, j);
 
 	mPos.x = 320.f;
 	mPos.y = 300.f;
@@ -70,6 +63,8 @@ BossA::BossA()
 	rota.x = 1.5f;
 	rota.y = 0;
 	rota.z = 0;
+
+	c_dead = 0;
 
 	MV1SetRotationXYZ(hm, rota);				// 回転値を設定
 	MV1SetPosition(hm, mPos);					// 座標を設定
@@ -136,13 +131,6 @@ void BossA::Update()
 
 	HitCheck();
 
-	// player's collision
-	if (state == eBossA_Normal)
-	{
-		const bool& IS_HIT = IPlayer::HitCheckCircl(HIT_RANGE, pos);
-		if (IS_HIT)	Damage(10);
-	}
-
 	/* エフェクト系 */
 	bomber->Update(pos.x, pos.y);
 
@@ -171,6 +159,9 @@ void BossA::Update()
 
 void BossA::Draw()
 {
+	if (isExist == false)
+		return;
+
 	if(isHit)
 		SetLightDifColor(CyanF);	// 緑
 	
@@ -211,7 +202,7 @@ void BossA::Draw()
 	if (DebugMode::isTest == false)	return;
 	
 	DrawCircle(pos.x, pos.y, HIT_RANGE, GetColor(0, 255, 0), false);
-	DrawFormatString(pos.x, pos.y, GetColor(0, 255, 0), "%d", hp);
+	DrawFormatString(pos.x, pos.y, GetColor(0, 255, 0), "Boss.y = %lf", pos.y);
 }
 
 
@@ -325,18 +316,20 @@ void BossA::Weak_Update()
 
 void BossA::Dead_Update()
 {
-	static int count = 0;
-	count++;
+	c_dead++;
 
-	// 一定の間隔で小爆発
-	if(time % 20 == 0 && pos.y < 480)	Effector::PlayAnime(pos.x + GetRand(80) - 40, pos.y + GetRand(80) - 40, eExplosion_small);
+	const bool& Is_deing = (time % 20 == 0 && pos.y < 480);
+	if(Is_deing)	// small explosion
+		Effector::PlayAnime(pos.x + GetRand(80) - 40, pos.y + GetRand(80) - 40, eExplosion_small);
 
-	pos.y += 1.;
+	pos.y += 1.;	// falling slowly
 
-	// 指定した時間に爆発音
-	if(count == 180)
+	if (c_dead == 180.)	// final explosion
 	{
-		PlaySoundMem(pos.x, pos.y, DX_PLAYTYPE_BACK);
+		isExist = false;
+		for (int i = 0; i < 5; ++i)
+			Effector::PlayAnime(pos.x, pos.y, eExplosion_big);
+		PlaySoundMem(hs_exp, DX_PLAYTYPE_BACK);
 	}
 }
 
@@ -353,26 +346,35 @@ bool BossA::isFine(){
 
 void BossA::HitCheck()
 {
-	const bool& IS_HIT = IBomb::IsHit(HIT_RANGE, pos.x, pos.y);
+	const bool& Is_hitBomb = IBomb::IsHit(HIT_RANGE, pos.x, pos.y);
 
-
-	if(IS_HIT && isWeak)
+	if(Is_hitBomb && isWeak)
 	{
 		isHit = true;
-		Damage(100);
+		Damage(10);
+	}
+
+	// player's collision
+	if (state == eBossA_Normal)
+	{
+		const bool& Is_hitPlayer = IPlayer::HitCheckCircl(HIT_RANGE, pos);
+		if (Is_hitPlayer)	Damage(10);
 	}
 }
 
 
 bool BossA::isOverLimit()
 {
-	const bool& IS_OUT = (pos.x < SC_LIMIT_XL || SC_LIMIT_XR < pos.x || pos.y < SC_LIMIT_YT || SC_LIMIT_YB < pos.y);
+	const bool& IS_OUT = (pos.x < SC_LIMIT_XL ||
+						  SC_LIMIT_XR < pos.x ||
+						  pos.y < SC_LIMIT_YT ||
+						  SC_LIMIT_YB < pos.y);
 
 	// 画面外に出てしまったら
 	if (IS_OUT)
 	{
-		pos.x = std::min(std::max((float)pos.x, SC_LIMIT_XL), SC_LIMIT_XR);
-		pos.y = std::min(std::max((float)pos.y, SC_LIMIT_YT), SC_LIMIT_YB);
+		pos.x = std::min(std::max(pos.x, static_cast<double>(SC_LIMIT_XL)), static_cast<double>(SC_LIMIT_XR) );
+		pos.y = std::min(std::max(pos.y, static_cast<double>(SC_LIMIT_YT)), static_cast<double>(SC_LIMIT_YB));
 	}
 
 	return IS_OUT;
@@ -384,17 +386,16 @@ void BossA::Damage(const int& point)
 	// スタート中ならここで返す
 	if (state == eBossA_Start)	return;
 
+
 	const bool& IS_ALIVE = (hp > 0);
+	
+	if (IS_ALIVE)	// 生きていれば
+		hp -= point;
+
 	const bool& IS_FINE = (hp > MAX_HP / 3);
 	const bool& IS_WEAK = (!isWeak && !IS_FINE);
-	const bool& IS_DEAD = (hp <= 0);
-
-	// 生きていれば
-	if (IS_ALIVE)
-		hp -= point;
 	
-	// 弱っていれば
-	if (IS_WEAK)
+	if (IS_WEAK)	// 弱っていれば
 	{
 		Effector::PlayAnime(pos.x + 40, pos.y + 40, eExplosion_small);
 		Effector::PlayAnime(pos.x + 20, pos.y - 10, eExplosion_small);
@@ -404,17 +405,18 @@ void BossA::Damage(const int& point)
 		PlaySoundMem(hs_break, DX_PLAYTYPE_BACK);
 	}
 	
-	// HPが3分の1以下になると酔った状態になる
-	if (!IS_FINE && state != eBossA_Weak)
+	if (!IS_FINE && state != eBossA_Weak)	// HPが3分の1以下になると酔った状態になる
 	{
 		ChangeState(eBossA_Weak);
 		isWeak = true;
 	}
 
-	// 死んでいれば
+	const bool& IS_DEAD = (hp <= 0);
+	
 	if (IS_DEAD)
 	{
 		ChangeState(eBossA_Dead);
+		c_dead = 0;
 		isDead = true;
 		Effector::PlayAnime(pos.x, pos.y, eExplosion_big);
 		Effector::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_BigAll);

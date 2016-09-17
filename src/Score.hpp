@@ -7,7 +7,7 @@
 #include <string>
 
 constexpr int RankingNum = 6;
-constexpr char* RankingFile = "data/rkg.txt";
+constexpr char* RankingFile = "data/rkg.dat";
 
 
 class Score : public Task

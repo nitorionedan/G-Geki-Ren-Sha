@@ -86,12 +86,13 @@ private:
 	int		hs_exp;							// 大爆発
 	int		in_time, stop_time, out_time;	// 登場、停止、退場の時間
 	int		big_time;
+	int Screen;
+	int c_dead;
 	float	targetX, targetY;				// 目的地
 	float	angle;							// 体当たりの方向用
 	bool	isMove;							// 攻撃開始しているか？
 	bool	isEnd;							// 退場したか？
 	bool	isDead;							// 死んだか？
-	int Screen;
 
 	// static -----------------------------
 	static eBossA_state state;

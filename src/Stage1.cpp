@@ -24,10 +24,13 @@ namespace
 
 Stage1::Stage1()
 {
-	int i = t_left_view.img = LoadGraph("GRAPH/mydat/img/kabe.png");
+	t_left_view.img = LoadGraph("GRAPH/mydat/img/kabe.png");
 	gh[0] = LoadGraph("GRAPH/mydat/img/tex.png");
 	gh[1] = LoadGraph("GRAPH/mydat/img/kabe.png");
 	Screen = MakeScreen(640, 480, TRUE);
+	SetFogEnable(TRUE);
+	SetFogColor(255, 0, 0);
+	SetFogStartEnd(0.f, 1000.f);
 
 	Initialize();
 }
@@ -65,14 +68,18 @@ void Stage1::Initialize()
 	*/
 
 	ObjectNum = 0;
-	IniObj(&Object[0], gh[0], 512, 0, 0, 256, 128, 250, 50, 2, 1000, 400, -200, -400, 320, 240 - 90, ObChildMax);
-	IniObj(&Object[1], gh[0], 512, 60, 270, 405, 512, 180, 125, 0, 1000, 400, -200, -400, 470, 275, 6);
-	IniObj(&Object[2], gh[1], 512, 0, 0, 390, 512, 73, 90, 1, 1000, 400, -200, -400, 170, 240, ObChildMax);
+	IniObj(&Object[0], gh[0], 512, 0,  0,   256, 128, 250, 50,  2, 1000, 400, -200, -400, 320, (240 - 90), ObChildMax);
+	IniObj(&Object[1], gh[0], 512, 60, 270, 405, 512, 180, 125, 0, 1000, 400, -200, -400, 470, 275,        6);
+	IniObj(&Object[2], gh[1], 512, 0,  0,   390, 512, 73,  90,  1, 1000, 400, -200, -400, 170, 240,        ObChildMax);
 }
 
 
 void Stage1::Update()
 {
+	static float c_rota = 0.f;
+	c_rota += 0.1f;
+	SetCameraPositionAndAngle(VGet(0.f, 0.f, 0.f), c_rota, c_rota, c_rota);
+
 	CalcObject();
 	SortObject();
 }
@@ -84,29 +91,29 @@ void Stage1::Draw()
 	SetDrawScreen(Screen);
 	ClearDrawScreen();
 
-	/// SetDrawArea(FX, FY, FX + FMX, FY + FMY);
 	SetDrawMode(DX_DRAWMODE_BILINEAR); // make smooth polygon
-	for(auto Ob : Object)
+	for (auto Ob : Object)
 	{
-		for (int s = 0; s < Ob.childMax; ++s)
-			DrawPolygon3D(Ob.child[s].Vertex, 2, Ob.img, TRUE);
+		for (int i = 0; i < Ob.childMax; ++i)
+			DrawPolygon3D(Ob.child[i].Vertex, 2, Ob.img, TRUE);
 	}
 	SetDrawMode(DX_DRAWMODE_NEAREST); // reset default
 	/// SetDrawArea(0, 0, 640, 480);
 
 	SetDrawScreen(tmpScreen);
-	//DrawGraph(0, 0, Screen, TRUE);
-	DrawCircleScreen(320, 240, 200.f, 400.f, 50.f, Screen);
+	DrawGraph(0, 0, Screen, TRUE);
+	//DrawCircleScreen(320, 240, 200.f, 400.f, 50.f, Screen);
+
+	/* Test */
+	//DrawFormatString(0, 40, GetColor(255, 255, 0), "c_color=%d", c_color);
 }
 
 
 void Stage1::IniObj(Object_t * Ob, int ImgHandle, int ImgSize, int ImgX1, int ImgY1, int ImgX2, int ImgY2, float LargeX, float LargeY, int Type, float FromZ, float FadeFromZ, float FadeToZ, float ToZ, float GraphX, float GraphY, int Obchild_Max)
 {
 	if ( ObjectNum >= ObjectNumMax - 1 )
-	{
 		assert(!"out of limit");
-		return;
-	}
+
 	++ObjectNum;
 
 	Ob->img = ImgHandle;//‰æ‘œƒnƒ“ƒhƒ‹
@@ -128,10 +135,7 @@ void Stage1::IniObj(Object_t * Ob, int ImgHandle, int ImgSize, int ImgX1, int Im
 		Ob->childMax = Obchild_Max;
 
 	if(Ob->childMax - 1 <= 0)
-	{
 		assert(!"Abnormality num of render");
-		return;
-	}
 
 	/* calc zWidth */
 	Ob->zWidth = (Ob->fromZ - Ob->toZ) / (Ob->childMax - 1);
@@ -179,19 +183,16 @@ void Stage1::CalcObject()
 					pos.y = center.y + Object[t].largeY * t_vtpm[i].y;
 					pos.z = center.z;
 					break;
-
 				case 1: // vertical (wall)
 					pos.x = center.x;
 					pos.y = center.y + Object[t].largeY * t_vtpm[i].y;
 					pos.z = center.z + Object[t].zWidth / 2 * t_vtpm[i].x;
-					break;
-				
+					break;				
 				case 2: // vertical (floor)
 					pos.x = center.x + Object[t].largeX * t_vtpm[i].x;
 					pos.y = center.y;
 					pos.z = center.z + Object[t].zWidth / 2 * t_vtpm[i].y;
 					break;
-
 				default: assert(!"Object[?].type is abnormal");
 				}
 			}

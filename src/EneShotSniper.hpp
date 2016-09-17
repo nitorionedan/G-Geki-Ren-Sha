@@ -6,7 +6,10 @@
 class EneShotSniper : public EneShotMove
 {
 public:
-	EneShotSniper(){}
-	~EneShotSniper(){}
+	EneShotSniper();
+	~EneShotSniper() {}
 	virtual void Move(EneShotCreater::EneShot* pEShot) override;
+
+private:
+	Vector2D vMove;
 };

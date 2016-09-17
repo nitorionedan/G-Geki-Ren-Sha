@@ -33,6 +33,8 @@ Stage::Stage()
 	cycle = 0.;
 	shake = 0.;
 	f_quake = false;
+	fadeoutFlag = false;
+
 	s_time = 0;
 	s_rank = 0;
 }
@@ -62,7 +64,7 @@ void Stage::StageSet(eStage estage)
 	{
 	case eStage::opening:
 		hs_bgm = LoadSoundMem("SOUND/s0.wav");
-		mField = static_cast<Field*>(new OpenigStage);
+		mField = static_cast<Field*>(new Stage1);
 		break;
 
 	case eStage::stage1 :
@@ -206,6 +208,20 @@ void Stage::Quake()
 
 void Stage::SkipTo(int Time){
 	s_time = Time;
+}
+
+
+void Stage::Fadein()
+{
+	fadeinFlag = true;
+	SetVolumeSoundMem(0, hs_bgm);
+}
+
+
+void Stage::Fadeout()
+{
+	fadeinFlag = true;
+	SetVolumeSoundMem(0, hs_bgm);
 }
 
 

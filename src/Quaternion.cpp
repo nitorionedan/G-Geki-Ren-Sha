@@ -20,7 +20,7 @@ Quaternion& Quaternion::operator*(Quaternion& other)
 
 	ans.t = d1 + d2 + d3 + d4;
 
-	// Calc z pram
+	// Calc x pram
 	d1 = t * other.x;
 	d2 = x * other.t;
 	d3 = y * other.z;
@@ -50,7 +50,35 @@ Quaternion& Quaternion::operator*(Quaternion& other)
 
 Quaternion& Quaternion::CreateRotation(double radian, VECTOR& Axis)
 {
+	Quaternion ans;
 
+	double norm;
+	double ccc, sss;
+
+	ans.t = ans.x = ans.y = ans.z = 0.;
+
+	norm = std::pow(Axis.x, 2) + std::pow(Axis.y, 2) + std::pow(Axis.z, 2);
+
+	if (norm <= 0.)
+		return ans;
+
+	norm = 1. / std::sqrt(norm);
+
+	Axis.x *= norm;
+	Axis.y *= norm;
+	Axis.z *= norm;
+
+	return ans;
+
+	ccc = std::cos(0.5 * radian);
+	sss = std::sin(0.5 * radian);
+
+	ans.t = ccc;
+	ans.x = sss * Axis.x;
+	ans.y = sss * Axis.y;
+	ans.z = sss * Axis.z;
+
+	return ans;
 }
 
 

@@ -1,16 +1,22 @@
 /*
 @referenced	http://dixq.net/rp/58.html
+きこえたーきがーしたー
 */
 
 #include "Stage1.hpp"
 #include "Graphics2D.hpp"
 #include <cassert>
 #include <algorithm>
+#include <DirectXMath.h>
 
+constexpr int ObType_Horizon = 0;	// Horizontal
+constexpr int ObType_VerWall = 1;	// Vertical(Wall)
+constexpr int ObType_VerFloor = 2;	// Vertical(Floor)
 
 namespace
 {
-	const VtPm_t t_vtpm[VertexNum] = {
+	const VtPm_t t_vtpm[VertexNum] = 
+	{
 		{ -1.f, 1.f, 0.f, 0.f },
 		{ 1.f, 1.f, 1.f, 0.f },
 		{ -1.f, -1.f, 0.f, 1.f },
@@ -47,6 +53,7 @@ Stage1::~Stage1()
 void Stage1::Initialize()
 {
 	::z = 0.f;
+	ObjectNum = 0;
 
 	/*
 	int ImgHandle   : 画像ハンドル
@@ -66,20 +73,18 @@ void Stage1::Initialize()
 	float GraphY    : 描画する中心点
 	int ObchildMax  : typeが0の場合のみ、同時にいくつ表示するか
 	*/
-
-	ObjectNum = 0;
-	IniObj(&Object[0], gh[0], 512, 0,  0,   256, 128, 250, 50,  2, 1000, 400, -200, -400, 320, (240 - 90), ObChildMax);
-	IniObj(&Object[1], gh[0], 512, 60, 270, 405, 512, 180, 125, 0, 1000, 400, -200, -400, 470, 275,        6);
-	IniObj(&Object[2], gh[1], 512, 0,  0,   390, 512, 73,  90,  1, 1000, 400, -200, -400, 170, 240,        ObChildMax);
+	int imgSize_tex = 0;
+	int imgSize_wall = 0;
+	GetGraphSize(gh[0], &imgSize_tex, &imgSize_tex);
+	GetGraphSize(gh[1], &imgSize_wall, &imgSize_wall);
+	IniObj(&Object[0], gh[0], imgSize_tex,  0,  0,   256, 128, 250, 50,  ObType_VerFloor, 1000, 400, -200, -400, 320, (240 - 90),  ObChildMax);
+	IniObj(&Object[1], gh[0], imgSize_tex,  60, 270, 405, 512, 180, 125, ObType_Horizon,  1000, 400, -200, -400, 470,  275,        6);
+	IniObj(&Object[2], gh[1], imgSize_wall, 0,  0,   390, 512, 73,  90,  ObType_Horizon,  1000, 400, -200, -400, 170,  240,        ObChildMax);
 }
 
 
 void Stage1::Update()
 {
-	static float c_rota = 0.f;
-	c_rota += 0.1f;
-	SetCameraPositionAndAngle(VGet(0.f, 0.f, 0.f), c_rota, c_rota, c_rota);
-
 	CalcObject();
 	SortObject();
 }
@@ -116,19 +121,19 @@ void Stage1::IniObj(Object_t * Ob, int ImgHandle, int ImgSize, int ImgX1, int Im
 
 	++ObjectNum;
 
-	Ob->img = ImgHandle;//画像ハンドル
-	Ob->imgSize = ImgSize;//画像サイズ
+	Ob->img = ImgHandle;		// 画像ハンドル
+	Ob->imgSize = ImgSize;		// 画像サイズ
 	Ob->imgX1 = ImgX1;
 	Ob->imgY1 = ImgY1;
 	Ob->imgX2 = ImgX2;
 	Ob->imgY2 = ImgY2;
-	Ob->largeX = LargeX;//とりあえず描画する大きさを適当に設定。縦・横比は素材の通りにする
+	Ob->largeX = LargeX;		// とりあえず描画する大きさを適当に設定。縦・横比は素材の通りにする
 	Ob->largeY = LargeY;
-	Ob->type = Type;//タイプを垂直に
-	Ob->fromZ = FromZ;//描画開始地点
-	Ob->fadeFromZ = FadeFromZ;//描画フェードイン開始地点
-	Ob->fadeToZ = FadeToZ;//描画フェードアウト開始地点
-	Ob->toZ = ToZ;//描画終了地点
+	Ob->type = Type;			// タイプを垂直に
+	Ob->fromZ = FromZ;			// 描画開始地点
+	Ob->fadeFromZ = FadeFromZ;	// 描画フェードイン開始地点
+	Ob->fadeToZ = FadeToZ;		// 描画フェードアウト開始地点
+	Ob->toZ = ToZ;				// 描画終了地点
 	Ob->childMax = ObChildMax;
 
 	if (Ob->type == 0)
@@ -228,17 +233,17 @@ void Stage1::CalcObject()
 						alpha = 0;
 				}
 
-				const bool& Is_imvisibleNear = ( Object[t].child[s].center.z < Object[t].toZ - Object[t].zWidth * 0.5f );
-				const bool& Is_imvisibleFar = ( Object[t].child[s].center.z > Object[t].fromZ + Object[t].zWidth * 0.5f );
+				const bool& Is_invisibleNear = ( Object[t].child[s].center.z < Object[t].toZ - Object[t].zWidth * 0.5f );
+				const bool& Is_invisibleFar = ( Object[t].child[s].center.z > Object[t].fromZ + Object[t].zWidth * 0.5f );
 				VECTOR& center = Object[t].child[s].center;
 				
-				if (Is_imvisibleNear) // 近づいて見えなくなったら
+				if (Is_invisibleNear) // 近づいて見えなくなったら
 				{
 					// 一番向こう側へ
 					float sub = (Object[t].toZ - Object[t].zWidth * 0.5f) - center.z;
 					center.z = Object[t].fromZ + Object[t].zWidth * 0.5f - sub;
 				}
-				else if (Is_imvisibleFar) // 遠ざかって見えなくなったら
+				else if (Is_invisibleFar) // 遠ざかって見えなくなったら
 				{
 					// 一番こちら側へ
 					float sub = center.z - (Object[t].fromZ + Object[t].zWidth * 0.5f);
@@ -247,6 +252,8 @@ void Stage1::CalcObject()
 			}
 		}
 	}
+
+	
 }
 
 

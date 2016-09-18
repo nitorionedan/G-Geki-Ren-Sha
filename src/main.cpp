@@ -28,16 +28,15 @@
 
 #include <memory>
 #include <time.h>
+#include <DirectXMath.h>
 
-#define SC_W 640
-#define SC_H 480
-
+constexpr int SC_W = 640;
+constexpr int SC_H = 480;
 
 static int  FrameStartTime;			// 60fps固定専用
 static int  FPS;
-static bool ScSizeFrag = false;		// 画面モード変更用
+static bool ScSizeFrag = true;		// 画面モード変更用
 static bool quit       = false;		// 強制終了フラグ
-static const int GauseRatio = 500;
 
 void QuitGame();					// ゲーム終了伝達関数
 
@@ -62,7 +61,14 @@ void message_box()
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+#if !defined(_DEBUG)
 	message_box();																				// ウィンドウスタイル質問
+#endif
+	if (DirectX::XMVerifyCPUSupport() == FALSE)
+	{
+		MessageBox(NULL, "CPU is not XMVerifyCPUSupport.", "ERROR", MB_OK);
+		return -1;
+	}
 	SetWindowIconID(444);
 	SetGraphMode(SC_W, SC_H, 32), ChangeWindowMode(ScSizeFrag), DxLib_Init();					// ウィンドウ初期設定(VGA),DxLib起動
 	SetMainWindowText("激連射");																// タイトルを設定

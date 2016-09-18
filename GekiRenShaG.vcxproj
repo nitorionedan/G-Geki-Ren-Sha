@@ -68,6 +68,7 @@
     <ClCompile Include="src\PieceEffect.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Pshot.cpp" />
+    <ClCompile Include="src\Quaternion.cpp" />
     <ClCompile Include="src\SceneMng.cpp" />
     <ClCompile Include="src\Score.cpp" />
     <ClCompile Include="src\Shot.cpp" />
@@ -140,6 +141,7 @@
     <ClInclude Include="src\PieceEffect.hpp" />
     <ClInclude Include="src\Player.hpp" />
     <ClInclude Include="src\Pshot.hpp" />
+    <ClInclude Include="src\Quaternion.hpp" />
     <ClInclude Include="src\SceneMng.hpp" />
     <ClInclude Include="src\Score.hpp" />
     <ClInclude Include="src\Shot.hpp" />

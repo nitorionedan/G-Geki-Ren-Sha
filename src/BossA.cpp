@@ -232,7 +232,6 @@ void BossA::ChangeState(eBossA_state state_) { state = state_; }
 
 void BossA::Start_Update()
 {
-
 	pos.x -= SPEED;
 	pos.y += 1.5f;
 	
@@ -281,18 +280,23 @@ void BossA::Weak_Update()
 	{
 		pos.x += std::cos(angle) * SPEED * 0.6;
 		pos.y += std::sin(angle) * SPEED * 0.6;
-	} else {
+	} 
+	else
+	{
 		pos.x += std::cos(angle) * SPEED;
 		pos.y += std::sin(angle) * SPEED;
 	}
 
-	if (c_atk1->isLast())	Eshot::GoFire1();
+	if (c_atk1->isLast())
+		Eshot::GoFire1();
 	
 	// ƒ`ƒƒ[ƒW
-	if (big_time == 400)	bomber->PlayAnime(pos.x, pos.y);
+	if (big_time == 400)
+		bomber->PlayAnime(pos.x, pos.y);
 
 	// ”j•Ð
-	if (big_time == 500)	Effector::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_SmallOrange);
+	if (big_time == 500)
+		Effector::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_SmallOrange);
 	
 	// ‘å‚«‚¢’e
 	if (big_time == 500)
@@ -327,8 +331,10 @@ void BossA::Dead_Update()
 	if (c_dead == 180.)	// final explosion
 	{
 		isExist = false;
+
 		for (int i = 0; i < 5; ++i)
 			Effector::PlayAnime(pos.x, pos.y, eExplosion_big);
+		
 		PlaySoundMem(hs_exp, DX_PLAYTYPE_BACK);
 	}
 }

@@ -37,4 +37,6 @@ private:
 	Vector2D pos;
 	int elapsedTime;
 	int Screen;
+	int c_trans;
+	double cycle, shake; // raster scroll
 };

@@ -40,9 +40,7 @@ Player::Player()
 	, elapsedTime(0)
 	, keydir(eInputDir::Neutral)
 	, dead_ef(eSpread_SmallGrey)
-	, isDead(false)
 	, life(3)
-	, isMuteki(false)
 {
 	LoadDivGraph("GRAPH/GAME/player.png", 3, 3, 1, 20, 26, hg);	// 画像の分割読み込み
 	LoadDivGraph("GRAPH/GAME/p_shield.png", 12, 6, 2, 26, 39, hg_arm);
@@ -55,9 +53,16 @@ Player::Player()
 	vec = Vector2D::ZERO;
 	bombNum = 3;
 	powlv = 0;
+	isDead = false;
 	isStart = false;
 	isHit = false;
+#ifdef _DEBUG
 	isMuteki = true;
+	printfDx("無敵だよ！\n");
+#else
+	isMuteki = false;
+	printfDx("無敵じゃないよ！\n");
+#endif
 	isArm = false;
 	state = ePlayerState::Start;
 }
@@ -161,7 +166,9 @@ void Player::Update_Start()
 
 	if (c_start->isLast())
 	{
+#ifndef _DEBUG
 		isMuteki = false;
+#endif
 		state = ePlayerState::Game;	// スタート地点ならスタートする
 	}
 }
@@ -452,7 +459,7 @@ bool Player::HitCheckCircle(const double& ColX, const double& ColY)
 
 	const bool& IS_HIT = Vector2D::CirclePointCollision(pos.x, pos.y + 9.0, ColX, ColY, HIT_RANGE);
 
-	if(IS_HIT && state == ePlayerState::Game)
+	if (IS_HIT && state == ePlayerState::Game && isMuteki == false)
 		Death();
 
 	return IS_HIT;
@@ -470,7 +477,7 @@ bool Player::HitCheckCircle(const double & Range1, const double & Range2, const 
 	if (IS_HIT && isArm)
 		isArm = false;
 
-	if (IS_HIT && state == ePlayerState::Game)
+	if (IS_HIT && state == ePlayerState::Game && isMuteki == false)
 		Death();
 
 	return IS_HIT;

@@ -72,7 +72,7 @@ void Stage::StageSet(eStage estage)
 	{
 	case eStage::opening:
 		hs_bgm = LoadSoundMem("SOUND/s1.wav");
-		ChangeVolumeSoundMem(170, hs_bgm);
+		ChangeVolumeSoundMem(0, hs_bgm); // 170
 		mField = static_cast<Field*>(new OpenigStage);
 		break;
 	case eStage::stage1 :

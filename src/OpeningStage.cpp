@@ -1,6 +1,8 @@
 #include "OpeningStage.hpp"
 #include "Graphics2D.hpp"
 #include "Counter.hpp"
+#include "EnemyMng.hpp"
+#include "Keyboard.hpp"
 #include <DxLib.h>
 #include <cassert>
 #include <algorithm>
@@ -8,6 +10,10 @@
 
 #undef max
 #undef min
+
+constexpr int TransTime = 180;
+constexpr double Cycle = 0.8;
+constexpr double Shake = 70.;
 
 
 OpenigStage::OpenigStage()
@@ -40,6 +46,9 @@ void OpenigStage::Initialize()
 	stage_fro.at(0).SetVec(320.0, 240.0);
 	stage_fro.at(1).SetVec(320.0, -240.0);
 	elapsedTime = 0;
+	c_trans = 0;
+	cycle = 0.;
+	shake = 0.;
 }
 
 
@@ -65,6 +74,20 @@ void OpenigStage::Update()
 		front.y += SPEED_FRONT;
 		front.y = static_cast<double>(WrapPos(static_cast<int>(front.y), 720, -240));
 	}
+
+	if (IEnemyMng::IsBossZone() || CheckHitKey(KEY_INPUT_L) != 0)
+	{
+		if (TransTime > c_trans)
+			++c_trans;
+	}
+	else
+	{
+		if (0 < c_trans)
+			--c_trans;
+	}
+
+	cycle = Cycle * (static_cast<double>(c_trans) / TransTime);
+	shake = Shake * (static_cast<double>(c_trans) / TransTime);
 }
 
 
@@ -75,16 +98,15 @@ void OpenigStage::Draw()
 	ClearDrawScreen();
 
 	for (auto& back : stage_back)
-		DrawRotaGraph(static_cast<int>(std::ceil(back.x)), static_cast<int>(std::ceil(back.y)), 1., 0., hg[eBG_back], TRUE);
+		DrawRasterScroll(static_cast<int>(back.x), static_cast<int>(back.y), cycle, shake, elapsedTime, hg[eBG_back], false);
 	for (auto& front : stage_fro)
-		DrawRotaGraph(static_cast<int>(std::ceil(front.x)), static_cast<int>(std::ceil(front.y)), 1., 0., hg[eBG_front], TRUE);
+		DrawRasterScroll(static_cast<int>(front.x), static_cast<int>(front.y), cycle, shake, elapsedTime, hg[eBG_front], false);
 
 	SetDrawScreen(DX_SCREEN_BACK);
-
-//	DrawRasterScroll(320, 240, 0., 0., elapsedTime, Screen, true);
 	DrawGraph(0, 0, Screen, TRUE);
-	
 	SetDrawScreen(tmpSc);
+
+	DrawFormatString(320, 40, GetColor(255, 0, 0), "cycle = %lf, shake = %lf", cycle, shake);
 }
 
 

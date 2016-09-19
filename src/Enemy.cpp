@@ -47,12 +47,9 @@ Enemy::Enemy(int type, int stype, int m_pattern, int s_pattern, int in_time, int
 	, isDamage(false)
 	, isUngry(false)
 {
-	// 例外処理
+	/* itemID check */
 	if(item < 0 || item > 3)
-	{
-		printfDx("アイテムID範囲外です。\n");
-		std::min(4, std::max(0, item));
-	}
+		assert(!"out of range");
 
 	// データ設定
 	this->type = type;
@@ -179,15 +176,13 @@ Enemy::~Enemy()
 void Enemy::Update()
 {
 	// 登場時間が来たら出てくる
-	if (Stage::GetTime() == in_time)
+	if (IStage::GetTime() == in_time)
 		isExist = true;
 
 	if (isExist)
 	{
-		// 時間を経過させる
-		elapsedTime++;
-
-		s_time++;
+		++elapsedTime;		// 敵にとっての時間を経過させる
+		++s_time;			// 全体としての時間
 
 		isDamage = false;
 
@@ -306,7 +301,8 @@ bool Enemy::IsHit(const double & ColX, const double & ColY, const int& DAMAGE)
 	}
 
 	// ダメージ処理
-	if (isHit)	Damage(DAMAGE);
+	if (isHit)
+		Damage(DAMAGE);
 
 	// 全部falseならここにくる
 	return isHit;

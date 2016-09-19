@@ -1,6 +1,9 @@
 #include "DxLib.h"
-
 #include "ExplosionEffect.hpp"
+#include <cassert>
+
+constexpr int RandomMax = 60;
+constexpr int RandomMaxTwo = RandomMax * 2;
 
 
 ExplosionEffect::ExplosionEffect(eExplosion_t kind_)
@@ -15,33 +18,30 @@ ExplosionEffect::ExplosionEffect(eExplosion_t kind_)
 		for (int i = 0; i < EXEF_ALL_NUM; i++)
 			c_play[i] = new Counter(2);
 		sh_ex = LoadSoundMem("SOUND/SE/explosion06.wav");
-//		sh_ex = LoadSoundMem("SOUND/SE/smallEx00.wav");
 		break;
-
 	case eExplosion_normal:
 		mExplosionS = new ExplosionS(eEpl_normal);
 		for (int i = 0; i < EXEF_ALL_NUM; i++)
 			c_play[i] = new Counter(41);
 		sh_ex = LoadSoundMem("SOUND/SE/explosion04.mp3");
 		break;
-
 	case eExplosion_big:
 		mExplosionS = new ExplosionS(eEpl_long);
 		for (int i = 0; i < EXEF_ALL_NUM; i++)
 			c_play[i] = new Counter(41);
 		sh_ex = LoadSoundMem("SOUND/SE/explosion03.mp3");
 		break;
-
 	case eExplosion_long:
 		mExplosionS = new ExplosionS(eEpl_normal);
 		for (int i = 0; i < EXEF_ALL_NUM; i++)
 			c_play[i] = new Counter(41);
 		sh_ex = LoadSoundMem("SOUND/SE/explosion04.mp3");
 		break;
+	default: assert(!"abnormality");
 	}
 
-	for (auto &p : pos)				p.SetZero();
-	for (bool &flag : isPlay)		flag = false;
+	for (auto& p : pos)				p.SetZero();
+	for (auto& flag : isPlay)		flag = false;
 }
 
 
@@ -69,7 +69,6 @@ void ExplosionEffect::Update()
 			isPlay[i] = false;
 		}
 	}
-
 	mExplosionS->Update();
 }
 
@@ -90,6 +89,7 @@ void ExplosionEffect::PlayAnime(const double & PlayX, const double & PlayY)
 	}
 }
 
+
 void ExplosionEffect::Play(const int & INDEX)
 {
 	Vector2D vRand;
@@ -104,7 +104,8 @@ void ExplosionEffect::Play(const int & INDEX)
 
 	case eExplosion_normal:
 		// 10ƒtƒŒ[ƒ€‚É‚P“x
-		if (c_play[INDEX]->Remainder(10) != 0)	break;
+		if (c_play[INDEX]->Remainder(10) != 0)
+			break;
 
 		// Å‰‚Ì‚PŒÂ‚Í‚¸‚ç‚³‚È‚¢
 		if (c_play[INDEX]->GetNowcount() == 40)
@@ -117,20 +118,20 @@ void ExplosionEffect::Play(const int & INDEX)
 			switch (nRand)
 			{
 			case 0:
-				vRand.x = (double)GetRand(60);
-				vRand.y = (double)GetRand(60);
+				vRand.x = static_cast<double>(GetRand(RandomMax));
+				vRand.y = static_cast<double>(GetRand(RandomMax));
 				break;
-			case 1:
-				vRand.x = (double)GetRand(60);
-				vRand.y = (double)GetRand(60) - 120.;
-				break;
-			case 2:
-				vRand.x = (double)GetRand(60) - 120.;
-				vRand.y = (double)GetRand(60) - 120.;
-				break;
-			case 3:
-				vRand.x = (double)GetRand(60) - 120.;
-				vRand.y = (double)GetRand(60);
+			case 1:		  
+				vRand.x = static_cast<double>(GetRand(RandomMax));
+				vRand.y = static_cast<double>(GetRand(RandomMax) - RandomMaxTwo);
+				break;	  
+			case 2:		  
+				vRand.x = static_cast<double>(GetRand(RandomMax) - RandomMaxTwo);
+				vRand.y = static_cast<double>(GetRand(RandomMax) - RandomMaxTwo);
+				break;	  
+			case 3:		  
+				vRand.x = static_cast<double>(GetRand(RandomMax) - RandomMaxTwo);
+				vRand.y = static_cast<double>(GetRand(RandomMax));
 				break;
 			}
 		}
@@ -139,7 +140,6 @@ void ExplosionEffect::Play(const int & INDEX)
 		
 		if (c_play[INDEX]->GetNowcount() == 40 || c_play[INDEX]->GetNowcount() == 10)
 			PlaySoundMem(sh_ex, DX_PLAYTYPE_BACK);
-		
 		break;
 
 	case eExplosion_big:
@@ -151,7 +151,6 @@ void ExplosionEffect::Play(const int & INDEX)
 	case eExplosion_long:
 		mExplosionS->PlayAnime(pos[INDEX].x, pos[INDEX].y);
 		PlaySoundMem(sh_ex, DX_PLAYTYPE_BACK);
-
 		break;
 	}
 }

@@ -1,6 +1,7 @@
 /*
 @referenced	http://dixq.net/rp/58.html
 きこえたーきがーしたー
+かんじたーきがーしたーんだー　んだんだそうだべ
 */
 
 #include "Stage1.hpp"
@@ -34,9 +35,9 @@ Stage1::Stage1()
 	gh[0] = LoadGraph("GRAPH/mydat/img/tex.png");
 	gh[1] = LoadGraph("GRAPH/mydat/img/kabe.png");
 	Screen = MakeScreen(640, 480, TRUE);
-	SetFogEnable(TRUE);
-	SetFogColor(255, 0, 0);
-	SetFogStartEnd(0.f, 1000.f);
+	//SetFogEnable(TRUE);
+	//SetFogColor(255, 0, 0);
+	//SetFogStartEnd(0.f, 1000.f);
 
 	Initialize();
 }
@@ -54,6 +55,12 @@ void Stage1::Initialize()
 {
 	::z = 0.f;
 	ObjectNum = 0;
+	Index[0] = 0;
+	Index[1] = 1;
+	Index[2] = 2;
+	Index[3] = 3;
+	Index[4] = 2;
+	Index[5] = 1;
 
 	/*
 	int ImgHandle   : 画像ハンドル
@@ -73,19 +80,38 @@ void Stage1::Initialize()
 	float GraphY    : 描画する中心点
 	int ObchildMax  : typeが0の場合のみ、同時にいくつ表示するか
 	*/
+	const float FromZ     = 2000.f; // 1000
+	const float FadeFromZ = 400.f;	// 400
+	const float FadeToZ   = -200.f;	// -200
+	const float ToZ       = -400.f;	// -400
 	int imgSize_tex = 0;
 	int imgSize_wall = 0;
 	GetGraphSize(gh[0], &imgSize_tex, &imgSize_tex);
 	GetGraphSize(gh[1], &imgSize_wall, &imgSize_wall);
-	IniObj(&Object[0], gh[0], imgSize_tex,  0,  0,   256, 128, 250, 50,  ObType_VerFloor, 1000, 400, -200, -400, 320, (240 - 90),  ObChildMax);
-	IniObj(&Object[1], gh[0], imgSize_tex,  60, 270, 405, 512, 180, 125, ObType_Horizon,  1000, 400, -200, -400, 470,  275,        6);
-	IniObj(&Object[2], gh[1], imgSize_wall, 0,  0,   390, 512, 73,  90,  ObType_Horizon,  1000, 400, -200, -400, 170,  240,        ObChildMax);
+	IniObj(&Object[0], gh[0], imgSize_tex,  0,  0,   256, 128, 250, 50,  ObType_VerFloor, FromZ, FadeFromZ, FadeToZ, ToZ, 320, (240 - 90),  ObChildMax);
+	IniObj(&Object[1], gh[0], imgSize_tex,  60, 270, 405, 512, 180, 125, ObType_Horizon,  FromZ, FadeFromZ, FadeToZ, ToZ, 470,  275,        ObChildMax); // 6?
+	IniObj(&Object[2], gh[1], imgSize_wall, 0,  0,   390, 512, 73,  90,  ObType_Horizon,  FromZ, FadeFromZ, FadeToZ, ToZ, 170,  240,        ObChildMax);
+
+	MATRIX m1 = MGetRotY(20);
+	float ang = 60.f * (DX_PI_F / 180.f);
+
+	for (auto& ob : Object)
+	{
+		for (int i = 0; i < ob.childMax; ++i)
+		{
+			//drawpolygonindexed3d(ob.child[i].vertex, vertexnum, index, 2, ob.img, true);
+			ob.child[i].center.y = ob.child[i].center.y * std::cos(ang) - ob.child[i].center.z * std::sin(ang);
+			ob.child[i].center.z = ob.child[i].center.y * std::sin(ang) + ob.child[i].center.z * std::cos(ang);
+		}
+	}
 }
 
 
 void Stage1::Update()
 {
+	//SetCameraPositionAndAngle(VGet(0.f, 0.f, 0.f), 0.f, 0.f, 0.f);
 	CalcObject();
+
 	SortObject();
 }
 
@@ -95,16 +121,18 @@ void Stage1::Draw()
 	int tmpScreen = GetDrawScreen();
 	SetDrawScreen(Screen);
 	ClearDrawScreen();
+	SetUseLighting(FALSE);
 
 	SetDrawMode(DX_DRAWMODE_BILINEAR); // make smooth polygon
 	for (auto Ob : Object)
 	{
 		for (int i = 0; i < Ob.childMax; ++i)
-			DrawPolygon3D(Ob.child[i].Vertex, 2, Ob.img, TRUE);
+			DrawPolygonIndexed3D(Ob.child[i].Vertex, VertexNum, Index, 2, Ob.img, TRUE);
 	}
 	SetDrawMode(DX_DRAWMODE_NEAREST); // reset default
 	/// SetDrawArea(0, 0, 640, 480);
 
+	SetUseLighting(TRUE);
 	SetDrawScreen(tmpScreen);
 	DrawGraph(0, 0, Screen, TRUE);
 	//DrawCircleScreen(320, 240, 200.f, 400.f, 50.f, Screen);
@@ -159,7 +187,8 @@ void Stage1::IniObj(Object_t * Ob, int ImgHandle, int ImgSize, int ImgX1, int Im
 		int i = 0;
 		for(auto& Vertex : Ob->child[s].Vertex)
 		{
-			Vertex.r = Vertex.g = Vertex.b = Vertex.a = 255;
+			Vertex.dif = GetColorU8(255, 255, 255, 255);
+			Vertex.spc = GetColorU8(255, 255, 255, 255);
 			Vertex.u = ou1 + ou2 * t_vtpm[i].u;
 			Vertex.v = ov1 + ov2 * t_vtpm[i].v;
 			++i;
@@ -214,7 +243,7 @@ void Stage1::CalcObject()
 				for (int i = 0; i < VertexNum; ++i)
 				{
 					float z = Object[t].child[s].Vertex[i].pos.z;
-					unsigned char& alpha = Object[t].child[s].Vertex[i].a;
+					unsigned char& alpha = Object[t].child[s].Vertex[i].dif.a;
 					const bool& Is_far = ( z < Object[t].toZ );
 					const bool& Is_fadeIn = ( Object[t].toZ < z && z <= Object[t].fadeToZ );
 					const bool& Is_renderRange = ( Object[t].fadeToZ <= z && z <= Object[t].fadeFromZ );

@@ -35,4 +35,6 @@ private:
 	std::array<Vector2D, 2> stage_back, stage_mid, stage_fro;		// （前・真中・後）背景それぞれの座標
 
 	Vector2D pos;
+	int elapsedTime;
+	int Screen;
 };

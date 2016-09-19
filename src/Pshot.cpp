@@ -695,7 +695,7 @@ void Pshot::Move()
 	{
 		if (shot->f_exist == false)	continue;
 
-		shot->x_pos += std::sin((double)Stage::GetTime()) * 4.0;	// ‹O“¹‚ð‚®‚É‚á‚ç‚¹‚é
+		shot->x_pos += std::sin( static_cast<double>(IStage::GetTime()) ) * 4.0;	// ‹O“¹‚ð‚®‚É‚á‚ç‚¹‚é
 		shot->y_pos -= B_SPEED;
 	}
 

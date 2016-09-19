@@ -1,13 +1,16 @@
 #pragma once
 #include "Field.hpp"
 #include "Vector2D.hpp"
+#include "Quaternion.hpp"
 #include <array>
+#include <memory>
 #include <DxLib.h>
 
 constexpr int VertexNum = 6;
 constexpr int ObChildMax = 11;
 constexpr int ObjectNumMax = 10;
 
+class Quaternion;
 
 // 三角形のポリゴン２つで四角形を描画する為の値。
 // 数値固定なので、覚える必要なし
@@ -16,7 +19,6 @@ struct VtPm_t
 	float x, y;
 	float u, v;
 };
-
 
 class Stage1 : public Field
 {
@@ -36,7 +38,7 @@ class Stage1 : public Field
 	struct ObChild_t
 	{
 		VECTOR center;
-		VERTEX_3D Vertex[VertexNum]; // texture's vertex
+		VERTEX3D Vertex[VertexNum]; // texture's vertex
 	};
 
 	/* struct a lot of texture */
@@ -67,8 +69,10 @@ private:
 	void CalcObject();
 	void SortObject();
 
+	Quaternion qua;
 	View_t t_left_view;
 	Object_t Object[ObjectNumMax];
+	WORD Index[VertexNum];
 	int gh[2], Screen;
 	int ObjectNum;
 };

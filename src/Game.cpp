@@ -33,7 +33,6 @@
 static VECTOR const DefLightPos = VGet(100.f, 100.f, 200.f);
 static int 	Screen;
 
-bool Game::isMsg;
 bool Game::isDead;
 
 
@@ -42,7 +41,6 @@ Game::Game(ISceneChanger* changer)
 	, bomb(new Bomb)
 	, graphic(new Graphic)
 	, board(new StatusBoard)
-	, c_msg(new Counter(100))
 	, player(new Player)
 	, pshot(new Pshot)
 	, effector(new Effector)
@@ -54,7 +52,7 @@ Game::Game(ISceneChanger* changer)
 	, hitEffect(new HitEffect)
 	, eneShotFactory(new EneShotCreater)
 {
-	/* インターフェイスクラス */
+	/* interface-class */
 	IScore::set(score);
 	IEnemyMng::set(enemyMng);
 	IStage::set(stage);
@@ -75,10 +73,6 @@ Game::Game(ISceneChanger* changer)
 Game::~Game()
 {
 	stage->Finalize();
-
-#ifdef _DEBUG
-	printfDx("\n~Game");
-#endif
 }
 
 
@@ -88,7 +82,6 @@ void Game::Initialize()
 	IStage::Load();
 
 	f_pause = false;
-	isMsg = false;
 	isDead = false;
 }
 
@@ -129,13 +122,6 @@ void Game::Update()
 	board->Update(*player);
 	itemMng->Update(player);
 	
-	if (isMsg)	c_msg->Update();
-	if(c_msg->isLast())
-	{
-		c_msg->Reset();
-		isMsg = false;
-	}
-
 	if (isDead)	mSceneChanger->ChangeScene(eScene_GameOver);
 
 // TEST ----------------------------------------------
@@ -147,7 +133,7 @@ void Game::Update()
 	if(Keyboard::Instance()->isPush(KEY_INPUT_F2))
 	{
 		IBossChara::Start();
-		IStage::SkipTo(1000);
+		//IStage::SkipTo(1000);
 	}
 }
 
@@ -189,7 +175,6 @@ void Game::Draw()
 	board->Draw(*player);
 
 	// 一番上に描画するその他の情報
-	Draw_StageMsg();
 	Draw_Status();
 
 	score->Draw();
@@ -224,29 +209,9 @@ void Game::Pause(){
 }
 
 
-void Game::StageCall(){
-	isMsg = true;
-}
-
-
 void Game::GameOver()
 {
 	isDead = true;
-}
-
-
-void Game::Draw_StageMsg()
-{
-	if (!isMsg)	return;
-
-	const int&    X_MSG = 290, Y_MSG = 240, SPACE_MSG = 16;
-	const double& EXRATE_MSG = 2.0;
-
-	switch (IStage::GetNowStage())
-	{
-	case eStage::stage1:	graphic->DrawMyString2(X_MSG - 20, Y_MSG, "OPENING!", SPACE_MSG, true, EXRATE_MSG);	break;
-	case eStage::stage2:	graphic->DrawMyString2(X_MSG, Y_MSG, "STAGE 2", SPACE_MSG, true, EXRATE_MSG);	break;
-	}
 }
 
 

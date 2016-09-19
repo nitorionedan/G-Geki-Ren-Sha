@@ -142,6 +142,9 @@ void EnemyMng::Update(const Player& player)
 
 	for (auto i : enemy)
 		i->Update();
+
+	if (IBossChara::IsDead() && isBossZone)
+		isBossZone = false;
 }
 
 
@@ -171,7 +174,10 @@ void EnemyMng::CountDownEneNum()
 	enemyCount--;
 
 	if (enemyCount == 0)
+	{
 		BossStart(IStage::GetNowStage());
+		isBossZone = true;
+	}
 }
 
 

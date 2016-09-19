@@ -3,9 +3,10 @@
 #include "Counter.hpp"
 #include "Graphics2D.hpp"
 #include "Vector2D.hpp"
+#include "Graphic.hpp"
+#include <DxLib.h>
 #include <memory>
 #include <string>
-
 
 class Field;
 
@@ -24,6 +25,14 @@ enum class eStage
 
 class Stage	: public Graphics2D
 {
+	struct t_Camera
+	{
+		VECTOR pos;
+		float vang;
+		float hang;
+		float tang;
+	};
+
 public:
 	Stage();
 	~Stage();
@@ -31,9 +40,9 @@ public:
 	void Update();
 	void Draw();
 	void StageSet(eStage estage);
-	void NextStage();								// リザルト表示後呼ばれる
-	void Clear    ();								// ステージクリアしたとき呼ばれる
-	void AllClear ();								// 全クリ用
+	void NextStage();				// リザルト表示後呼ばれる
+	void Clear    ();				// ステージクリアしたとき呼ばれる
+	void AllClear ();				// 全クリ用
 	void PlayQuake();
 	void SkipTo(int Time);
 	void Fadein();
@@ -41,29 +50,36 @@ public:
 	const eStage GetNowStage() const {
 		return nowStage;
 	}
-	static const int GetTime() {
-		return s_time;
+	const int GetTime() const {
+		return time;
+	}
+	const int GetRank() const {
+		return rank;
 	}
 	
 
 private:
+	void DrawStageCall();
 	void Quake(); // ステージを揺らす
 
-	std::unique_ptr<Counter> c_quake;								// ステージ全体を揺らす
+	std::unique_ptr<Graphic> graphic;
+	std::unique_ptr<Counter> c_quake;	// ステージ全体を揺らす
 	Field* mField;
 	Vector2D pos;
-	eStage	nowStage;												// 現在のステージ
-	int    hs_bgm;													// BGM用ハンドル
-	int    hs_boss;													// BGM用ハンドル
+	t_Camera tCamera;
+	eStage	nowStage;					// 現在のステージ
+	int    hs_bgm;						// BGM用ハンドル
+	int    hs_boss;						// BGM用ハンドル
 	int Screen;
-	double cycle, shake;											// ラスタースクロール用 // [目標] 3.0, 400
-	bool f_quake;													// シフトアップしたときの画面振動フラグ
+	double cycle, shake;				// ラスタースクロール用 // [目標] 3.0, 400
+	bool f_quake;						// シフトアップしたときの画面振動フラグ
 	bool fadeinFlag;
 	bool fadeoutFlag;
+	bool isStanby;
 
 	// static ------------
-	static int s_time;		// ステージの経過時間
-	static int s_rank;		// ランク
+	int time;		// ステージの経過時間
+	int rank;		// ランク
 };
 
 
@@ -84,6 +100,12 @@ public:
 	static void SkipTo(int Time);
 	static const eStage GetNowStage() {
 		return mStage->GetNowStage();
+	}
+	static const int GetTime() {
+		return mStage->GetTime();
+	}
+	static const int GetRank() {
+		return mStage->GetRank();
 	}
 
 private:

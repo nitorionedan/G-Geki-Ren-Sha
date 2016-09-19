@@ -25,7 +25,6 @@ class Stage;
 class Effector;
 class HitEffect;
 class Vector2D;
-class Counter;
 class Graphic;
 
 
@@ -52,18 +51,14 @@ public:
 		return f_pause;
 	}
 
-	static void StageCall();
 	static void GameOver();
 
 private:
-	void Draw_StageMsg();
 	void Draw_Status();
 
-	static bool isMsg;
 	static bool isDead;
 
 	std::unique_ptr<Graphic> graphic;
-	std::unique_ptr<Counter> c_msg;
 	std::shared_ptr<Player> player;
 	std::shared_ptr<StatusBoard> board;
 	std::shared_ptr<Pshot> pshot;

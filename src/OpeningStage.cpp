@@ -7,13 +7,28 @@
 #include <cassert>
 #include <algorithm>
 #include <cmath>
+#include <functional>
 
 #undef max
 #undef min
 
 constexpr int TransTime = 180;
+constexpr int CenterX = 320;
+constexpr int CenterY = 240;
 constexpr double Cycle = 0.8;
 constexpr double Shake = 70.;
+constexpr double Harf = 0.5;
+
+namespace
+{
+	std::function<double(double val, double max, double min)> Wrap = 
+		[](double val, double max, double min)
+		{
+			assert(max > min && "Stage::WrapPos()");
+			const double& offset = std::fmod((val - min), (max - min));
+			return (offset >= 0) ? (offset + min) : (offset + max);
+		};
+}
 
 
 OpenigStage::OpenigStage()
@@ -39,16 +54,45 @@ OpenigStage::~OpenigStage()
 
 void OpenigStage::Initialize()
 {
-	stage_back.at(0).SetVec(320.0, 240.0);
-	stage_back.at(1).SetVec(320.0, -400.0); // pixサイズが例外的に 320 x 320　なので
-	stage_mid.at(0).SetVec(320.0, 240.0);
-	stage_mid.at(1).SetVec(320.0, -240.0);
-	stage_fro.at(0).SetVec(320.0, 240.0);
-	stage_fro.at(1).SetVec(320.0, -240.0);
+	int GrSizeX, GrSizeY;
+	GetGraphSize(hg.at(eBG_back), &GrSizeX, &GrSizeY);
+	GrSizeX /= 2;
+	GrSizeY /= 2;
+	//stage_back.at(0).SetVec(320., 240.);
+	//stage_back.at(1).SetVec(320., -400.); // pixサイズが例外的に 320 x 320　なので
+	//stage_back.at(2).SetVec(320., -1040);
+	for (int i = 0; i < stage_back.size(); ++i)
+		stage_back[i].SetVec(CenterX, CenterY - (i * GrSizeY * 2));
+
+	GetGraphSize(hg.at(eBG_front), &GrSizeX, &GrSizeY);
+	GrSizeX /= 2;
+	GrSizeY /= 2;
+	//stage_fro.at(0).SetVec(320., 240.);
+	//stage_fro.at(1).SetVec(320., -240.);
+	for (int i = 0; i < stage_fro.size(); ++i)
+		stage_fro[i].SetVec(CenterX, CenterY - (i * GrSizeY * 2));
+
 	elapsedTime = 0;
 	c_trans = 0;
-	cycle = 0.;
-	shake = 0.;
+	cycle = Cycle;
+	shake = Shake;
+
+	//using DirectX::XMVECTOR;
+	//using DirectX::XMMATRIX;
+
+	//XMVECTOR v0 = DirectX::XMVectorReplicate(0.f);
+	//XMVECTOR v1 = DirectX::XMVectorSet(1.f, 2.f, 3.f, 1.f);
+	//XMMATRIX m0 = DirectX::XMMatrixIdentity();
+	//XMMATRIX m1 = DirectX::XMMatrixScaling(1.f, 2.f, 3.f);
+	//XMMATRIX m = DirectX::XMMatrixMultiply(m0, m1);
+	//XMVECTOR v = DirectX::XMVector4Transform(v1, m);
+	//float vx = DirectX::XMVectorGetX(v);
+	//float vy = DirectX::XMVectorGetX(v);
+	//float vz = DirectX::XMVectorGetX(v);
+
+	//printfDx("vx = %f\n", vx);
+	//printfDx("vy = %f\n", vy);
+	//printfDx("vz = %f\n", vz);
 }
 
 
@@ -56,29 +100,12 @@ void OpenigStage::Update()
 {
 	++elapsedTime;
 
-	// Scroll
-	for (auto& back : stage_back)
-	{
-		back.y += SPEED_BACK;
-		back.y = static_cast<double>(WrapPos(static_cast<int>(back.y), 880, -400));
-	}
-
-	for (auto& middle : stage_mid)
-	{
-		middle.y += SPEED_MIDDLE;
-		middle.y = static_cast<double>(WrapPos(static_cast<int>(middle.y), 720, -240));
-	}
-
-	for (auto& front : stage_fro)
-	{
-		front.y += SPEED_FRONT;
-		front.y = static_cast<double>(WrapPos(static_cast<int>(front.y), 720, -240));
-	}
-
+	double bi = 1.;
 	if (IEnemyMng::IsBossZone() || CheckHitKey(KEY_INPUT_L) != 0)
 	{
-		if (TransTime > c_trans)
+		if (255 > c_trans)
 			++c_trans;
+		bi = 0.5;
 	}
 	else
 	{
@@ -86,8 +113,20 @@ void OpenigStage::Update()
 			--c_trans;
 	}
 
-	cycle = Cycle * (static_cast<double>(c_trans) / TransTime);
-	shake = Shake * (static_cast<double>(c_trans) / TransTime);
+	// Scroll
+	for (auto& back : stage_back)
+	{
+		back.y += SPEED_BACK * bi;
+		//back.y = Wrap(back.y, 880, -400);
+		back.y = Wrap(back.y, 800, -480);
+	}
+
+	for (auto& front : stage_fro)
+	{
+		front.y += SPEED_FRONT * bi;
+		//front.y = Wrap(front.y, 480 + (120 * 2), -120 * 2);
+		front.y = Wrap(front.y, 720 + (240), -480 + (240));
+	}
 }
 
 
@@ -97,16 +136,24 @@ void OpenigStage::Draw()
 	SetDrawScreen(Screen);
 	ClearDrawScreen();
 
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, c_trans);
+	SetDrawBright(255, 100, 100);
 	for (auto& back : stage_back)
 		DrawRasterScroll(static_cast<int>(back.x), static_cast<int>(back.y), cycle, shake, elapsedTime, hg[eBG_back], false);
 	for (auto& front : stage_fro)
 		DrawRasterScroll(static_cast<int>(front.x), static_cast<int>(front.y), cycle, shake, elapsedTime, hg[eBG_front], false);
+	SetDrawBright(255, 255, 255);
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 - c_trans);
+	for (auto& back : stage_back)
+		DrawRotaGraphF(static_cast<float>(back.x), static_cast<float>(back.y), 1., 0., hg[eBG_back], TRUE);
+	for (auto& front : stage_fro)
+		DrawRotaGraphF(static_cast<float>(front.x), static_cast<float>(front.y), 1., 0., hg[eBG_front], TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	SetDrawScreen(DX_SCREEN_BACK);
 	DrawGraph(0, 0, Screen, TRUE);
 	SetDrawScreen(tmpSc);
-
-	DrawFormatString(320, 40, GetColor(255, 0, 0), "cycle = %lf, shake = %lf", cycle, shake);
 }
 
 

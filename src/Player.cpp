@@ -58,10 +58,8 @@ Player::Player()
 	isHit = false;
 #ifdef _DEBUG
 	isMuteki = true;
-	printfDx("無敵だよ！\n");
 #else
 	isMuteki = false;
-	printfDx("無敵じゃないよ！\n");
 #endif
 	isArm = false;
 	state = ePlayerState::Start;
@@ -459,6 +457,13 @@ bool Player::HitCheckCircle(const double& ColX, const double& ColY)
 
 	const bool& IS_HIT = Vector2D::CirclePointCollision(pos.x, pos.y + 9.0, ColX, ColY, HIT_RANGE);
 
+	// アームを剥がす
+	if (IS_HIT && isArm)
+	{
+		isArm = false;
+		IBomb::Fire();
+	}
+
 	if (IS_HIT && state == ePlayerState::Game && isMuteki == false)
 		Death();
 
@@ -475,7 +480,10 @@ bool Player::HitCheckCircle(const double & Range1, const double & Range2, const 
 
 	// アームを剥がす
 	if (IS_HIT && isArm)
+	{
 		isArm = false;
+		IBomb::Fire();
+	}
 
 	if (IS_HIT && state == ePlayerState::Game && isMuteki == false)
 		Death();

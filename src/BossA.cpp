@@ -165,10 +165,12 @@ void BossA::Draw()
 	if(isHit)
 		SetLightDifColor(CyanF);	// 緑
 	
+	/* flashing */
 	const bool& Is_flashing = (isWeak && (time % 12) >= 10);
 	if(Is_flashing)
 		SetLightDifColor(RedF);
 
+	/* preliminary action */
 	const bool&  PreliminaryActionFlag = (c_atk1->GetNowcount() == 50);
 	if(PreliminaryActionFlag)
 		SetLightDifColor(YellowF);	// 色変更
@@ -176,7 +178,7 @@ void BossA::Draw()
 	if (isWeak)
 	{
 		MV1SetRotationXYZ(hmWeaking, rota);	// 回転値設定
-		MV1SetPosition(hmWeaking, mPos);		// 座標を設定
+		MV1SetPosition(hmWeaking, mPos);	// 座標を設定
 		MV1DrawModel(hmWeaking);
 	}
 	else
@@ -202,7 +204,7 @@ void BossA::Draw()
 	if (DebugMode::isTest == false)	return;
 	
 	DrawCircle(pos.x, pos.y, HIT_RANGE, GetColor(0, 255, 0), false);
-	DrawFormatString(pos.x, pos.y, GetColor(0, 255, 0), "Boss.y = %lf", pos.y);
+	DrawFormatString(pos.x, pos.y, GetColor(0, 255, 0), "HP : %d", hp);
 }
 
 
@@ -357,14 +359,14 @@ void BossA::HitCheck()
 	if(Is_hitBomb && isWeak)
 	{
 		isHit = true;
-		Damage(10);
+		Damage(5);
 	}
 
 	// player's collision
-	if (state == eBossA_Normal)
+	if (state == eBossA_Normal || state == eBossA_Weak)
 	{
 		const bool& Is_hitPlayer = IPlayer::HitCheckCircl(HIT_RANGE, pos);
-		if (Is_hitPlayer)	Damage(10);
+		if (Is_hitPlayer)	Damage(1);
 	}
 }
 

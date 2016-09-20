@@ -2,7 +2,6 @@
 #include <DxLib.h>
 #include "Bomb.hpp"
 #include "EnemyMng.hpp"
-#include "IScore.hpp"
 #include <cassert>
 
 
@@ -53,6 +52,7 @@ void Bomb::Draw()
 
 void Bomb::SetParam(Vector2D& pos, int& shiftLevel, int& bombNum)
 {
+	// TODO: remove this func
 	this->shiftLevel = shiftLevel;
 	this->bombNum = bombNum;
 }
@@ -64,7 +64,6 @@ void Bomb::Fire()
 	if (bombNum == 0)	return;
 
 	isBomb = true;
-	///IPlayer::ShiftReset();		// << パワーリセットしたいならはずす
 	pos = IPlayer::GetPos();
 
 	switch (shiftLevel)
@@ -97,14 +96,12 @@ bool Bomb::IsHit(const int & ColCircle, const double & ColX, const double & ColY
 {
 	bool isHit = false;
 
-	for (int i = 0; i < EFFECT_NUM; i++)
+	for (int i = 0; i < _countof(effect); i++)
 	{
 		if (!effect[i].isExist)	continue;
 
 		isHit = Vector2D::CirclesCollision(ColCircle, effect[i].rad, ColX, ColY, pos.x, pos.y);
 		
-		// static じゃなくなったらはずせ
-		if (isHit)	IScore::AddScore(50);
 		if (isHit)	return isHit;
 	}
 
@@ -151,7 +148,7 @@ void Bomb::MoveEffect()
 
 		IEnemyMng::IsHit(effect[i].rad, pos.x, pos.y, 100);
 
-		// リセット
+		// reset
 		if (effect[i].rad > 400)
 			effect[i].isExist = false;
 	}

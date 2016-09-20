@@ -32,7 +32,7 @@ private:
 	const double SPEED_FRONT;
 
 	std::array<int, 3> hg;											// 画像用ハンドル
-	std::array<Vector2D, 2> stage_back, stage_mid, stage_fro;		// （前・真中・後）背景それぞれの座標
+	std::array<Vector2D, 4> stage_back, stage_mid, stage_fro;		// （前・真中・後）背景それぞれの座標
 
 	Vector2D pos;
 	int elapsedTime;

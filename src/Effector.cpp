@@ -6,14 +6,19 @@
 #include "ExplosionS.hpp"
 #include "Piece.hpp"
 #include "ChargeEffect.hpp"
+#include <DxLib.h>
 
+constexpr int EX_NUM = 4;
 
 PieceEffect*	Effector::pieceef;
 Effect**		Effector::effect;
+Effector::Shock Effector::s_shock[10];
 
 
 Effector::Effector()
 {
+	img_shock = LoadGraph("GRAPH/GAME/EFFECT/circle.png");
+
 	pieceef = new PieceEffect;
 
 	effect = new Effect*[EX_NUM];
@@ -21,23 +26,47 @@ Effector::Effector()
 	effect[1] = new Effect(new ExplosionEffect(eExplosion_normal));
 	effect[2] = new Effect(new ExplosionEffect(eExplosion_big));
 	effect[3] = new Effect(new ExplosionEffect(eExplosion_long));
+
+	for (auto& i : s_shock)
+	{
+		i.img = img_shock;
+		i.isPlay = false;
+		i.x = 0.;
+		i.y = 0.;
+		i.exrate = 1.;
+	}
 }
 
 
 Effector::~Effector()
 {
+	DeleteGraph(img_shock);
+
 	delete pieceef;
-	{
-		for (int i = 0; i < EX_NUM; i++)	delete effect[i];
-		delete[] effect;
-	}
+	for (int i = 0; i < EX_NUM; i++)
+		delete effect[i];
+	delete[] effect;
 }
 
 
 void Effector::Update()
 {
 	pieceef->Update();
-	for (int i = 0; i < EX_NUM; i++)	effect[i]->Update();
+	
+	for (int i = 0; i < EX_NUM; i++)
+		effect[i]->Update();
+	
+	for (auto& i : s_shock)
+	{
+		if (i.isPlay == false)
+			continue;
+		i.exrate += 0.5;
+		if (i.exrate > 30)
+		{
+			i.isPlay = false;
+			i.exrate = 1.;
+		}
+	}
 }
 
 
@@ -47,6 +76,17 @@ void Effector::Draw()
 
 	for (int i = 0; i < EX_NUM; i++)
 		effect[i]->Draw();
+
+	SetDrawMode(DX_DRAWMODE_BILINEAR);
+	for(auto i : s_shock)
+	{
+		if (i.isPlay == false)
+			continue;
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 - i.exrate * i.exrate );
+		DrawRotaGraphF(i.x, i.y, i.exrate, 0., i.img, TRUE);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}	
+	SetDrawMode(DX_DRAWMODE_NEAREST);
 }
 
 
@@ -69,4 +109,18 @@ void Effector::PlayAnime(const double& PlayX, const double& PlayY, eExplosion_t 
 
 void Effector::PlaySpread(const double & PosX, const double & PosY, const double & ANGLE, eSpread_t type) {
 	pieceef->PlayAnime(PosX, PosY, ANGLE, type);
+}
+
+
+void Effector::PlayShock(double x, double y)
+{
+	for(auto& i : s_shock)
+	{
+		if (i.isPlay)
+			continue;
+		i.isPlay = true;
+		i.x = x;
+		i.y = y;
+		break;
+	}
 }

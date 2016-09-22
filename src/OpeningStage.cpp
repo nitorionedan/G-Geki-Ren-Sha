@@ -41,12 +41,16 @@ OpenigStage::OpenigStage()
 	hg.at(eBG_front) = LoadGraph("GRAPH/GAME/BACKGROUND/RasterOnly/rbg01.png");
 	Screen = MakeScreen(640, 480, TRUE);
 
+	testGh = LoadGraph("GRAPH/GAME/BACKGROUND/moon.png");
+
 	Initialize();
 }
 
 
 OpenigStage::~OpenigStage()
 {
+	DeleteGraph(testGh);
+
 	for (auto Gr_Handle : hg)
 		DeleteGraph(Gr_Handle);
 }
@@ -58,41 +62,19 @@ void OpenigStage::Initialize()
 	GetGraphSize(hg.at(eBG_back), &GrSizeX, &GrSizeY);
 	GrSizeX /= 2;
 	GrSizeY /= 2;
-	//stage_back.at(0).SetVec(320., 240.);
-	//stage_back.at(1).SetVec(320., -400.); // pixサイズが例外的に 320 x 320　なので
-	//stage_back.at(2).SetVec(320., -1040);
-	for (int i = 0; i < stage_back.size(); ++i)
+	for (int i = 0; i != stage_back.size(); ++i)
 		stage_back[i].SetVec(CenterX, CenterY - (i * GrSizeY * 2));
 
 	GetGraphSize(hg.at(eBG_front), &GrSizeX, &GrSizeY);
 	GrSizeX /= 2;
 	GrSizeY /= 2;
-	//stage_fro.at(0).SetVec(320., 240.);
-	//stage_fro.at(1).SetVec(320., -240.);
-	for (int i = 0; i < stage_fro.size(); ++i)
+	for (int i = 0; i != stage_fro.size(); ++i)
 		stage_fro[i].SetVec(CenterX, CenterY - (i * GrSizeY * 2));
 
 	elapsedTime = 0;
 	c_trans = 0;
 	cycle = Cycle;
 	shake = Shake;
-
-	//using DirectX::XMVECTOR;
-	//using DirectX::XMMATRIX;
-
-	//XMVECTOR v0 = DirectX::XMVectorReplicate(0.f);
-	//XMVECTOR v1 = DirectX::XMVectorSet(1.f, 2.f, 3.f, 1.f);
-	//XMMATRIX m0 = DirectX::XMMatrixIdentity();
-	//XMMATRIX m1 = DirectX::XMMatrixScaling(1.f, 2.f, 3.f);
-	//XMMATRIX m = DirectX::XMMatrixMultiply(m0, m1);
-	//XMVECTOR v = DirectX::XMVector4Transform(v1, m);
-	//float vx = DirectX::XMVectorGetX(v);
-	//float vy = DirectX::XMVectorGetX(v);
-	//float vz = DirectX::XMVectorGetX(v);
-
-	//printfDx("vx = %f\n", vx);
-	//printfDx("vy = %f\n", vy);
-	//printfDx("vz = %f\n", vz);
 }
 
 
@@ -101,7 +83,7 @@ void OpenigStage::Update()
 	++elapsedTime;
 
 	double bi = 1.;
-	if (IEnemyMng::IsBossZone() || CheckHitKey(KEY_INPUT_L) != 0)
+	if (IEnemyMng::IsBossZone())
 	{
 		if (255 > c_trans)
 			++c_trans;

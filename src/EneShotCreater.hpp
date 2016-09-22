@@ -81,6 +81,9 @@ class IEneShotCreater
 public:
 	~IEneShotCreater(){}
 	static void set(std::shared_ptr<EneShotCreater> eneShotCreater);
+	static void reset() {
+		mEShotCreater.reset();
+	}
 	static void Fire(eEneShot shotType, eEneShotMove moveType, Vector2D& firstPos, double& speed);
 
 private:

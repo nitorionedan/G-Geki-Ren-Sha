@@ -5,6 +5,7 @@
 #include "IScore.hpp"
 #include <fstream>
 #include <cassert>
+// この心は１つで　１つのようで無限で～
 
 const int Score::digit = 8;
 
@@ -23,7 +24,7 @@ Score::Score()
 	, f_exist(true)
 {
 	LoadScore();	// ハイスコアデータをロードするよ
-	LoadRanking();
+	LoadRanking();	// ランキングデータをロードするよ
 	
 	Initialize();
 }
@@ -68,8 +69,6 @@ void Score::Draw()
 	// HiScore
 	graphic->DrawMyString2(x_hi - 160, y_hi, "HI", 16, true, 2.0);
 	graphic->DrawScore(x_hi, y_hi, val_hiscore, 15, 2.0);
-
-	// TEST
 }
 
 

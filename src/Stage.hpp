@@ -25,6 +25,12 @@ enum class eStage
 
 class Stage	: public Graphics2D
 {
+	enum class eState
+	{
+		game,
+		result,
+	};
+
 	struct t_Camera
 	{
 		VECTOR pos;
@@ -39,6 +45,7 @@ public:
 	void Finalize();
 	void Update();
 	void Draw();
+	void UpdateField();
 	void StageSet(eStage estage);
 	void NextStage();				// リザルト表示後呼ばれる
 	void Clear    ();				// ステージクリアしたとき呼ばれる
@@ -60,6 +67,7 @@ public:
 
 private:
 	void DrawStageCall();
+	void DrawResult();
 	void Quake(); // ステージを揺らす
 
 	std::unique_ptr<Graphic> graphic;
@@ -68,18 +76,17 @@ private:
 	Vector2D pos;
 	t_Camera tCamera;
 	eStage	nowStage;					// 現在のステージ
+	eState state;						// 状態
 	int    hs_bgm;						// BGM用ハンドル
 	int    hs_boss;						// BGM用ハンドル
 	int Screen;
+	int time;							// ステージの経過時間
+	int rank;							// ランク
 	double cycle, shake;				// ラスタースクロール用 // [目標] 3.0, 400
 	bool f_quake;						// シフトアップしたときの画面振動フラグ
 	bool fadeinFlag;
 	bool fadeoutFlag;
 	bool isStanby;
-
-	// static ------------
-	int time;		// ステージの経過時間
-	int rank;		// ランク
 };
 
 
@@ -93,9 +100,18 @@ class IStage
 public:
 	~IStage() {}
 	static void set(std::shared_ptr<Stage>);
+	static void reset() {
+		mStage.reset();
+	}
 	static void Load();
 	static void Quake() {
 		mStage->PlayQuake();
+	}
+	void Clear() {
+		mStage->Clear();
+	}
+	void AllClear() {
+		mStage->AllClear();
 	}
 	static void SkipTo(int Time);
 	static const eStage GetNowStage() {

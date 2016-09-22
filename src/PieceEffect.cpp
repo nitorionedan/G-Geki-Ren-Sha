@@ -69,7 +69,6 @@ PieceEffect::PieceEffect()
 
 
 PieceEffect::~PieceEffect()
-
 {
 	for (int i = 0; i < 10; i++)	delete piece[i];
 	delete[] piece;
@@ -84,7 +83,17 @@ void PieceEffect::Update()
 
 void PieceEffect::Draw()
 {
+	switch (kind)
+	{
+	case eSpread_SmallOrange:
+		SetDrawBright(252, 97, 3);
+		break;
+	default: break;
+	}
+
 	for (int i = 0; i < 10; i++)	piece[i]->Draw();
+
+	SetDrawBright(252, 255, 255);
 }
 
 
@@ -92,6 +101,7 @@ void PieceEffect::PlayAnime(const double & PosX, const double & PosY, const doub
 {
 	double rand_spin;
 	int rand_type;
+	kind = kind_;
 
 	switch (kind_)
 	{
@@ -150,6 +160,31 @@ void PieceEffect::PlayAnime(const double & PosX, const double & PosY, const doub
 		piece[0]->Play(PosX, PosY, ANGLE + ANGLE12, SPEED12, 2., rand_spin, BRAKE12, 0, 255, 255);
 		break;
 	case eSpread_SmallOrange:
+		rand_spin = ((double)GetRand(20) - 10.) / 100.;	// 回転値をランダムに取得 (-0.10 ~ 0.1)
+		piece[0]->Play(PosX, PosY, ANGLE + ANGLE1, SPEED1, 2., rand_spin, BRAKE1, 0, 255, 255);
+		rand_spin = ((double)GetRand(20) - 10.) / 100.;
+		piece[0]->Play(PosX, PosY, ANGLE + ANGLE2, SPEED2, 2., rand_spin, BRAKE2, 0, 255, 255);
+		rand_spin = ((double)GetRand(20) - 10.) / 100.;
+		piece[0]->Play(PosX, PosY, ANGLE + ANGLE3, SPEED3, 2., rand_spin, BRAKE3, 0, 255, 255);
+		rand_spin = ((double)GetRand(20) - 10.) / 100.;
+		piece[0]->Play(PosX, PosY, ANGLE + ANGLE4, SPEED4, 2., rand_spin, BRAKE4, 0, 255, 255);
+		rand_spin = ((double)GetRand(20) - 10.) / 100.;
+		piece[0]->Play(PosX, PosY, ANGLE + ANGLE5, SPEED5, 2., rand_spin, BRAKE5, 0, 255, 255);
+		rand_spin = ((double)GetRand(20) - 10.) / 100.;
+		piece[0]->Play(PosX, PosY, ANGLE + ANGLE6, SPEED6, 2., rand_spin, BRAKE6, 0, 255, 255);
+
+		rand_spin = ((double)GetRand(20) - 10.) / 100.;	// 回転値をランダムに取得 (-0.10 ~ 0.1)
+		piece[0]->Play(PosX, PosY, ANGLE + ANGLE7, SPEED7, 2., rand_spin, BRAKE7, 0, 255, 255);
+		rand_spin = ((double)GetRand(20) - 10.) / 100.;
+		piece[0]->Play(PosX, PosY, ANGLE + ANGLE8, SPEED8, 2., rand_spin, BRAKE8, 0, 255, 255);
+		rand_spin = ((double)GetRand(20) - 10.) / 100.;
+		piece[0]->Play(PosX, PosY, ANGLE + ANGLE9, SPEED9, 2., rand_spin, BRAKE9, 0, 255, 255);
+		rand_spin = ((double)GetRand(20) - 10.) / 100.;
+		piece[0]->Play(PosX, PosY, ANGLE + ANGLE10, SPEED10, 2., rand_spin, BRAKE10, 0, 255, 255);
+		rand_spin = ((double)GetRand(20) - 10.) / 100.;
+		piece[0]->Play(PosX, PosY, ANGLE + ANGLE11, SPEED11, 2., rand_spin, BRAKE11, 0, 255, 255);
+		rand_spin = ((double)GetRand(20) - 10.) / 100.;
+		piece[0]->Play(PosX, PosY, ANGLE + ANGLE12, SPEED12, 2., rand_spin, BRAKE12, 0, 255, 255);
 		break;
 	case eSpread_SmallRed:
 		break;
@@ -334,7 +369,7 @@ void PieceEffect::PlayAnime(const double & PosX, const double & PosY, const doub
 }
 
 
-void PieceEffect::GetRadian(double* rad, const double & ANGLE){
-	*rad = ANGLE * DX_PI / 180.;	// 度数to弧度法
+void PieceEffect::GetRadian(double* rad, const double & ANGLE) {
+	*rad = ANGLE * DX_PI / 180.;	// convert angle to radian
 }
 

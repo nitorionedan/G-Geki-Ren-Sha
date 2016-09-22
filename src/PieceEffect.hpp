@@ -98,4 +98,5 @@ private:
 	const double BRAKE12;
 
 	Piece** piece;
+	eSpread_t kind;
 };

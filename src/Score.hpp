@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Task.hpp"
 #include "Graphic.hpp"
 #include <memory>
 #include <DxLib.h>
@@ -10,7 +9,7 @@ constexpr int RankingNum = 6;
 constexpr char* RankingFile = "data/rkg.dat";
 
 
-class Score : public Task
+class Score
 {
 	struct t_Ranking
 	{
@@ -23,8 +22,8 @@ public:
 	Score();
 	~Score();
 	void Initialize();
-	void Update() override;
-	void Draw() override;
+	void Update();
+	void Draw();
 	void IsShowScore(const bool& IsShow);
 	void ShowResult();
 	void AddScore(const int& point);

@@ -304,6 +304,8 @@ void BossA::Weak_Update()
 	if (big_time == 500)
 	{
 		PlaySoundMem(hs_big, DX_PLAYTYPE_BACK);
+		Effector::PlayShock(pos.x, pos.y);
+		Effector::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_SmallOrange);
 		shot3->Fire(10, std::atan2(playerY - pos.y, playerX - pos.x));
 	}
 
@@ -311,6 +313,8 @@ void BossA::Weak_Update()
 	if(big_time == 530)
 	{
 		PlaySoundMem(hs_big, DX_PLAYTYPE_BACK);
+		Effector::PlayShock(pos.x, pos.y);
+		Effector::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_SmallOrange);
 		shot3->Fire(10, std::atan2(playerY - pos.y, playerX - pos.x));
 	}
 

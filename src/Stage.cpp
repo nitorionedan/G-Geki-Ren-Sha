@@ -1,8 +1,8 @@
 #include "Stage.hpp"
 #include "Keyboard.hpp"
 #include "DebugMode.hpp"
-#include "Game.hpp"
 
+/* field */
 #include "Field.hpp"
 #include "NullStage.hpp"
 #include "OpeningStage.hpp"
@@ -20,6 +20,7 @@ constexpr float CamY = 240.f;
 constexpr float CamZ = -415.6922f;
 constexpr int StageCallTime = 120;
 
+
 Stage::Stage()
 	: c_quake( new Counter(30) )
 	, graphic(new Graphic)
@@ -34,6 +35,8 @@ Stage::Stage()
 	tCamera.tang = GetCameraAngleVRotate();
 	tCamera.hang = GetCameraAngleHRotate();
 	tCamera.tang = GetCameraAngleTRotate();
+
+	state = eState::game;
 
 	pos.SetVec(320., 240.);
 	cycle = 0.;
@@ -71,15 +74,17 @@ void Stage::StageSet(eStage estage)
 	switch (estage)
 	{
 	case eStage::opening:
-		hs_bgm = LoadSoundMem("SOUND/s1.wav");
-		ChangeVolumeSoundMem(0, hs_bgm); // 170
+		hs_bgm = LoadSoundMem("SOUND/s1.mp3");
+		ChangeVolumeSoundMem(170, hs_bgm); // 170
 		mField = static_cast<Field*>(new OpenigStage);
 		break;
 	case eStage::stage1 :
-		hs_bgm = LoadSoundMem("SOUND/s0.wav"); // TODO: change bgm
+		hs_bgm = LoadSoundMem("SOUND/s1.mp3"); // TODO: change bgm
 		mField = static_cast<Field*>(new Stage1);
 		break;
 	case eStage::stage2 :
+		hs_bgm = LoadSoundMem("SOUND/s2.mp3");
+		
 		break;
 	case eStage::stage3 :
 		break;
@@ -102,20 +107,15 @@ void Stage::StageSet(eStage estage)
 
 void Stage::Update()
 {
-	if (time == StageCallTime) // stop to StageCall
-		isStanby = false;
+	switch (state)
+	{
+	case Stage::eState::game:
+		UpdateField();
+		break;
+	case Stage::eState::result:
+		break;
+	}
 
-	// 時間経過
-	++time;
-
-	// rank increment
-	const int& RankUpTime = (time % 120 == 0);
-	if (RankUpTime)
-		++rank;
-
-	mField->Update();
-
-	Quake();
 
 	// TEST-----------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
@@ -131,16 +131,42 @@ void Stage::Update()
 
 void Stage::Draw()
 {
-	mField->Draw();
-	DrawStageCall();
+	switch (state)
+	{
+	case Stage::eState::game:
+		mField->Draw();
+		DrawStageCall();
+		break;
+	case Stage::eState::result:
+		DrawResult();
+		break;
+	}
 
 	// TEST -------------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
 
-//	DrawFormatString(540, 20, GetColor(0, 255, 0), "TIME:%d sec", testTime);
+	//DrawFormatString(540, 20, GetColor(0, 255, 0), "TIME:%d sec", testTime);
 	//DrawFormatString(520, 20, GetColor(0, 255, 0), "TIME:%d", time);
-	DrawFormatString(520, 40, GetColor(0, 255, 0), "CYCLE:%lf", cycle); // 0.8 << good enough
-	DrawFormatString(520, 60, GetColor(0, 255, 0), "SHAKE:%lf", shake); // 70 << good enough
+	//DrawFormatString(520, 40, GetColor(0, 255, 0), "CYCLE:%lf", cycle); // 0.8 << good enough
+	//DrawFormatString(520, 60, GetColor(0, 255, 0), "SHAKE:%lf", shake); // 70 << good enough
+}
+
+void Stage::UpdateField()
+{
+	if (time == StageCallTime) // stop to StageCall
+		isStanby = false;
+
+	// ステージの経過時間
+	++time;
+
+	// rank increment
+	const int& RankUpTime = (time % 120 == 0);
+	if (RankUpTime)
+		++rank;
+
+	mField->Update();
+
+	Quake();
 }
 
 
@@ -160,6 +186,7 @@ void Stage::Clear()
 {
 	// TODO: implement
 	printfDx("Clear\n");
+	state = eState::result;
 	time = 0;
 }
 
@@ -214,6 +241,11 @@ void Stage::DrawStageCall()
 		break;
 	}
 
+}
+
+
+void Stage::DrawResult()
+{
 }
 
 

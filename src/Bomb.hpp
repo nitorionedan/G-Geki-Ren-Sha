@@ -82,6 +82,9 @@ class IBomb
 public:
 	~IBomb(){}
 	static void set(std::shared_ptr<Bomb> bomb);
+	static void reset() {
+		mBomb.reset();
+	}
 	static void SetParam(Vector2D& pos, int& shiftLevel, int& bombNum);
 	static void Fire() {
 		mBomb->Fire();

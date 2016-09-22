@@ -72,7 +72,16 @@ Game::Game(ISceneChanger* changer)
 
 Game::~Game()
 {
-	stage->Finalize();
+	IScore::reset();
+	IEnemyMng::reset();
+	IStage::reset();
+	IPlayer::reset();
+	IBossChara::reset();
+	IItemMng::reset();
+	IBomb::reset();
+	IHitEffect::reset();
+	IPshot::reset();
+	IEneShotCreater::reset();
 }
 
 

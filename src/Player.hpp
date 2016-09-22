@@ -139,6 +139,9 @@ class IPlayer
 public:
 	~IPlayer(){}
 	static void set(std::shared_ptr<Player>);
+	static void reset() {
+		mPlayer.reset();
+	}
 	static void DownBombNum() {
 		mPlayer->DownBombNum();
 	}

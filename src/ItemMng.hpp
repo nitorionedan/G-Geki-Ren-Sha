@@ -66,6 +66,9 @@ class IItemMng
 public:
 	~IItemMng(){}
 	static void set(std::shared_ptr<ItemMng> itemMng);
+	static void reset() {
+		mItemMng.reset();
+	}
 	static void Create(Vector2D pos) {
 		mItemMng->Create(pos.x, pos.y);
 	}

@@ -69,6 +69,9 @@ class IBossChara
 public:
 	~IBossChara(){}
 	static void set(std::shared_ptr<BossChara> bossChara);
+	static void reset() {
+		mBossChara.reset();
+	}
 	static const Vector2D& GetPos() {
 		return mBossChara->GetPos();
 	}

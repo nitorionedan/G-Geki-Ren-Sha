@@ -99,6 +99,9 @@ class IPshot
 public:
 	~IPshot(){}
 	static void set(std::shared_ptr<Pshot> pshot);
+	static void reset() {
+		mPshot.reset();
+	}
 	static void SetParam(Vector2D& pos, int& shiftLevel) {
 		mPshot->SetParam(pos, shiftLevel);
 	}

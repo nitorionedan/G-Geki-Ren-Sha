@@ -32,6 +32,9 @@ class IHitEffect
 public:
 	~IHitEffect() {}
 	static void set(std::shared_ptr<HitEffect> hitEffect);
+	static void reset() {
+		mHitEffect.reset();
+	}
 	static void PlayAnime(Vector2D& pos) {
 		mHitEffect->PlayAnime(pos.x, pos.y);
 	}

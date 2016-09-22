@@ -61,6 +61,9 @@ class IEnemyMng
 public:
 	~IEnemyMng() {}
 	static void set(std::shared_ptr<EnemyMng>);
+	static void reset() {
+		mEnemyMng.reset();
+	}
 	static void Load(eStage);
 	static void CountDownEneNum();
 	static bool IsHit(const double& ColX, const double& ColY, const int& DAMAGE);

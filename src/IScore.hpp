@@ -9,8 +9,8 @@ public:
 	IScore() {}
 	~IScore() {}
 	static void set(std::shared_ptr<Score> score);
-	static void free() {
-		
+	static void reset() {
+		mScore.reset();
 	}
 	static void AddScore(int point);
 

@@ -1,11 +1,8 @@
 /*
-
 @file
 @brief		Singleton abstract class
 @reference	http://dixq.net/g/sp_02.html
-
 */
-
 
 #pragma once
 

@@ -7,6 +7,7 @@
 #include "NullStage.hpp"
 #include "OpeningStage.hpp"
 #include "Stage1.hpp"
+#include "Sound.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -99,7 +100,8 @@ void Stage::StageSet(eStage estage)
 	default: assert(!"Stage::StageSet()");
 	}
 
-	PlaySoundMem(hs_bgm, DX_PLAYTYPE_LOOP);
+	//PlaySoundMem(hs_bgm, DX_PLAYTYPE_LOOP);
+	Sound::Play(eSound::stage1);
 	nowStage = estage;	// setting current stage
 	isStanby = true;
 }

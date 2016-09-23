@@ -42,6 +42,7 @@ class Stage	: public Graphics2D
 public:
 	Stage();
 	~Stage();
+	void Initialize();
 	void Finalize();
 	void Update();
 	void Draw();
@@ -66,6 +67,8 @@ public:
 	
 
 private:
+	void Update_Result();
+	void Update_Fadeout();
 	void DrawStageCall();
 	void DrawResult();
 	void Quake(); // ステージを揺らす
@@ -77,12 +80,10 @@ private:
 	t_Camera tCamera;
 	eStage	nowStage;					// 現在のステージ
 	eState state;						// 状態
-	int    hs_bgm;						// BGM用ハンドル
-	int    hs_boss;						// BGM用ハンドル
 	int Screen;
 	int time;							// ステージの経過時間
 	int rank;							// ランク
-	double cycle, shake;				// ラスタースクロール用 // [目標] 3.0, 400
+	double soundVolume;
 	bool f_quake;						// シフトアップしたときの画面振動フラグ
 	bool fadeinFlag;
 	bool fadeoutFlag;

@@ -74,7 +74,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetGraphMode(SC_W, SC_H, 32), ChangeWindowMode(ScSizeFrag), DxLib_Init();					// ウィンドウ初期設定(VGA),DxLib起動
 	SetMainWindowText("激連射");																// タイトルを設定
 	SetChangeScreenModeGraphicsSystemResetFlag(FALSE);											// 画面モード変更後、素材メモリをリセットしない
-	SetEmulation320x240(TRUE);																	// 320x240の解像度にする
 	SetWaitVSyncFlag(FALSE);																	// 垂直同期信号を待たない
 	FrameStartTime = GetNowCount();																// 開始時間を設定
 	FPS = 60;
@@ -101,7 +100,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		sceneMng->Draw();																		// 現在のシーンを描画
 		DebugMode::Draw();
 
-		ScreenFlip();
+		ScreenFlip();	//　裏画面を表画面に反映
 	}
 	Sound::Delete();
 	LoadPauseGraph(NULL);

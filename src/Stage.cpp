@@ -20,6 +20,8 @@ constexpr float CamX = 320.f;
 constexpr float CamY = 240.f;
 constexpr float CamZ = -415.6922f;
 constexpr int StageCallTime = 120;
+constexpr double OpeningStageVolume = 170.;
+constexpr double SoundFadeoutTime = 180.;
 
 
 Stage::Stage()
@@ -27,9 +29,8 @@ Stage::Stage()
 	, graphic(new Graphic)
 	, mField(static_cast<Field*>(new NullStage))
 {
-	hs_bgm;
 	Screen = MakeScreen(640, 480, FALSE);
-	
+
 	// LoadStage(*.dat);		// TODO: こういう風にロードしたい 
 
 	tCamera.pos = GetCameraPosition();
@@ -37,18 +38,7 @@ Stage::Stage()
 	tCamera.hang = GetCameraAngleHRotate();
 	tCamera.tang = GetCameraAngleTRotate();
 
-	state = eState::game;
-
-	pos.SetVec(320., 240.);
-	cycle = 0.;
-	shake = 0.;
-	f_quake = false;
-	fadeoutFlag = false;
-	fadeinFlag = false;
-	isStanby = true;
-
-	time = 0;
-	rank = 0;
+	Initialize();
 }
 
 
@@ -58,34 +48,46 @@ Stage::~Stage()
 }
 
 
+void Stage::Initialize()
+{
+	state = eState::game;
+
+	time = 0;
+	rank = 0;
+	soundVolume = 255;
+	pos.SetVec(320., 240.);
+	f_quake = false;
+	fadeoutFlag = false;
+	fadeinFlag = false;
+	isStanby = true;
+}
+
+
 void Stage::Finalize()
 {
-	DeleteSoundMem(hs_bgm);
 }
 
 
 void Stage::StageSet(eStage estage)
 {
-	if (hs_bgm != NULL)
-		DeleteSoundMem(hs_bgm);
-
 	delete mField;
+	mField = static_cast<Field*>(new NullStage);
 
 	// ステージ用素材ロード
 	switch (estage)
 	{
 	case eStage::opening:
-		hs_bgm = LoadSoundMem("SOUND/s1.mp3");
-		ChangeVolumeSoundMem(170, hs_bgm); // 170
+		soundVolume = OpeningStageVolume;
+		Sound::Play(eSound::opening);
+		Sound::SetVolume(eSound::opening, OpeningStageVolume);
 		mField = static_cast<Field*>(new OpenigStage);
 		break;
 	case eStage::stage1 :
-		hs_bgm = LoadSoundMem("SOUND/s1.mp3"); // TODO: change bgm
+		Sound::Play(eSound::stage1);
 		mField = static_cast<Field*>(new Stage1);
 		break;
 	case eStage::stage2 :
-		hs_bgm = LoadSoundMem("SOUND/s2.mp3");
-		
+		Sound::Play(eSound::stage2);
 		break;
 	case eStage::stage3 :
 		break;
@@ -100,8 +102,6 @@ void Stage::StageSet(eStage estage)
 	default: assert(!"Stage::StageSet()");
 	}
 
-	//PlaySoundMem(hs_bgm, DX_PLAYTYPE_LOOP);
-	Sound::Play(eSound::stage1);
 	nowStage = estage;	// setting current stage
 	isStanby = true;
 }
@@ -115,19 +115,19 @@ void Stage::Update()
 		UpdateField();
 		break;
 	case Stage::eState::result:
+		Update_Result();
 		break;
 	}
 
+	Update_Fadeout();
 
 	// TEST-----------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
 
 	/// TODO: 時がくるまで封印
 //	if (effect->getIsAnime() && !f_quake)	f_quake = true;
-	if (Keyboard::Instance()->isDown(KEY_INPUT_W)) cycle += 0.1;
-	if (Keyboard::Instance()->isDown(KEY_INPUT_S)) cycle -= 0.1;
-	if (Keyboard::Instance()->isDown(KEY_INPUT_D)) shake += 0.1;
-	if (Keyboard::Instance()->isDown(KEY_INPUT_A)) shake -= 0.1;
+	if (Keyboard::Instance()->isPush(KEY_INPUT_W))
+		Fadeout();
 }
 
 
@@ -150,7 +150,7 @@ void Stage::Draw()
 	//DrawFormatString(540, 20, GetColor(0, 255, 0), "TIME:%d sec", testTime);
 	//DrawFormatString(520, 20, GetColor(0, 255, 0), "TIME:%d", time);
 	//DrawFormatString(520, 40, GetColor(0, 255, 0), "CYCLE:%lf", cycle); // 0.8 << good enough
-	//DrawFormatString(520, 60, GetColor(0, 255, 0), "SHAKE:%lf", shake); // 70 << good enough
+	DrawFormatString(520, 60, GetColor(0, 255, 0), "volume:%lf", soundVolume);
 }
 
 void Stage::UpdateField()
@@ -173,14 +173,13 @@ void Stage::UpdateField()
 
 
 void Stage::NextStage()
-{
-	StopSoundMem(hs_bgm); // stopping the bgm for next stage
-	
+{	
 	bool not_stage0 = (nowStage != eStage::stage0);
 	if (not_stage0)
 		nowStage = static_cast<eStage>(static_cast<int>(nowStage) + 1);
 	else
 		AllClear();
+	Initialize();
 }
 
 
@@ -188,6 +187,7 @@ void Stage::Clear()
 {
 	// TODO: implement
 	printfDx("Clear\n");
+	Fadeout();
 	state = eState::result;
 	time = 0;
 }
@@ -203,6 +203,53 @@ void Stage::AllClear()
 
 void Stage::PlayQuake(){
 	f_quake = true;
+}
+
+
+void Stage::Update_Result()
+{
+	++time;
+
+	if (time == 300)
+		NextStage();
+}
+
+
+void Stage::Update_Fadeout()
+{
+	if (fadeoutFlag == false)
+		return;
+
+	switch (nowStage)
+	{
+	case eStage::opening:
+		if (soundVolume > 0)
+			soundVolume -= OpeningStageVolume / SoundFadeoutTime;
+
+		Sound::SetVolume(eSound::opening, soundVolume);
+		
+		if (soundVolume == 0)
+		{
+			Sound::Stop();
+			fadeoutFlag = false;
+			soundVolume = 255;
+		}
+		break;
+	case eStage::stage1:
+		break;
+	case eStage::stage2:
+		break;
+	case eStage::stage3:
+		break;
+	case eStage::stage4:
+		break;
+	case eStage::stage5:
+		break;
+	case eStage::stage6:
+		break;
+	case eStage::stage0:
+		break;
+	}
 }
 
 
@@ -284,14 +331,14 @@ void Stage::SkipTo(int Time){
 void Stage::Fadein()
 {
 	fadeinFlag = true;
-	SetVolumeSoundMem(0, hs_bgm);
 }
 
 
 void Stage::Fadeout()
 {
-	fadeinFlag = true;
-	SetVolumeSoundMem(0, hs_bgm);
+	if (fadeinFlag)
+		return;
+	fadeoutFlag = true;
 }
 
 

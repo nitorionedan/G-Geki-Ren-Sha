@@ -4,6 +4,7 @@
 
 enum class eSound
 {
+	opening,
 	stage1,
 	stage2,
 	stage3,
@@ -11,18 +12,42 @@ enum class eSound
 	stage5,
 	stage6,
 	stage0,
+	bossA,
+	bossB,
+	bossC,
+	bossD,
+	bossE,
+	bossF,
+	bossG,
+	bossH,
+	gameover,
+	name_entry,
 };
 
 
 class Sound
 {
+	class SoundFile 
+	{
+	public:
+		SoundFile(int handle)
+		{
+			this->handle = handle;
+			volume = 255;
+		}
+		~SoundFile() {}
+
+		int volume;
+		int handle;
+	};
+
 public:
 	static void Load();
 	static void Delete();
 	static void Play(eSound sound);
 	static void Stop();
 	static void FadeOut();
-	static void SetVolume(eSound sound);
+	static void SetVolume(eSound sound, int volume);
 
 private:
 	Sound() {}
@@ -31,7 +56,7 @@ private:
 	// @brief ‰¹Šy‚ÌØ‚è‘Ö‚¦i‚Ô‚ÂØ‚è–h~j
 	static void Change();
 
-	static std::vector<int> h_sound;
+	static std::vector<SoundFile> mSound;
 	static bool isLoaded;
 };
 

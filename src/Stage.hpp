@@ -4,6 +4,7 @@
 #include "Graphics2D.hpp"
 #include "Vector2D.hpp"
 #include "Graphic.hpp"
+#include "Sound.hpp"
 #include <DxLib.h>
 #include <memory>
 #include <string>
@@ -54,7 +55,7 @@ public:
 	void PlayQuake();
 	void SkipTo(int Time);
 	void Fadein();
-	void Fadeout();
+	void Fadeout(eSound esound);
 	const eStage GetNowStage() const {
 		return nowStage;
 	}
@@ -80,9 +81,11 @@ private:
 	t_Camera tCamera;
 	eStage	nowStage;					// 現在のステージ
 	eState state;						// 状態
+	eSound esound;
 	int Screen;
 	int time;							// ステージの経過時間
 	int rank;							// ランク
+	int c_bossBgm;
 	double soundVolume;
 	bool f_quake;						// シフトアップしたときの画面振動フラグ
 	bool fadeinFlag;
@@ -108,10 +111,10 @@ public:
 	static void Quake() {
 		mStage->PlayQuake();
 	}
-	void Clear() {
+	static void Clear() {
 		mStage->Clear();
 	}
-	void AllClear() {
+	static void AllClear() {
 		mStage->AllClear();
 	}
 	static void SkipTo(int Time);

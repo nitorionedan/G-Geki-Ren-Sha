@@ -9,6 +9,7 @@
 #include "ExplosionEffect.hpp"
 #include "Effector.hpp"
 #include "PieceEffect.hpp"
+#include "Stage.hpp"
 
 #include <DxLib.h>
 #include <cmath>
@@ -342,6 +343,8 @@ void BossA::Dead_Update()
 			Effector::PlayAnime(pos.x, pos.y, eExplosion_big);
 		
 		PlaySoundMem(hs_exp, DX_PLAYTYPE_BACK);
+
+		IStage::Clear();
 	}
 }
 

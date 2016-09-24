@@ -27,14 +27,14 @@ void Sound::Load()
 	mSound.push_back(SoundFile(LoadSoundMem(NULL))); // 6
 	mSound.push_back(SoundFile(LoadSoundMem(NULL))); // 0
 
-	mSound.push_back(SoundFile(LoadSoundMem("bossA.mp3"))); // A
-	mSound.push_back(SoundFile(LoadSoundMem("bossA.mp3"))); // B
-	mSound.push_back(SoundFile(LoadSoundMem("bossA.mp3"))); // C
-	mSound.push_back(SoundFile(LoadSoundMem("bossA.mp3"))); // D
-	mSound.push_back(SoundFile(LoadSoundMem("bossA.mp3"))); // E
-	mSound.push_back(SoundFile(LoadSoundMem("bossA.mp3"))); // F
-	mSound.push_back(SoundFile(LoadSoundMem("bossA.mp3"))); // G
-	mSound.push_back(SoundFile(LoadSoundMem("bossA.mp3"))); // H
+	mSound.push_back(SoundFile(LoadSoundMem("SOUND/bossA.mp3"))); // A
+	mSound.push_back(SoundFile(LoadSoundMem("SOUND/bossA.mp3"))); // B
+	mSound.push_back(SoundFile(LoadSoundMem("SOUND/bossA.mp3"))); // C
+	mSound.push_back(SoundFile(LoadSoundMem("SOUND/bossA.mp3"))); // D
+	mSound.push_back(SoundFile(LoadSoundMem("SOUND/bossA.mp3"))); // E
+	mSound.push_back(SoundFile(LoadSoundMem("SOUND/bossA.mp3"))); // F
+	mSound.push_back(SoundFile(LoadSoundMem("SOUND/bossA.mp3"))); // G
+	mSound.push_back(SoundFile(LoadSoundMem("SOUND/bossA.mp3"))); // H
 }
 
 

@@ -159,6 +159,8 @@ void Game::Draw()
 	// Back Ground
 	stage->Draw();
 
+	effector->Draw_Shock();
+
 	boss->Draw();
 
 	// Effect

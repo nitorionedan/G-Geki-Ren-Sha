@@ -76,16 +76,24 @@ void Effector::Draw()
 
 	for (int i = 0; i < EX_NUM; i++)
 		effect[i]->Draw();
+}
 
+
+void Effector::Draw_Shock()
+{
 	SetDrawMode(DX_DRAWMODE_BILINEAR);
-	for(auto i : s_shock)
+	for (auto i : s_shock)
 	{
 		if (i.isPlay == false)
 			continue;
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 - i.exrate * i.exrate );
+
+		int alpha = 200 - i.exrate * i.exrate;
+		if (alpha < 0)
+			alpha = 0;
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 		DrawRotaGraphF(i.x, i.y, i.exrate, 0., i.img, TRUE);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-	}	
+	}
 	SetDrawMode(DX_DRAWMODE_NEAREST);
 }
 

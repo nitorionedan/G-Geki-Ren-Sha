@@ -1,4 +1,5 @@
 #include "Sound.hpp"
+#include "Graphics2D.hpp"
 #include <DxLib.h>
 #include <cassert>
 
@@ -53,31 +54,59 @@ void Sound::Load()
 		return;
 	}
 
+	int tmpGr = LoadGraph("GRAPH/MENU/title.png");
+
+	SetUseASyncLoadFlag(TRUE);
+
 	isLoaded = true;
 	
 	mSound.reserve(static_cast<int>(eSound::eSoundNum));
 
 	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/s1.mp3"), 170)); // opening
 	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/s2.mp3"), 170)); // 1
-	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // 2
-	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // 3
-	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // 4
-	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // 5
-	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // 6
-	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // 0
+	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/bossA.mp3"), 170)); // 2
+	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/bossA.mp3"), 170)); // 3
+	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/bossA.mp3"), 170)); // 4
+	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/bossA.mp3"), 170)); // 5
+	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/bossA.mp3"), 170)); // 6
+	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/bossA.mp3"), 170)); // 0
 	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/bossA.mp3"), 170)); // A
 	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/bossB.mp3"), 170)); // B
-	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // C
-	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // D
-	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // E
-	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // F
-	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // G
-	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // H
+	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/bossA.mp3"), 170)); // C
+	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/bossA.mp3"), 170)); // D
+	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/bossA.mp3"), 170)); // E
+	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/bossA.mp3"), 170)); // F
+	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/bossA.mp3"), 170)); // G
+	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/bossA.mp3"), 170)); // H
 
-	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // gameover
-	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // nameentry
+	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/bossA.mp3"), 170)); // gameover
+	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/bossA.mp3"), 170)); // nameentry
 
 	assert(mSound.size() == static_cast<int>(eSound::eSoundNum) && "num of sound file not goes well with mSound.size()");
+
+	bool finishFlag = false;
+	int c_load = 0;
+	while (!finishFlag)
+	{
+		ProcessMessage();
+		++c_load;
+
+		int i = 0;
+		for (auto sound : mSound)
+		{
+			// finish
+			if (CheckHandleASyncLoad(sound->handle) != FALSE)
+				continue;
+			finishFlag = true;
+		}
+
+		ClearDrawScreen();
+		DrawRotaGraph(320, 240, 1., 0., tmpGr, TRUE);
+		Sleep(1);
+	}
+
+	SetUseASyncLoadFlag(FALSE);
+	DeleteGraph(tmpGr);
 }
 
 

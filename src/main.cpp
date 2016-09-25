@@ -77,8 +77,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetWaitVSyncFlag(FALSE);																	// 垂直同期信号を待たない
 	FrameStartTime = GetNowCount();																// 開始時間を設定
 	FPS = 60;
+
 	Sound::Load();
 	std::unique_ptr<SceneMng> sceneMng(new SceneMng);											// シーン管理
+
 	SRand((unsigned)time(NULL));																// 乱数シード
 	LoadPauseGraph("GRAPH/Cover.png");															// 非アクティブ状態時の画像
 

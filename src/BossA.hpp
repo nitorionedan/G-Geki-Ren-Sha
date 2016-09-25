@@ -77,10 +77,11 @@ private:
 
 	Vector2D pos;							// モデルのスクリーン座標
 	VECTOR	mPos;							// モデルのワールド座標
-	VECTOR	rota;							// モデルの回転値
+	VECTOR	rota, rota_core;				// モデルの回転値
 	VECTOR	startPos;						// スクリーンとワールド座標の線分
 	int		hm;								// モデリングデータ用ハンドル
 	int		hmWeaking;						// 死にかけ用モデル
+	int hm_core;
 	int		hg_shield;						// シールド
 	int		hs_big;							// 巨弾
 	int		hs_exp;							// 大爆発

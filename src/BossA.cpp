@@ -21,6 +21,7 @@
 
 constexpr int DEAD_TIME = 530;
 constexpr int StartStayTime = 600;
+constexpr double HitBrake = 0.6;
 
 const float BossA::SC_LIMIT_XL = 78.f;
 const float BossA::SC_LIMIT_XR = 560.f;
@@ -56,15 +57,12 @@ BossA::BossA()
 	hs_break = LoadSoundMem("SOUND/SE/break00.wav");
 	hm = MV1LoadModel("GRAPH/MODEL/BossA_3.x");
 	hmWeaking = MV1LoadModel("GRAPH/MODEL/BossA_3.x");
+	hm_core = MV1LoadModel("GRAPH/MODEL/ring.x");
 	Screen = MakeScreen(640, 480, TRUE);
 
-	mPos.x = 320.f;
-	mPos.y = 300.f;
-	mPos.z = -300.f;
-
-	rota.x = 1.5f;
-	rota.y = 0;
-	rota.z = 0;
+	mPos = VGet(320.f, 300.f, -300.f);
+	rota = VGet(1.5f, 0.f, 0.f);
+	rota_core = VGet(0.f, 0.f, 0.f);
 
 	c_dead = 0;
 	c_start = 0;
@@ -75,14 +73,13 @@ BossA::BossA()
 	MV1SetRotationXYZ(hmWeaking, rota);				// 回転値を設定
 	MV1SetPosition(hmWeaking, mPos);					// 座標を設定
 	MV1SetScale(hmWeaking, VGet(13.f, 13.f, 13.f));	// モデル拡大
+	MV1SetScale(hm_core, VGet(5.f, 5.f, 5.f));	// モデル拡大
 
-	// static -----------------------------------------------------
 	pos = Vector2D::ZERO;
 	state = eBossA_Start;
 	hp = MAX_HP;
 	time   = 0;
-	pos.x	 = 400.0f;
-	pos.y	 = -100.0f;
+	pos.SetVec(400.f, -100.f);
 	isExist = true;
 	isHit  = false;
 	isDead   = false;
@@ -102,6 +99,7 @@ BossA::~BossA()
 	DeleteSoundMem(hs_break);
 	MV1DeleteModel(hm);
 	MV1DeleteModel(hmWeaking);
+	MV1DeleteModel(hm_core);
 }
 
 
@@ -117,10 +115,14 @@ void BossA::Update()
 	if (!isDead)	c_end->Update();	
 
 	rota.z += 0.03f;												// モデルを回転
+
+	if (isHit)
+		rota_core.x += 0.005f;
+	else
+		rota_core.x += 0.1f;
+
 	startPos = ConvScreenPosToWorldPos(VGet(pos.x, pos.y, 0.5f));	// スクリーン座標からワールド座標へ
 	mPos = startPos;												// モデル座標をスクリーン座標系に調節
-
-	isHit = false;
 
 	switch (state)
 	{
@@ -131,6 +133,8 @@ void BossA::Update()
 	case eBossA_End:	End_Update();		break;
 	default:	break;
 	}
+
+	isHit = false;
 
 	HitCheck();
 
@@ -182,6 +186,10 @@ void BossA::Draw()
 	{
 		MV1SetRotationXYZ(hmWeaking, rota);	// 回転値設定
 		MV1SetPosition(hmWeaking, mPos);	// 座標を設定
+		MV1SetRotationXYZ(hm_core, rota_core);	// 回転値設定
+		MV1SetPosition(hm_core, mPos);	// 座標を設定
+
+		MV1DrawModel(hm_core);
 		MV1DrawModel(hmWeaking);
 	}
 	else
@@ -262,8 +270,8 @@ void BossA::Normal_Update()
 	// 弾に当たったときスピードを落とす
 	if(isHit)
 	{
-		pos.x += std::cos(angle) * SPEED * 0.6;
-		pos.y += std::sin(angle) * SPEED * 0.6;
+		pos.x += std::cos(angle) * SPEED * HitBrake;
+		pos.y += std::sin(angle) * SPEED * HitBrake;
 	} else {
 		pos.x += std::cos(angle) * SPEED;
 		pos.y += std::sin(angle) * SPEED;
@@ -289,8 +297,8 @@ void BossA::Weak_Update()
 	// 弾に当たったときスピードを落とす
 	if (isHit)
 	{
-		pos.x += std::cos(angle) * SPEED * 0.6;
-		pos.y += std::sin(angle) * SPEED * 0.6;
+		pos.x += std::cos(angle) * SPEED * HitBrake;
+		pos.y += std::sin(angle) * SPEED * HitBrake;
 	} 
 	else
 	{

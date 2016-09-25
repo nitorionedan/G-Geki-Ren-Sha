@@ -115,7 +115,7 @@ void Sound::Load()
 				int x = CheckHandleASyncLoad(sound->handle);
 				if (x == -1)
 				{
-					MessageBox(NULL, "もう一度起動してくれ。根気よく。", "サウンド読み込みエラー", MB_OK);
+					MessageBox(NULL, "もう一度起動してください。根気よく・・・。", "サウンド読み込みエラー", MB_OK);
 					exit(-1);
 				}
 			}
@@ -126,9 +126,9 @@ void Sound::Load()
 
 		ClearDrawScreen();
 		DrawRotaGraph(320, 240, 1., 0., tmpGr, TRUE);
-		DrawAnime(320, 320, 2., 0., _countof(tmpGrS), 20, tmpGrS);
-		DrawAnime(320, 200, 2., 0., _countof(tmpGrP), 20, tmpGrP);
-		DrawAnime(220, 320, 2., 0., _countof(tmpGrB), 20, tmpGrB);
+		DrawAnime(320, 320, 2., 0., c_load,     _countof(tmpGrS), 4, tmpGrS);
+		DrawAnime(220, 320, 2., 0., c_load + 2, _countof(tmpGrB), 4, tmpGrB);
+		DrawAnime(420, 320, 2., 0., c_load + 4, _countof(tmpGrP), 4, tmpGrP);
 
 		if (finishFlag)
 			break;

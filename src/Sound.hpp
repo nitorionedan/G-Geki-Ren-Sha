@@ -1,8 +1,9 @@
 #pragma once
 #include <vector>
+#include <memory>
 
 
-enum class eSound
+enum class eSound : int
 {
 	opening,
 	stage1,
@@ -22,6 +23,8 @@ enum class eSound
 	bossH,
 	gameover,
 	name_entry,
+
+	eSoundNum,
 };
 
 
@@ -30,33 +33,38 @@ class Sound
 	class SoundFile 
 	{
 	public:
-		SoundFile(int handle)
-		{
-			this->handle = handle;
-			volume = 255;
-		}
+		SoundFile(int handle, double Max_vol);
 		~SoundFile() {}
+		void SetVolume(int volumePal);
 
-		int volume;
+		const double Max_vol;
+		double volume;
 		int handle;
+		bool isFadeOut;
+
+	private:
+		SoundFile() : Max_vol(255) {}
 	};
 
 public:
+	static void Update();
+	static void Update_fadeout();
 	static void Load();
 	static void Delete();
 	static void Play(eSound sound);
 	static void Stop();
-	static void FadeOut();
-	static void SetVolume(eSound sound, int volume);
+	static void FadeOutStop();
+	static int GetVolume(eSound sound) {
+		return mSound[static_cast<int>(sound)]->volume;
+	}
+	static bool IsPlaySome();
 
 private:
 	Sound() {}
 	~Sound() {}
+	static void SetVolume(eSound sound, int volume);
 
-	// @brief ‰¹Šy‚ÌØ‚è‘Ö‚¦i‚Ô‚ÂØ‚è–h~j
-	static void Change();
-
-	static std::vector<SoundFile> mSound;
+	static std::vector<SoundFile*> mSound;
 	static bool isLoaded;
 };
 

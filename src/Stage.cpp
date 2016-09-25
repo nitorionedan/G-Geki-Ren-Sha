@@ -3,6 +3,7 @@
 #include "DebugMode.hpp"
 #include "BossChara.hpp"
 #include "EnemyMng.hpp"
+#include "Sound.hpp"
 
 /* field */
 #include "Field.hpp"
@@ -21,10 +22,6 @@ constexpr float CamX = 320.f;
 constexpr float CamY = 240.f;
 constexpr float CamZ = -415.6922f;
 constexpr int StageCallTime = 120;
-constexpr double OpeningStageVolume = 170.;
-constexpr double Stage1Volume = 255.;
-constexpr double BossAVolume = 170.;
-constexpr double SoundFadeoutTime = 180.;
 
 
 Stage::Stage()
@@ -57,12 +54,9 @@ void Stage::Initialize()
 
 	time = 0;
 	rank = 0;
-	soundVolume = 255;
 	c_bossBgm = 0;
 	pos.SetVec(320., 240.);
 	f_quake = false;
-	fadeoutFlag = false;
-	fadeinFlag = false;
 	isStanby = true;
 }
 
@@ -81,14 +75,12 @@ void Stage::StageSet(eStage estage)
 	switch (estage)
 	{
 	case eStage::opening:
-		soundVolume = OpeningStageVolume;
-		Sound::Play(eSound::opening);
-		Sound::SetVolume(eSound::opening, OpeningStageVolume);
 		mField = static_cast<Field*>(new OpenigStage);
+		Sound::Play(eSound::opening);
 		break;
 	case eStage::stage1 :
-		Sound::Play(eSound::stage1);
 		mField = static_cast<Field*>(new Stage1);
+		Sound::Play(eSound::stage1);
 		break;
 	case eStage::stage2 :
 		Sound::Play(eSound::stage2);
@@ -119,62 +111,42 @@ void Stage::Update()
 		UpdateField();
 		if (IEnemyMng::IsBossZone())
 		{
-			if (c_bossBgm == 0)
+			if (Sound::IsPlaySome() == false)
+				++c_bossBgm;
+
+			clsDx();
+			printfDx("c_bossBgm : %d\n", c_bossBgm);
+
+			if (c_bossBgm == 120)
 			{
 				switch (nowStage)
 				{
-				case eStage::opening: Fadeout(eSound::opening); break;
-				case eStage::stage1:  Fadeout(eSound::stage1);  break;
-				case eStage::stage2:  Fadeout(eSound::stage2);	break;
-				case eStage::stage3:  Fadeout(eSound::stage3);	break;
-				case eStage::stage4:  Fadeout(eSound::stage4);	break;
-				case eStage::stage5:  Fadeout(eSound::stage5);	break;
-				case eStage::stage6:  Fadeout(eSound::stage6);	break;
-				case eStage::stage0:  Fadeout(eSound::stage0);	break;
+				case eStage::opening:
+					Sound::Play(eSound::bossA);
+					break;
+				case eStage::stage1:
+					Sound::Play(eSound::bossB);
+					break;
+				case eStage::stage2:
+					Sound::Play(eSound::bossC);
+					break;
+				case eStage::stage3:
+					Sound::Play(eSound::bossD);
+					break;
+				case eStage::stage4:
+					Sound::Play(eSound::bossE);
+					break;
+				case eStage::stage5:
+					Sound::Play(eSound::bossF);
+					break;
+				case eStage::stage6:
+					Sound::Play(eSound::bossG);
+					break;
+				case eStage::stage0:
+					Sound::Play(eSound::bossH);
+					break;
 				}
-			}
-
-			if (soundVolume == 0)
-			{
-				++c_bossBgm;
-				if (c_bossBgm == 120)
-				{
-					switch (nowStage)
-					{
-					case eStage::opening:
-						Sound::Play(eSound::bossA);
-						Sound::SetVolume(eSound::bossA, BossAVolume);
-						break;
-					case eStage::stage1:
-						Sound::Play(eSound::bossB);
-						Sound::SetVolume(eSound::bossB, BossAVolume);
-						break;
-					case eStage::stage2:
-						Sound::Play(eSound::bossC);
-						Sound::SetVolume(eSound::bossC, BossAVolume);
-						break;
-					case eStage::stage3:
-						Sound::Play(eSound::bossD);
-						Sound::SetVolume(eSound::bossD, BossAVolume);
-						break;
-					case eStage::stage4:
-						Sound::Play(eSound::bossE);
-						Sound::SetVolume(eSound::bossE, BossAVolume);
-						break;
-					case eStage::stage5:
-						Sound::Play(eSound::bossF);
-						Sound::SetVolume(eSound::bossF, BossAVolume);
-						break;
-					case eStage::stage6:
-						Sound::Play(eSound::bossG);
-						Sound::SetVolume(eSound::bossG, BossAVolume);
-						break;
-					case eStage::stage0:
-						Sound::Play(eSound::bossH);
-						Sound::SetVolume(eSound::bossH, BossAVolume);
-						break;
-					}
-				}
+				c_bossBgm = 0;
 			}
 		}
 		break;
@@ -183,15 +155,13 @@ void Stage::Update()
 		break;
 	}
 
-	Update_Fadeout();
-
 	// TEST-----------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
 
 	/// TODO: Žž‚ª‚­‚é‚Ü‚Å••ˆó
 //	if (effect->getIsAnime() && !f_quake)	f_quake = true;
 	if (Keyboard::Instance()->isPush(KEY_INPUT_W))
-		Fadeout(eSound::opening);
+		Sound::FadeOutStop();
 }
 
 
@@ -214,7 +184,6 @@ void Stage::Draw()
 	//DrawFormatString(540, 20, GetColor(0, 255, 0), "TIME:%d sec", testTime);
 	//DrawFormatString(520, 20, GetColor(0, 255, 0), "TIME:%d", time);
 	//DrawFormatString(520, 40, GetColor(0, 255, 0), "CYCLE:%lf", cycle); // 0.8 << good enough
-	DrawFormatString(520, 60, GetColor(0, 255, 0), "volume:%lf", soundVolume);
 }
 
 void Stage::UpdateField()
@@ -252,33 +221,7 @@ void Stage::Clear()
 	// TODO: implement
 	printfDx("Clear\n");
 	
-	switch (nowStage)
-	{
-	case eStage::opening:
-		Fadeout(eSound::bossA);
-		break;
-	case eStage::stage1:
-		Fadeout(eSound::bossB);
-		break;
-	case eStage::stage2:
-		Fadeout(eSound::bossC);
-		break;
-	case eStage::stage3:
-		Fadeout(eSound::bossD);
-		break;
-	case eStage::stage4:
-		Fadeout(eSound::bossE);
-		break;
-	case eStage::stage5:
-		Fadeout(eSound::bossF);
-		break;
-	case eStage::stage6:
-		Fadeout(eSound::bossG);
-		break;
-	case eStage::stage0:
-		Fadeout(eSound::bossH);
-		break;
-	}
+	Sound::FadeOutStop();
 	
 	state = eState::result;
 	time = 0;
@@ -304,75 +247,6 @@ void Stage::Update_Result()
 
 	if (time == 300)
 		NextStage();
-}
-
-
-void Stage::Update_Fadeout()
-{
-	if (fadeoutFlag == false)
-		return;
-
-	switch (esound)
-	{
-	case eSound::opening:
-		if (soundVolume > 0.)
-			soundVolume -= OpeningStageVolume / SoundFadeoutTime;
-
-		Sound::SetVolume(eSound::opening, soundVolume);
-
-		soundVolume = std::max(0., soundVolume);
-		if (soundVolume == 0.)
-		{
-			Sound::Stop();
-			fadeoutFlag = false;
-		}
-		break;
-	case eSound::stage1:
-		break;
-	case eSound::stage2:
-		break;
-	case eSound::stage3:
-		break;
-	case eSound::stage4:
-		break;
-	case eSound::stage5:
-		break;
-	case eSound::stage6:
-		break;
-	case eSound::stage0:
-		break;
-	case eSound::bossA:
-		if (soundVolume > 0.)
-			soundVolume -= BossAVolume / SoundFadeoutTime;
-
-		Sound::SetVolume(eSound::bossA, soundVolume);
-
-		soundVolume = std::max(0., soundVolume);
-		if (soundVolume == 0.)
-		{
-			Sound::Stop();
-			fadeoutFlag = false;
-		}
-		break;
-	case eSound::bossB:
-		break;
-	case eSound::bossC:
-		break;
-	case eSound::bossD:
-		break;
-	case eSound::bossE:
-		break;
-	case eSound::bossF:
-		break;
-	case eSound::bossG:
-		break;
-	case eSound::bossH:
-		break;
-	case eSound::gameover:
-		break;
-	case eSound::name_entry:
-		break;
-	}
 }
 
 
@@ -449,23 +323,6 @@ void Stage::Quake()
 void Stage::SkipTo(int Time){
 	time = Time;
 }
-
-
-void Stage::Fadein()
-{
-	fadeinFlag = true;
-}
-
-
-void Stage::Fadeout(eSound esound)
-{
-	this->esound = esound;
-
-	if (fadeinFlag)
-		return;
-	fadeoutFlag = true;
-}
-
 
 // IStage============================================
 

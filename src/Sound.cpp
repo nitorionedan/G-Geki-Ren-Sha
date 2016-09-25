@@ -2,9 +2,47 @@
 #include <DxLib.h>
 #include <cassert>
 
+constexpr double SoundFadeoutTime = 180.;
+
 
 bool Sound::isLoaded = false;
-std::vector<Sound::SoundFile> Sound::mSound;
+std::vector<Sound::SoundFile*> Sound::mSound;
+
+
+void Sound::Update()
+{
+	Update_fadeout();
+
+#ifdef _DEBUG
+	/* check num of playing sound mem*/
+	int c_play = 0;
+	for (auto i : mSound)
+	{
+		if (CheckSoundMem(i->handle) == TRUE)
+			++c_play;
+	}
+#endif
+}
+
+
+void Sound::Update_fadeout()
+{
+	for (auto sound : mSound)
+	{
+		if (CheckSoundMem(sound->handle) == TRUE && sound->isFadeOut)
+		{
+			sound->volume -= sound->Max_vol / SoundFadeoutTime;
+			if (sound->volume <= 0.)
+			{
+				StopSoundMem(sound->handle);
+				sound->SetVolume(sound->Max_vol);
+				sound->isFadeOut = false;
+			}
+			sound->SetVolume(sound->volume);
+			break;
+		}
+	}
+}
 
 
 void Sound::Load()
@@ -17,31 +55,38 @@ void Sound::Load()
 
 	isLoaded = true;
 	
-	mSound.reserve(10);
-	mSound.push_back(SoundFile(LoadSoundMem("SOUND/s1.mp3"))); // opening
-	mSound.push_back(SoundFile(LoadSoundMem("SOUND/s2.mp3"))); // 1
-	mSound.push_back(SoundFile(LoadSoundMem(NULL))); // 2
-	mSound.push_back(SoundFile(LoadSoundMem(NULL))); // 3
-	mSound.push_back(SoundFile(LoadSoundMem(NULL))); // 4
-	mSound.push_back(SoundFile(LoadSoundMem(NULL))); // 5
-	mSound.push_back(SoundFile(LoadSoundMem(NULL))); // 6
-	mSound.push_back(SoundFile(LoadSoundMem(NULL))); // 0
+	mSound.reserve(static_cast<int>(eSound::eSoundNum));
 
-	mSound.push_back(SoundFile(LoadSoundMem("SOUND/bossA.mp3"))); // A
-	mSound.push_back(SoundFile(LoadSoundMem("SOUND/bossA.mp3"))); // B
-	mSound.push_back(SoundFile(LoadSoundMem("SOUND/bossA.mp3"))); // C
-	mSound.push_back(SoundFile(LoadSoundMem("SOUND/bossA.mp3"))); // D
-	mSound.push_back(SoundFile(LoadSoundMem("SOUND/bossA.mp3"))); // E
-	mSound.push_back(SoundFile(LoadSoundMem("SOUND/bossA.mp3"))); // F
-	mSound.push_back(SoundFile(LoadSoundMem("SOUND/bossA.mp3"))); // G
-	mSound.push_back(SoundFile(LoadSoundMem("SOUND/bossA.mp3"))); // H
+	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/s1.mp3"), 170)); // opening
+	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/s2.mp3"), 170)); // 1
+	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // 2
+	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // 3
+	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // 4
+	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // 5
+	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // 6
+	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // 0
+	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/bossA.mp3"), 170)); // A
+	mSound.push_back(new SoundFile(LoadSoundMem("SOUND/bossB.mp3"), 170)); // B
+	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // C
+	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // D
+	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // E
+	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // F
+	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // G
+	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // H
+
+	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // gameover
+	mSound.push_back(new SoundFile(LoadSoundMem(NULL), 170)); // nameentry
+
+	assert(mSound.size() == static_cast<int>(eSound::eSoundNum) && "num of sound file not goes well with mSound.size()");
 }
 
 
 void Sound::Delete()
 {
 	for (auto i : mSound)
-		DeleteSoundMem(i.handle);
+		DeleteSoundMem(i->handle);
+	for (auto i : mSound)
+		delete i;
 	mSound.clear();
 	isLoaded = false;
 }
@@ -49,37 +94,69 @@ void Sound::Delete()
 
 void Sound::Play(eSound sound)
 {
-	bool isPlay = false;
-
-	for(auto i : mSound)
-	{
-		if (CheckSoundMem(i.handle) == FALSE)
-			continue;
-		StopSoundMem(i.handle);
-		isPlay = true;
-	}
-
-	PlaySoundMem(mSound.at(static_cast<int>(sound)).handle, DX_PLAYTYPE_LOOP);
+	//ChangeVolumeSoundMem(mSound[static_cast<int>(sound)]->Max_vol, mSound[static_cast<int>(sound)]->handle);
+	PlaySoundMem(mSound[static_cast<int>(sound)]->handle, DX_PLAYTYPE_LOOP);
+	printfDx("ok");
 }
 
 
 void Sound::Stop()
 {
+	for (auto sound : mSound)
+	{
+		if (CheckSoundMem(sound->handle) == TRUE)
+		{
+			StopSoundMem(sound->handle);
+			break;
+		}
+	}
 }
 
 
-void Sound::FadeOut()
+void Sound::FadeOutStop()
 {
+	for (auto sound : mSound)
+	{
+		if (CheckSoundMem(sound->handle) == TRUE && sound->isFadeOut == false)
+		{
+			sound->isFadeOut = true;
+			break;
+		}
+	}
 }
 
 
 void Sound::SetVolume(eSound sound, int volume)
 {
-	mSound[static_cast<int>(sound)].volume = volume;
-	ChangeVolumeSoundMem(volume, mSound[static_cast<int>(sound)].handle);
+	//mSound[static_cast<int>(sound)]->volume = volume;
+	//ChangeVolumeSoundMem(volume, mSound[static_cast<int>(sound)]->handle);
+	printfDx("Sorry, please don't use this func\n");
 }
 
 
-void Sound::Change()
+bool Sound::IsPlaySome()
 {
+	for (auto i : mSound)
+	{
+		if (CheckSoundMem(i->handle) == TRUE)
+			return true;
+	}
+
+	return false;
+}
+
+
+Sound::SoundFile::SoundFile(int handle, double Max_vol)
+	: Max_vol(Max_vol)
+{
+	this->handle = handle;
+	volume = Max_vol;
+	isFadeOut = false;
+}
+
+
+void Sound::SoundFile::SetVolume(int volumePal)
+{
+	volume = volumePal;
+	ChangeVolumeSoundMem(volume, handle);
 }

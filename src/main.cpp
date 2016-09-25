@@ -90,6 +90,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		sceneMng->Update();																		// 現在のシーンデータを更新
 		Keyboard::Instance()->Update();															// キー入力データ更新
+		Sound::Update();
 
 		if (Keyboard::Instance()->isPush(KEY_INPUT_ESCAPE))	break;								// [Esc]で疑似強制終了
 		if (Keyboard::Instance()->isPush(KEY_INPUT_F5))

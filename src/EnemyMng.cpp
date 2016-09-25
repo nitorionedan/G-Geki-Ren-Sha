@@ -1,6 +1,7 @@
 #include "EnemyMng.hpp"
 #include "DebugMode.hpp"
 #include "NullEnemyShot.hpp"
+#include "Sound.hpp"
 
 #include <DxLib.h>
 #include <cassert>
@@ -184,6 +185,7 @@ void EnemyMng::CountDownEneNum()
 void EnemyMng::BossStart(eStage stage)
 {
 	IBossChara::Start();
+	Sound::FadeOutStop();
 }
 
 

@@ -114,9 +114,6 @@ void Stage::Update()
 			if (Sound::IsPlaySome() == false)
 				++c_bossBgm;
 
-			clsDx();
-			printfDx("c_bossBgm : %d\n", c_bossBgm);
-
 			if (c_bossBgm == 120)
 			{
 				switch (nowStage)

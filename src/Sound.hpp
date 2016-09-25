@@ -57,6 +57,9 @@ public:
 	static int GetVolume(eSound sound) {
 		return mSound[static_cast<int>(sound)]->volume;
 	}
+	static int GetHandle(eSound sound) {
+		return mSound[static_cast<int>(sound)]->handle;
+	}
 	static bool IsPlaySome();
 
 private:

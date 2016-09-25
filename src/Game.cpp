@@ -26,6 +26,7 @@
 #include "HitEffect.hpp"
 #include "Vector2D.hpp"
 #include "Keyboard.hpp"
+#include "Sound.hpp"
 
 #include <DxLib.h>
 #include <cassert>
@@ -103,8 +104,11 @@ void Game::Update()
 
 	if(f_pause)
 	{
-		if(Keyboard::Instance()->isPush(KEY_INPUT_P))
+		if (Keyboard::Instance()->isPush(KEY_INPUT_P))
+		{
 			mSceneChanger->ChangeScene(eScene_Menu);
+			Sound::Stop();
+		}
 		return;
 	}
 

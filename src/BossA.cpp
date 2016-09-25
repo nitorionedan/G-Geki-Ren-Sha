@@ -19,7 +19,8 @@
 #undef max
 
 
-static const int DEAD_TIME = 530;
+constexpr int DEAD_TIME = 530;
+constexpr int StartStayTime = 600;
 
 const float BossA::SC_LIMIT_XL = 78.f;
 const float BossA::SC_LIMIT_XR = 560.f;
@@ -66,6 +67,7 @@ BossA::BossA()
 	rota.z = 0;
 
 	c_dead = 0;
+	c_start = 0;
 
 	MV1SetRotationXYZ(hm, rota);				// ‰ñ“]’l‚ğİ’è
 	MV1SetPosition(hm, mPos);					// À•W‚ğİ’è
@@ -235,6 +237,12 @@ void BossA::ChangeState(eBossA_state state_) { state = state_; }
 
 void BossA::Start_Update()
 {
+	if (c_start < StartStayTime)
+		++c_start;
+
+	if (c_start != StartStayTime)
+		return;
+
 	pos.x -= SPEED;
 	pos.y += 1.5f;
 	

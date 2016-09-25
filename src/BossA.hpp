@@ -88,6 +88,7 @@ private:
 	int		big_time;
 	int Screen;
 	int c_dead;
+	int c_start;
 	float	targetX, targetY;				// 目的地
 	float	angle;							// 体当たりの方向用
 	bool	isMove;							// 攻撃開始しているか？

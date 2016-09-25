@@ -1,6 +1,7 @@
 #include "EnemyMng.hpp"
 #include "DebugMode.hpp"
 #include "NullEnemyShot.hpp"
+#include "Stage.hpp"
 #include "Sound.hpp"
 
 #include <DxLib.h>

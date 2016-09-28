@@ -55,7 +55,9 @@ BossA::BossA()
 	hs_big = LoadSoundMem("SOUND/SE/eshot03.wav");
 	hs_exp = LoadSoundMem("SOUND/SE/explosion03.mp3");
 	hs_break = LoadSoundMem("SOUND/SE/break00.wav");
+
 	hm = MV1LoadModel("GRAPH/MODEL/BossA_3.x");
+	
 	hmWeaking = MV1LoadModel("GRAPH/MODEL/BossA_3.x");
 	hm_core = MV1LoadModel("GRAPH/MODEL/ring.x");
 	Screen = MakeScreen(640, 480, TRUE);

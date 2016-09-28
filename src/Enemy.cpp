@@ -8,6 +8,7 @@
 #include "PieceEffect.hpp"
 #include "ItemMng.hpp"
 #include "Keyboard.hpp"
+#include "Stage.hpp"
 
 // Shots
 #include "EShot00.hpp"
@@ -638,17 +639,13 @@ void Enemy::Damage(int damage)
 		if (hp > 0)	return;
 
 		ItemDrop();
-
 		isExist = false;
-
 		IScore::AddScore(400);
 		Effector::PlayAnime(pos.x, pos.y, eExplosion_small);
 		IEnemyMng::CountDownEneNum();
 		break;
-
 	case 1:
 		break;
-
 	case 2:
 		hp -= damage;
 		isDamage = true;
@@ -710,9 +707,11 @@ void Enemy::Damage(int damage)
 	case 7:
 		break;
 
-	default:
-		break;
+	default: assert(!"out of range");
 	}
+
+	if (hp <= 0)
+		IStage::Quake();
 }
 
 

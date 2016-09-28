@@ -68,13 +68,13 @@ Player::Player()
 
 Player::~Player()
 {
-	for (int i = 0; i < sizeof(hg) / sizeof(hg[0]); i++)	DeleteGraph(hg[i]);
-	for (int i = 0; i < sizeof(hg_arm) / sizeof(hg_arm[0]); i++)	DeleteGraph(hg_arm[i]);
+	for (int i = 0; i < _countof(hg); i++)
+		DeleteGraph(hg[i]);
+	for (int i = 0; i < _countof(hg_arm); i++)
+		DeleteGraph(hg_arm[i]);
 	DeleteSoundMem(hs_shiftUp);
 	DeleteSoundMem(hs_shiftDown);
 	DeleteSoundMem(hs_dead);
-
-	printfDx("\n~Player");
 }
 
 
@@ -87,7 +87,7 @@ void Player::Update()
 	case ePlayerState::Start: Update_Start();	break;
 	case ePlayerState::Game: Update_Game();		break;
 	case ePlayerState::Dead: Update_Dead();		break;
-	default:	printfDx("Player.cpp:ERROR\n");	break;
+	default: assert(!"Player.cpp:ERROR\n");
 	}
 
 	isHit = false;
@@ -113,6 +113,8 @@ void Player::Update()
 		Shift(false);
 	if (Keyboard::Instance()->isPush(KEY_INPUT_P))
 		Shift(true);
+	if (Keyboard::Instance()->isPush(KEY_INPUT_0))
+		IStage::Quake();
 }
 
 
@@ -132,7 +134,7 @@ void Player::Draw()
 	case ePlayerState::Start: Draw_Start();	break;
 	case ePlayerState::Game: Draw_Game();	break;
 	case ePlayerState::Dead: Draw_Dead();	break;
-	default:	printfDx("Player.cpp:ERROR\n");	break;
+	default: assert(!"Player.cpp:ERROR");
 	}
 
 	// TEST------------------------------------------------------------------------------------
@@ -154,8 +156,12 @@ void Player::Update_Start()
 
 	if (c_start->isEach(70, 149))
 	{
-		pos.y -= 2.0;						// 上に上昇
-		pos.y = std::max(pos.y, Y_START);	// スタート地点まで
+		pos.y -= 2.0;						// rise up
+//		pos.y = std::max(pos.y, Y_START);	// go to start pos
+
+		if (pos.y < Y_START)
+			state = ePlayerState::Game;
+
 	}else{
 		InputMng();
 		Rensha_Update();

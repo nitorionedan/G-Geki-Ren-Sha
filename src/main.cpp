@@ -20,6 +20,7 @@
      // どこかに「超」「連」「射」が隠れているよ！探してみよう！
 */
 #define _CRTDBG_MAP_ALLOC
+#define main int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 #include "DxLib.h"
 
 #include "Keyboard.hpp"
@@ -60,7 +61,7 @@ void message_box()
 }
 
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+main
 {
 #if !defined(_DEBUG)
 	message_box();																				// ウィンドウスタイル質問

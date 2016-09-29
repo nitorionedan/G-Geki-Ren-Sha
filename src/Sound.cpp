@@ -1,5 +1,6 @@
 #include "Sound.hpp"
 #include "Graphics2D.hpp"
+#include "Graphic.hpp"
 #include <DxLib.h>
 #include <cassert>
 #include <cstdlib>
@@ -8,6 +9,7 @@ constexpr double SoundFadeoutTime = 180.;
 
 
 bool Sound::isLoaded = false;
+Graphic Sound::gr;
 std::vector<Sound::SoundFile*> Sound::mSound;
 
 
@@ -129,6 +131,7 @@ void Sound::Load()
 		DrawAnime(320, 320, 2., 0., c_load,     _countof(tmpGrS), 4, tmpGrS);
 		DrawAnime(220, 320, 2., 0., c_load + 2, _countof(tmpGrB), 4, tmpGrB);
 		DrawAnime(420, 320, 2., 0., c_load + 4, _countof(tmpGrP), 4, tmpGrP);
+		gr.DrawMyString2(0, 0, "NOW LOADING...", 16, true, 2.);
 
 		if (finishFlag)
 			break;

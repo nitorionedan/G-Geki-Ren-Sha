@@ -114,10 +114,6 @@ void OpenigStage::Update()
 
 void OpenigStage::Draw()
 {
-	int tmpSc = GetDrawScreen();
-	SetDrawScreen(Screen);
-	ClearDrawScreen();
-
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, c_trans);
 	SetDrawBright(255, 100, 100);
 	for (auto& back : stage_back)
@@ -132,10 +128,6 @@ void OpenigStage::Draw()
 	for (auto& front : stage_fro)
 		DrawRotaGraphF(static_cast<float>(front.x), static_cast<float>(front.y), 1., 0., hg[eBG_front], TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
-	SetDrawScreen(DX_SCREEN_BACK);
-	DrawGraph(0, 0, Screen, TRUE);
-	SetDrawScreen(tmpSc);
 }
 
 

@@ -57,9 +57,9 @@ Player::Player()
 	isStart = false;
 	isHit = false;
 #ifdef _DEBUG
-	isMuteki = true;
+	superFlag = true;
 #else
-	isMuteki = false;
+	superFlag = false;
 #endif
 	isArm = false;
 	state = ePlayerState::Start;
@@ -109,9 +109,9 @@ void Player::Update()
 	// TEST------------------------------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
 
-	if (Keyboard::Instance()->isPush(KEY_INPUT_O))
+	if (Keyboard::Instance()->isPush(Input::KeyCode.O))
 		Shift(false);
-	if (Keyboard::Instance()->isPush(KEY_INPUT_P))
+	if (Keyboard::Instance()->isPush(Input::KeyCode.P))
 		Shift(true);
 	if (Keyboard::Instance()->isPush(KEY_INPUT_0))
 		IStage::Quake();
@@ -170,9 +170,8 @@ void Player::Update_Start()
 
 	if (c_start->isLast())
 	{
-#ifndef _DEBUG
-		isMuteki = false;
-#endif
+		if (superFlag == false)
+			isMuteki = false;
 		state = ePlayerState::Game;	// スタート地点ならスタートする
 	}
 }

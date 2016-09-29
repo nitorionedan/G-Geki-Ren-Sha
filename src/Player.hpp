@@ -131,6 +131,7 @@ private:
 	bool isStart;		// スタート地点に到達したか？
 	bool isHit;			// 被弾したか？
 	bool isArm;			// アーム展開中か？
+	bool superFlag;
 };
 
 

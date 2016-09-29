@@ -22,7 +22,7 @@ struct KeyCode_t
 class Input
 {
 public:
-	static const KeyCode_t KeyCode;
+	static KeyCode_t KeyCode;
 };
 
 

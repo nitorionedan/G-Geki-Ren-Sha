@@ -133,8 +133,9 @@ void Stage1::Draw()
 	/// SetDrawArea(0, 0, 640, 480);
 
 	SetUseLighting(TRUE);
-	SetDrawScreen(tmpScreen);
+	SetDrawScreen(DX_SCREEN_BACK);
 	DrawGraph(0, 0, Screen, TRUE);
+	SetDrawScreen(tmpScreen);
 	//DrawCircleScreen(320, 240, 200.f, 400.f, 50.f, Screen);
 
 	/* Test */

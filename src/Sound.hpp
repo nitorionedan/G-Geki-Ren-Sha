@@ -2,6 +2,8 @@
 #include <vector>
 #include <memory>
 
+class Graphic;
+
 
 enum class eSound : int
 {
@@ -69,6 +71,7 @@ private:
 
 	static std::vector<SoundFile*> mSound;
 	static bool isLoaded;
+	static Graphic gr;
 };
 
 // GetCurrentPositionSoundMem

@@ -29,7 +29,7 @@ Stage::Stage()
 	, graphic(new Graphic)
 	, mField(static_cast<Field*>(new NullStage))
 {
-	Screen = MakeScreen(640, 480, FALSE);
+	Screen = MakeScreen(640, 480, TRUE);
 
 	// LoadStage(*.dat);		// TODO: こういう風にロードしたい 
 
@@ -55,7 +55,7 @@ void Stage::Initialize()
 	time = 0;
 	rank = 0;
 	c_bossBgm = 0;
-	pos.SetVec(320., 240.);
+	pos = Vector2D::ZERO;
 	f_quake = false;
 	isStanby = true;
 }
@@ -69,7 +69,6 @@ void Stage::Finalize()
 void Stage::StageSet(eStage estage)
 {
 	delete mField;
-	mField = static_cast<Field*>(new NullStage);
 
 	// ステージ用素材ロード
 	switch (estage)
@@ -164,6 +163,10 @@ void Stage::Update()
 
 void Stage::Draw()
 {
+	int tmpSc = GetDrawScreen();
+	SetDrawScreen(Screen);
+	ClearDrawScreen();
+
 	switch (state)
 	{
 	case Stage::eState::game:
@@ -175,12 +178,16 @@ void Stage::Draw()
 		break;
 	}
 
+	SetDrawScreen(DX_SCREEN_BACK);
+	DrawGraph(pos.x, pos.y, Screen, TRUE);
+	SetDrawScreen(tmpSc);
+
 	// TEST -------------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
 
 	//DrawFormatString(540, 20, GetColor(0, 255, 0), "TIME:%d sec", testTime);
 	//DrawFormatString(520, 20, GetColor(0, 255, 0), "TIME:%d", time);
-	//DrawFormatString(520, 40, GetColor(0, 255, 0), "CYCLE:%lf", cycle); // 0.8 << good enough
+	DrawFormatString(520, 40, GetColor(0, 255, 0), "pos.x:%lf", pos.x); // 0.8 << good enough
 }
 
 void Stage::UpdateField()
@@ -233,7 +240,7 @@ void Stage::AllClear()
 }
 
 
-void Stage::PlayQuake(){
+void Stage::PlayQuake() {
 	f_quake = true;
 }
 
@@ -254,7 +261,7 @@ void Stage::DrawStageCall()
 		return;
 
 	const int&    X_MSG = 290, Y_MSG = 240, SPACE_MSG = 16;
-	const double& EXRATE_MSG = 2.0;
+	const double& EXRATE_MSG = 2.;
 
 	switch (nowStage)
 	{
@@ -308,9 +315,10 @@ void Stage::Quake()
 	if (c_quake->Remainder(4) <= 1)
 		pos.x += offsetB;
 
-	if (!c_quake->isLast()) return;		// stop to quake
+	if (!c_quake->isLast())
+		return;		// stop to quake
 
-	pos.SetVec(320., 240.);
+	pos = Vector2D::ZERO;
 	
 	c_quake->Reset();
 	f_quake = false;	// 振動をやめる

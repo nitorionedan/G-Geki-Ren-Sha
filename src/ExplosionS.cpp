@@ -69,7 +69,9 @@ void ExplosionS::Draw()
 
 void ExplosionS::Fire(const int& INDEX)
 {
-	Vector2D V, cV;
+	Vector2D V;
+	double cx = pos[INDEX].x;
+	double cy = pos[INDEX].y;
 
 	switch (type)
 	{
@@ -78,20 +80,25 @@ void ExplosionS::Fire(const int& INDEX)
 		if (c_play[INDEX]->Remainder(2) != 0)	break;
 		
 		// ”š•—‚Ì‘¬‚³‚ðŒˆ’è
-		if (c_play[INDEX]->isEach(9, 16))
+		if (c_play[INDEX]->isEach(9, 17))
 			V.SetVec((GetRand(20) - 10.) / 10., (GetRand(20) - 10.) / 10.);
-		if (c_play[INDEX]->isEach(1, 8))
+		else
 			V.SetVec((GetRand(16) - 8.) / 10., (GetRand(16) - 8.) / 10.);
 
 		// ”š”­‚·‚éˆÊ’u‚ðƒ‰ƒ“ƒ_ƒ€‚É‚¸‚ç‚·
-		cV.SetVec(pos[INDEX].x + GetRand(40) - 20, pos[INDEX].y + GetRand(40) - 20);
+		//cV.SetVec(pos[INDEX].x + GetRand(40) - 20, pos[INDEX].y + GetRand(40) - 20);
+		cx = pos[INDEX].x + GetRand(40) - 20;
+		cy = pos[INDEX].y + GetRand(40) - 20;
+
 		break;
 	case eEpl_normal:
 		if(c_play[INDEX]->isEach(16, 30))
 			V.SetVec((GetRand(40) - 20.) / 10., (GetRand(40) - 20.) / 10.);
 		if(c_play[INDEX]->isEach(1, 15))
 			V.SetVec((GetRand(20) - 10.) / 10., (GetRand(20) - 10.) / 10.);
-		cV.SetVec(pos[INDEX].x + GetRand(40) - 20, pos[INDEX].y + GetRand(40) - 20);
+		//cV.SetVec(pos[INDEX].x + GetRand(40) - 20, pos[INDEX].y + GetRand(40) - 20);
+		cx = pos[INDEX].x + GetRand(40) - 20;
+		cy = pos[INDEX].y + GetRand(40) - 20;
 		break;
 	case eEpl_long:
 
@@ -99,8 +106,8 @@ void ExplosionS::Fire(const int& INDEX)
 	}
 
 	// ‚»‚ê‚¼‚êF‚Ìˆá‚¤”š•—‚ð•`‰æ
-	if (!isRed[INDEX])	explosion->PlayAnime(cV.x, cV.y, V.x, V.y);
-	if (isRed[INDEX])	explosion2->PlayAnime(cV.x, cV.y, V.x, V.y);
+	if (!isRed[INDEX])	explosion->PlayAnime(cx, cy, V.x, V.y);
+	if (isRed[INDEX])	explosion2->PlayAnime(cx, cy, V.x, V.y);
 }
 
 

@@ -21,6 +21,7 @@
 #include "StatusBoard.hpp"
 #include "Stage.hpp"
 #include "Effector.hpp"
+#include "ExplosionEffect.hpp"
 #include "Graphics2D.hpp"
 #include "Graphic.hpp"
 #include "HitEffect.hpp"
@@ -148,6 +149,9 @@ void Game::Update()
 		IBossChara::Start();
 		//IStage::SkipTo(1000);
 	}
+
+	if (Keyboard::Instance()->isPush(Input::KeyCode.C))
+		effector->PlayAnime(320, 240, eExplosion_small);
 }
 
 

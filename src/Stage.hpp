@@ -23,6 +23,14 @@ enum class eStage
 };
 
 
+enum class eQuake
+{
+	smal,
+	normal,
+	big,
+};
+
+
 class Stage	: public Graphics2D
 {
 	enum class eState
@@ -52,6 +60,7 @@ public:
 	void Clear    ();				// ステージクリアしたとき呼ばれる
 	void AllClear ();				// 全クリ用
 	void PlayQuake();
+	void PlayQuake(eQuake aukeType);
 	void SkipTo(int Time);
 	const eStage GetNowStage() const {
 		return nowStage;
@@ -69,6 +78,8 @@ private:
 	void DrawStageCall();
 	void DrawResult();
 	void Quake(); // ステージを揺らす
+	void SmallQuale();
+	void BigQuake();
 
 	std::unique_ptr<Graphic> graphic;
 	std::unique_ptr<Counter> c_quake;	// ステージ全体を揺らす
@@ -77,6 +88,7 @@ private:
 	t_Camera tCamera;
 	eStage	nowStage;					// 現在のステージ
 	eState state;						// 状態
+	eQuake quakeType;
 	int Screen;
 	int time;							// ステージの経過時間
 	int rank;							// ランク
@@ -100,9 +112,9 @@ public:
 		mStage.reset();
 	}
 	static void Load();
-	static void Quake() {
-		mStage->PlayQuake();
-	}
+
+	static void Quake(eQuake auakeType);
+	
 	static void Clear() {
 		mStage->Clear();
 	}

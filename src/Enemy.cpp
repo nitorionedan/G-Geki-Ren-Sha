@@ -711,7 +711,7 @@ void Enemy::Damage(int damage)
 	}
 
 	if (hp <= 0)
-		IStage::Quake();
+		IStage::Quake(eQuake::normal);
 }
 
 

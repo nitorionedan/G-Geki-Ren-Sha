@@ -25,6 +25,7 @@
     <ClCompile Include="src\Bezier.cpp" />
     <ClCompile Include="src\Bomb.cpp" />
     <ClCompile Include="src\BossA.cpp" />
+    <ClCompile Include="src\BossB.cpp" />
     <ClCompile Include="src\BossChara.cpp" />
     <ClCompile Include="src\Bullet.cpp" />
     <ClCompile Include="src\BossShotMgr.cpp" />
@@ -91,6 +92,7 @@
     <ClInclude Include="src\Bezier.hpp" />
     <ClInclude Include="src\Bomb.hpp" />
     <ClInclude Include="src\BossA.hpp" />
+    <ClInclude Include="src\BossB.hpp" />
     <ClInclude Include="src\BossChara.hpp" />
     <ClInclude Include="src\BossTask.hpp" />
     <ClInclude Include="src\Bullet.hpp" />

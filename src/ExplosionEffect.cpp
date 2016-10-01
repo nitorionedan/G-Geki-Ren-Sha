@@ -109,7 +109,7 @@ void ExplosionEffect::Play(const int & INDEX)
 
 		// Å‰‚Ì‚PŒÂ‚Í‚¸‚ç‚³‚È‚¢
 		if (c_play[INDEX]->GetNowcount() == 40)
-			vRand.SetZero();
+			vRand = Vector2D::ZERO;
 
 		// ˆÊ’u‚ðƒ‰ƒ“ƒ_ƒ€‚É‚¸‚ç‚·
 		if (c_play[INDEX]->GetNowcount() != 40)

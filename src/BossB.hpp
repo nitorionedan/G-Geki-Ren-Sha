@@ -36,7 +36,9 @@ public:
 	~BossB();
 	virtual void Update() override;
 	virtual void Draw() override;
-	virtual const Vector2D& GetPos() const override;
+	virtual const Vector2D& GetPos() const override {
+		return pos;
+	}
 	virtual bool HitCheck(const double& ColX, const double& ColY, const int& DamagePoint) override;
 	virtual const bool IsDead() const override;
 
@@ -45,4 +47,5 @@ private:
 	std::unique_ptr<Body> body_leftWing;
 	std::unique_ptr<Body> body_rightWing;
 	std::unique_ptr<Body> body_tail;
+	Vector2D pos;
 };

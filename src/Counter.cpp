@@ -1,5 +1,5 @@
 #include "Counter.hpp"
-
+#include <cassert>
 
 Counter::Counter() : MAX_COUNT(0)
 {}
@@ -51,7 +51,6 @@ bool Counter::isLast()
 
 bool Counter::isEach(const int & MIN, const int & MAX)
 {
-	if (MIN > MAX)	return false;
-
+	assert(MIN < MAX);
 	return (counter >= MIN && counter <= MAX) ? true : false;
 }

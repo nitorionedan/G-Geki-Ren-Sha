@@ -26,12 +26,6 @@ void BossB::Draw()
 }
 
 
-const Vector2D & BossB::GetPos() const
-{
-	// TODO: return ステートメントをここに挿入します
-}
-
-
 bool BossB::HitCheck(const double & ColX, const double & ColY, const int & DamagePoint)
 {
 	return false;

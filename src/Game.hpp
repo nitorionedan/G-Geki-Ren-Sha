@@ -27,7 +27,6 @@ class HitEffect;
 class Vector2D;
 class Graphic;
 
-
 enum eColKind
 {
 	eCol_CirclePoint,

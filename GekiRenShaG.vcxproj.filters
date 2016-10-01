@@ -243,6 +243,9 @@
     <ClCompile Include="src\Sound.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="src\BossB.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Another.hpp">
@@ -469,6 +472,9 @@
     </ClInclude>
     <ClInclude Include="src\Sound.hpp">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BossB.hpp">
+      <Filter>ヘッダー ファイル\Enemy\Boss</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

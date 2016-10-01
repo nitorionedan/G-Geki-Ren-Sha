@@ -140,7 +140,6 @@ void Explosion::PlayAnime(const double & PlayX, const double & PlayY, const doub
 		case 2: angle[i] = 180. * DX_PI / 180.;	break;
 		case 3: angle[i] = 270. * DX_PI / 180.;	break;
 		}
-
 		break;
 	}
 }

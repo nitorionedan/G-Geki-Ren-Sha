@@ -114,7 +114,7 @@ void Player::Update()
 	if (Keyboard::Instance()->isPush(Input::KeyCode.P))
 		Shift(true);
 	if (Keyboard::Instance()->isPush(KEY_INPUT_0))
-		IStage::Quake();
+		IStage::Quake(eQuake::normal);
 }
 
 
@@ -412,7 +412,7 @@ void Player::Death()
 	isDead = true;
 	vec.SetVec(std::cos(1.5 * GetRand(100)), 1.5 * std::cos(GetRand(100)));
 	Effector::PlaySpread(pos.x, pos.y, GetRand(100), dead_ef);
-	IStage::Quake();
+	IStage::Quake(eQuake::normal);
 	PlaySoundMem(hs_dead, DX_PLAYTYPE_BACK);
 }
 

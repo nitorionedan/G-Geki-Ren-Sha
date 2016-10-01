@@ -127,11 +127,14 @@ void Sound::Load()
 		}
 
 		ClearDrawScreen();
+
 		DrawRotaGraph(320, 240, 1., 0., tmpGr, TRUE);
 		DrawAnime(320, 320, 2., 0., c_load,     _countof(tmpGrS), 4, tmpGrS);
 		DrawAnime(220, 320, 2., 0., c_load + 2, _countof(tmpGrB), 4, tmpGrB);
 		DrawAnime(420, 320, 2., 0., c_load + 4, _countof(tmpGrP), 4, tmpGrP);
-		gr.DrawMyString2(0, 0, "NOW LOADING...", 16, true, 2.);
+		DrawFormatString(0, 30, GetColor(0, 255, 0), "ì«Ç›çûÇ›ó¶%10.0lfÅì", ( (double)i / (double)mSound.size() ) * 100);
+		DrawBox(0, 0, i * 10, 30, GetColor(0, 255, 0), TRUE);
+		//gr.DrawMyString2(0, 0, "NOW LOADING...", 16, true, 2.);
 
 		if (finishFlag)
 			break;

@@ -26,7 +26,7 @@ constexpr int StageCallTime = 120;
 
 Stage::Stage()
 	: c_quake( new Counter(30) )
-	, graphic(new Graphic)
+	, graphic( new Graphic )
 	, mField(static_cast<Field*>(new NullStage))
 {
 	Screen = MakeScreen(640, 480, TRUE);
@@ -51,6 +51,7 @@ Stage::~Stage()
 void Stage::Initialize()
 {
 	state = eState::game;
+	quakeType = eQuake::normal;
 
 	time = 0;
 	rank = 0;
@@ -205,7 +206,12 @@ void Stage::UpdateField()
 
 	mField->Update();
 
-	Quake();
+	switch (quakeType)
+	{
+	case eQuake::smal:	 SmallQuale(); break;
+	case eQuake::normal: Quake(); break;
+	case eQuake::big: BigQuake(); break;
+	}
 }
 
 
@@ -241,6 +247,12 @@ void Stage::AllClear()
 
 
 void Stage::PlayQuake() {
+	f_quake = true;
+}
+
+void Stage::PlayQuake(eQuake aukeType)
+{
+	this->quakeType = quakeType;
 	f_quake = true;
 }
 
@@ -325,6 +337,38 @@ void Stage::Quake()
 }
 
 
+void Stage::SmallQuale()
+{
+	if (f_quake == false)
+		return;
+
+	c_quake->Update();
+
+	double offsetB = GetRand(2) + 2;
+	double offsetF = GetRand(2) + 2;
+
+	if (c_quake->Remainder(4) >= 2)
+		pos.x -= offsetB;
+
+	if (c_quake->Remainder(4) <= 1)
+		pos.x += offsetB;
+
+	if (!c_quake->isLast())
+		return;		// stop to quake
+
+	pos = Vector2D::ZERO;
+
+	c_quake->Reset();
+	f_quake = false;
+}
+
+
+void Stage::BigQuake()
+{
+	f_quake = false;
+}
+
+
 void Stage::SkipTo(int Time){
 	time = Time;
 }
@@ -343,6 +387,23 @@ void IStage::set(std::shared_ptr<Stage> stage)
 
 void IStage::Load(){
 	mStage->StageSet( mStage->GetNowStage() );
+}
+
+void IStage::Quake(eQuake quakeType)
+{
+	switch (quakeType)
+	{
+	case eQuake::smal:
+		mStage->PlayQuake(eQuake::smal);
+		break;
+	case eQuake::normal:
+		mStage->PlayQuake(eQuake::normal);
+		break;
+	case eQuake::big:
+		mStage->PlayQuake(eQuake::big);
+		break;
+	default: assert(!"");
+	}
 }
 
 

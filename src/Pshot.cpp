@@ -80,7 +80,7 @@ Pshot::Pshot()
 	hg2.at(eShot_Red)		= LoadGraph("GRAPH/GAME/shot2_2.png");
 
 	ChangeVolumeSoundMem(90, hs_shot);
-	ChangeVolumeSoundMem(135, hs_hit);
+	ChangeVolumeSoundMem(80, hs_hit);
 
 	for (auto& shot : Ashot)	shot->atk = 2;
 	for (auto& shot : Bshot)	shot->atk = 3;

@@ -19,26 +19,30 @@
 
      // どこかに「超」「連」「射」が隠れているよ！探してみよう！
 */
+#define GEKI_REN_SHA_VER_0_1
 #define _CRTDBG_MAP_ALLOC
-#define main int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
-#include "DxLib.h"
+#define main() WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 
+#include "DxLib.h"
 #include "Keyboard.hpp"
 #include "SceneMng.hpp"
 #include "DebugMode.hpp"
 #include "Sound.hpp"
-
+#include <random>
 #include <memory>
 #include <time.h>
 #include <DirectXMath.h>
 
-constexpr int SC_W = 640;
-constexpr int SC_H = 480;
+namespace
+{
+	constexpr int SC_W = 640;
+	constexpr int SC_H = 480;
 
-static int  FrameStartTime;			// 60fps固定専用
-static int  FPS;
-static bool ScSizeFrag = true;		// 画面モード変更用
-static bool quit       = false;		// 強制終了フラグ
+	int  FrameStartTime;		// 60fps固定専用
+	int  FPS;
+	bool ScSizeFrag = true;		// 画面モード変更用
+	bool quit = false;			// 強制終了フラグ
+}
 
 void QuitGame();					// ゲーム終了伝達関数
 
@@ -61,7 +65,7 @@ void message_box()
 }
 
 
-main
+int main()
 {
 #if !defined(_DEBUG)
 	message_box();																				// ウィンドウスタイル質問

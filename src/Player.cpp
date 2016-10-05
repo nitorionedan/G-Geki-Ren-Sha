@@ -412,7 +412,7 @@ void Player::Death()
 	isDead = true;
 	vec.SetVec(std::cos(1.5 * GetRand(100)), 1.5 * std::cos(GetRand(100)));
 	Effector::PlaySpread(pos.x, pos.y, GetRand(100), dead_ef);
-	IStage::Quake(eQuake::normal);
+	IStage::Quake(eQuake::smal);
 	PlaySoundMem(hs_dead, DX_PLAYTYPE_BACK);
 }
 
@@ -469,7 +469,8 @@ bool Player::HitCheckCircle(const double& ColX, const double& ColY)
 		IBomb::Fire();
 	}
 
-	if (IS_HIT && state == ePlayerState::Game && isMuteki == false)
+	const bool& CanDeath = ( IS_HIT && state == ePlayerState::Game && isMuteki == false );
+	if ( CanDeath & !superFlag )
 		Death();
 
 	return IS_HIT;
@@ -490,7 +491,8 @@ bool Player::HitCheckCircle(const double & Range1, const double & Range2, const 
 		IBomb::Fire();
 	}
 
-	if (IS_HIT && state == ePlayerState::Game && isMuteki == false)
+	const bool& CanDeath = (IS_HIT && state == ePlayerState::Game && isMuteki == false);
+	if (CanDeath & !superFlag)
 		Death();
 
 	return IS_HIT;

@@ -59,6 +59,7 @@ void Stage::Initialize()
 	pos = Vector2D::ZERO;
 	f_quake = false;
 	isStanby = true;
+	StageSet(nowStage);
 }
 
 
@@ -75,7 +76,7 @@ void Stage::StageSet(eStage estage)
 	switch (estage)
 	{
 	case eStage::opening:
-		mField = static_cast<Field*>(new OpenigStage);
+		mField = static_cast<Field*>(new Stage1);
 		Sound::Play(eSound::opening);
 		break;
 	case eStage::stage1 :
@@ -344,8 +345,8 @@ void Stage::SmallQuale()
 
 	c_quake->Update();
 
-	double offsetB = GetRand(2) + 2;
-	double offsetF = GetRand(2) + 2;
+	double offsetB = GetRand(1) + 1;
+	double offsetF = GetRand(1) + 1;
 
 	if (c_quake->Remainder(4) >= 2)
 		pos.x -= offsetB;
@@ -365,6 +366,32 @@ void Stage::SmallQuale()
 
 void Stage::BigQuake()
 {
+	if (f_quake == false)
+		return;
+
+	c_quake->Update();
+
+	double offsetB = GetRand(4) + 4;
+	double offsetF = GetRand(4) + 4;
+
+	if (c_quake->Remainder(4) >= 2)
+	{
+		pos.x += GetRand(4);
+		pos.y -= GetRand(4);
+	}
+
+	if (c_quake->Remainder(4) <= 1)
+	{
+		pos.x -= GetRand(4);
+		pos.y += GetRand(4);
+	}
+
+	if (!c_quake->isLast())
+		return;		// stop to quake
+
+	pos = Vector2D::ZERO;
+
+	c_quake->Reset();
 	f_quake = false;
 }
 

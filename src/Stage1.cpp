@@ -10,20 +10,20 @@
 #include <algorithm>
 #include <DirectXMath.h>
 
-constexpr int ObType_Horizon = 0;	// Horizontal
-constexpr int ObType_VerWall = 1;	// Vertical(Wall)
+constexpr int ObType_Horizon  = 0;	// Horizontal
+constexpr int ObType_VerWall  = 1;	// Vertical(Wall)
 constexpr int ObType_VerFloor = 2;	// Vertical(Floor)
 
 namespace
 {
-	const VtPm_t t_vtpm[VertexNum] = 
+	const VtPm_t t_vtpm[VertexNum] =
 	{
-		{ -1.f, 1.f, 0.f, 0.f },
-		{ 1.f, 1.f, 1.f, 0.f },
+		{ -1.f,  1.f, 0.f, 0.f },
+		{  1.f,  1.f, 1.f, 0.f },
 		{ -1.f, -1.f, 0.f, 1.f },
-		{ 1.f, -1.f, 1.f, 1.f },
+		{  1.f, -1.f, 1.f, 1.f },
 		{ -1.f, -1.f, 0.f, 1.f },
-		{ 1.f, 1.f, 1.f, 0.f }
+		{  1.f,  1.f, 1.f, 0.f }
 	};
 	float z;
 }
@@ -80,9 +80,9 @@ void Stage1::Initialize()
 	float GraphY    : 描画する中心点
 	int ObchildMax  : typeが0の場合のみ、同時にいくつ表示するか
 	*/
-	const float FromZ     = 2000.f; // 1000
+	const float FromZ     = 1000.f; // 1000
 	const float FadeFromZ = 400.f;	// 400
-	const float FadeToZ   = -200.f;	// -200
+	const float FadeToZ   = -150.f;	// -200
 	const float ToZ       = -400.f;	// -400
 	int imgSize_tex = 0;
 	int imgSize_wall = 0;
@@ -90,20 +90,20 @@ void Stage1::Initialize()
 	GetGraphSize(gh[1], &imgSize_wall, &imgSize_wall);
 	IniObj(&Object[0], gh[0], imgSize_tex,  0,  0,   256, 128, 250, 50,  ObType_VerFloor, FromZ, FadeFromZ, FadeToZ, ToZ, 320, (240 - 90),  ObChildMax);
 	IniObj(&Object[1], gh[0], imgSize_tex,  60, 270, 405, 512, 180, 125, ObType_Horizon,  FromZ, FadeFromZ, FadeToZ, ToZ, 470,  275,        ObChildMax); // 6?
-	IniObj(&Object[2], gh[1], imgSize_wall, 0,  0,   390, 512, 73,  90,  ObType_Horizon,  FromZ, FadeFromZ, FadeToZ, ToZ, 170,  240,        ObChildMax);
+	IniObj(&Object[2], gh[1], imgSize_wall, 0,  0,   390, 512, 73,  90,  ObType_VerWall,  FromZ, FadeFromZ, FadeToZ, ToZ, 170,  240,        ObChildMax);
 
-	MATRIX m1 = MGetRotY(20);
-	float ang = 60.f * (DX_PI_F / 180.f);
+	//MATRIX m1 = MGetRotY(20);
+	//float ang = 60.f * (DX_PI_F / 180.f);
 
-	for (auto& ob : Object)
-	{
-		for (int i = 0; i < ob.childMax; ++i)
-		{
-			//drawpolygonindexed3d(ob.child[i].vertex, vertexnum, index, 2, ob.img, true);
-			ob.child[i].center.y = ob.child[i].center.y * std::cos(ang) - ob.child[i].center.z * std::sin(ang);
-			ob.child[i].center.z = ob.child[i].center.y * std::sin(ang) + ob.child[i].center.z * std::cos(ang);
-		}
-	}
+	//for (auto& ob : Object)
+	//{
+	//	for (int i = 0; i < ob.childMax; ++i)
+	//	{
+	//		//drawpolygonindexed3d(ob.child[i].vertex, vertexnum, index, 2, ob.img, true);
+	//		ob.child[i].center.y = ob.child[i].center.y * std::cos(ang) - ob.child[i].center.z * std::sin(ang);
+	//		ob.child[i].center.z = ob.child[i].center.y * std::sin(ang) + ob.child[i].center.z * std::cos(ang);
+	//	}
+	//}
 }
 
 

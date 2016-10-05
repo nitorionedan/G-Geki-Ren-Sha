@@ -6,9 +6,12 @@
 #include <memory>
 #include <DxLib.h>
 
-constexpr int VertexNum = 6;
-constexpr int ObChildMax = 11;
-constexpr int ObjectNumMax = 10;
+namespace
+{
+	constexpr int VertexNum = 6;
+	constexpr int ObChildMax = 7;
+	constexpr int ObjectNumMax = 10; // 10
+}
 
 class Quaternion;
 

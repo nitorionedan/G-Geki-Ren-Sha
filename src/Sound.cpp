@@ -139,7 +139,7 @@ void Sound::Load()
 		if (finishFlag)
 			break;
 
-		//Sleep(10);
+		Sleep(1);
 	}
 
 	SetUseASyncLoadFlag(FALSE);
@@ -167,7 +167,6 @@ void Sound::Delete()
 
 void Sound::Play(eSound sound)
 {
-	//ChangeVolumeSoundMem(mSound[static_cast<int>(sound)]->Max_vol, mSound[static_cast<int>(sound)]->handle);
 	PlaySoundMem(mSound[static_cast<int>(sound)]->handle, DX_PLAYTYPE_LOOP);
 }
 

@@ -8,27 +8,51 @@
 #include <memory>
 
 
+enum class eEnemyParam
+{
+	type,
+	stype,
+	m_pattern,
+	s_pattern,
+	in_time,
+	stop_time,
+	shot_time,
+	out_time,
+	x_pos,
+	y_pos,
+	s_speed,
+	hp,
+	item,
+};
+
+
+struct tEnemyData
+{
+	int type,		// 敵種類
+		stype,		// 弾種類
+		m_pattern,	// 移動パターン
+		s_pattern,	// 発射パターン
+		in_time,	// 出現時間
+		stop_time,	// 停止時間
+		shot_time,	// 弾発射時間
+		out_time,	// 帰還時間
+		x_pos,		// x座標
+		y_pos,		// y座標
+		s_speed,	// 弾スピード
+		hp,			// HP
+		item;		// アイテム
+};
+
+
 class Enemy
 {
 public:
 	// @param[in]	type	敵種類（０～３０）
-	Enemy(
-		int type,
-		int stype,
-		int m_pattern,
-		int s_pattern,
-		int in_time,
-		int stop_time,
-		int shot_time,
-		int out_time,
-		int x_pos,
-		int y_pos,
-		int s_speed,
-		int hp,
-		int item);
+	explicit Enemy(tEnemyData param);
 	~Enemy();
 	void Update();
 	void Draw();
+	const int GetParam(eEnemyParam param);
 	const bool IsExist() const {
 		return isExist;
 	}
@@ -107,19 +131,7 @@ private:
 	Shot* shot3;
 
 	// 構造体データに合わせる
-	int type;
-	int stype;
-	int m_pattern;
-	int s_pattern;
-	int in_time;
-	int stop_time;
-	int shot_time;
-	int out_time;
-	int x_pos;
-	int y_pos;
-	int s_speed;
-	int hp;
-	int item;
+	tEnemyData param;
 };
 
 #endif

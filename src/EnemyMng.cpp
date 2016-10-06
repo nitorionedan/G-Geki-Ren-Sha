@@ -30,7 +30,7 @@ EnemyMng::~EnemyMng()
 
 void EnemyMng::Load(eStage stage)
 {
-	assert(stage == eStage::opening && "[EnemyMng::Load]Å@Sorry, I haven't been implement this stage XD\n");
+	assert(stage != eStage::stage2 && "[EnemyMng::Load]Å@Sorry, I haven't been implement this stage XD\n");
 
 	if (!enemy.empty())
 		Finalize();
@@ -83,21 +83,21 @@ void EnemyMng::Load(eStage stage)
 
 		switch (nowCol)
 		{
-		// num of column is one which is enemy type
-		case 1:		ene_date[nowRow].type = std::stoi(buf);			break;
-		// omitted below
-		case 2:		ene_date[nowRow].stype = std::stoi(buf);		break;
-		case 3:		ene_date[nowRow].m_pattern = std::stoi(buf);	break;
-		case 4:		ene_date[nowRow].s_pattern = std::stoi(buf);	break;
-		case 5:		ene_date[nowRow].in_time = std::stoi(buf);		break;
-		case 6:		ene_date[nowRow].stop_time = std::stoi(buf);	break;
-		case 7:		ene_date[nowRow].shot_time = std::stoi(buf);	break;
-		case 8:		ene_date[nowRow].out_time = std::stoi(buf);		break;
-		case 9:		ene_date[nowRow].x_pos = std::stoi(buf);		break;
-		case 10:	ene_date[nowRow].y_pos = std::stoi(buf);		break;
-		case 11:	ene_date[nowRow].s_speed = std::stoi(buf);		break;
-		case 12:	ene_date[nowRow].hp = std::stoi(buf);			break;
-		case 13:	ene_date[nowRow].item = std::stoi(buf);			break;
+		/* num of column is one which is enemy type */
+		case 1:	ene_date[nowRow].type       = std::stoi(buf); break;
+		/* omitted below */
+		case 2:	 ene_date[nowRow].stype     = std::stoi(buf); break;
+		case 3:	 ene_date[nowRow].m_pattern = std::stoi(buf); break;
+		case 4:	 ene_date[nowRow].s_pattern = std::stoi(buf); break;
+		case 5:	 ene_date[nowRow].in_time   = std::stoi(buf); break;
+		case 6:	 ene_date[nowRow].stop_time = std::stoi(buf); break;
+		case 7:	 ene_date[nowRow].shot_time = std::stoi(buf); break;
+		case 8:	 ene_date[nowRow].out_time  = std::stoi(buf); break;
+		case 9:	 ene_date[nowRow].x_pos     = std::stoi(buf); break;
+		case 10: ene_date[nowRow].y_pos     = std::stoi(buf); break;
+		case 11: ene_date[nowRow].s_speed   = std::stoi(buf); break;
+		case 12: ene_date[nowRow].hp        = std::stoi(buf); break;
+		case 13: ene_date[nowRow].item      = std::stoi(buf); break;
 		}
 
 		buf.clear();
@@ -117,22 +117,7 @@ out:
 
 	// create enemys
 	for (int i = 0; i < enemyCount; i++)
-	{
-		enemy.emplace_back( new Enemy(
-			ene_date[i].type,
-			ene_date[i].stype,
-			ene_date[i].m_pattern,
-			ene_date[i].s_pattern,
-			ene_date[i].in_time,
-			ene_date[i].stop_time,
-			ene_date[i].shot_time,
-			ene_date[i].out_time,
-			ene_date[i].x_pos,
-			ene_date[i].y_pos,
-			ene_date[i].s_speed,
-			ene_date[i].hp,
-			ene_date[i].item) );
-	}
+		enemy.emplace_back(new Enemy(ene_date[i]));
 
 	delete[] ene_date;
 }
@@ -220,18 +205,18 @@ bool EnemyMng::IsHit(const int & ColCircle, const double & ColX, const double & 
 }
 
 
-void EnemyMng::GetAllEnemyNum(int * enemyNum, std::string fileName)
+void EnemyMng::GetAllEnemyNum(int* enemyNum, std::string fileName)
 {
-	(*enemyNum) = 0;
-	std::ifstream ifs(fileName, std::ios::in);
+	*enemyNum = 0;
+	std::ifstream ifs(fileName);
 
-	while (!ifs.eof())
+	while ( !ifs.eof() )
 	{
 		char tmp = ifs.get();
-		if (tmp == '\n')
-			(*enemyNum)++;
+		if ( tmp == '\n' )
+			++(*enemyNum);
 	}
-	(*enemyNum)--;	// adjust enemy num
+	--(*enemyNum);	// adjust enemy num
 
 	ifs.close();
 }

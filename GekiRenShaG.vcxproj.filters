@@ -49,6 +49,9 @@
     <Filter Include="ソース ファイル\Stage">
       <UniqueIdentifier>{df865812-a971-43b2-9058-b76bb99517a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Enemy\AI">
+      <UniqueIdentifier>{6aad2180-8552-4d45-a401-bcadf1a2393a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Another.cpp">
@@ -244,6 +247,12 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\BossB.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BossAAI.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ZakoEasyAI.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -475,6 +484,15 @@
     </ClInclude>
     <ClInclude Include="src\BossB.hpp">
       <Filter>ヘッダー ファイル\Enemy\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EnemyAI.hpp">
+      <Filter>ヘッダー ファイル\Enemy\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BossAAI.hpp">
+      <Filter>ヘッダー ファイル\Enemy\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ZakoEasyAI.hpp">
+      <Filter>ヘッダー ファイル\Enemy\AI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

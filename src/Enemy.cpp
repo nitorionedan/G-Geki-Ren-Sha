@@ -26,12 +26,12 @@
 #undef min // wtf
 
 
-Enemy::Enemy(int type, int stype, int m_pattern, int s_pattern, int in_time, int stop_time, int shot_time, int out_time, int x_pos, int y_pos, int s_speed, int hp, int item)
+Enemy::Enemy(tEnemyData param)
 	: SCREEN_LIMIT_XL(-10)
 	, SCREEN_LIMIT_XR(650)
 	, SCREEN_LIMIT_YT(-10)
 	, SCREEN_LIMIT_YB(490)
-	, MAX_HP(hp)
+	, MAX_HP(param.hp)
 	, DROP_RATE(2)
 	, shot(nullptr)
 	, shot2(nullptr)
@@ -49,27 +49,15 @@ Enemy::Enemy(int type, int stype, int m_pattern, int s_pattern, int in_time, int
 	, isUngry(false)
 {
 	/* itemID check */
-	if(item < 0 || item > 3)
+	if (param.item < 0 || param.item > 3)
 		assert(!"out of range");
 
 	// データ設定
-	this->type = type;
-	this->stype = stype;
-	this->m_pattern = m_pattern;
-	this->s_pattern = s_pattern;
-	this->in_time = in_time;
-	this->stop_time = stop_time;
-	this->shot_time = shot_time;
-	this->out_time = out_time;
-	this->x_pos = x_pos;
-	this->y_pos = y_pos;
-	this->s_speed = s_speed;
-	this->hp = hp;
-	this->item = item;
-	pos.SetVec(static_cast<double>(x_pos), static_cast<double>(y_pos));
+	this->param = param;
+	pos.SetVec(static_cast<double>(param.x_pos), static_cast<double>(param.y_pos));
 
 	// タイプに合わせた
-	switch (type)
+	switch (this->param.type)
 	{
 	case 0:
 		gh_ene00 = LoadGraph("GRAPH/GAME/ENEMY/ene00.png");
@@ -98,7 +86,7 @@ Enemy::Enemy(int type, int stype, int m_pattern, int s_pattern, int in_time, int
 	}
 
 	// 速度
-	switch (m_pattern)
+	switch (param.m_pattern)
 	{
 	case 0:	vSpeed.SetVec(2., 4.);	break;
 	case 1:	break;
@@ -116,7 +104,7 @@ Enemy::Enemy(int type, int stype, int m_pattern, int s_pattern, int in_time, int
 	}
 
 	// 弾ロード
-	switch (s_pattern)
+	switch (param.s_pattern)
 	{
 	case 0:	shot = new Shot(new EShot00);	break;
 	case 1:	break;
@@ -142,7 +130,7 @@ Enemy::~Enemy()
 	delete shot3;
 
 	// 画像アンロード
-	switch (type)
+	switch (param.type)
 	{
 	case 0:
 		DeleteGraph(gh_ene00);
@@ -177,7 +165,7 @@ Enemy::~Enemy()
 void Enemy::Update()
 {
 	// 登場時間が来たら出てくる
-	if (IStage::GetTime() == in_time)
+	if (IStage::GetTime() == param.in_time)
 		isExist = true;
 
 	if (isExist)
@@ -213,7 +201,7 @@ void Enemy::Draw()
 	if (isExist)
 	{
 		// On-Damage-Effect
-		if (MAX_HP / 3 >= hp && elapsedTime % 12 >= 10)
+		if (MAX_HP / 3 >= param.hp && elapsedTime % 12 >= 10)
 		{
 			SetDrawBlendMode(DX_BLENDMODE_INVSRC, 255);
 			SetDrawBright(255, 0, 0);
@@ -222,7 +210,7 @@ void Enemy::Draw()
 		if (isDamage)
 			SetDrawBlendMode(DX_BLENDMODE_INVSRC, 255);
 
-		switch (type)
+		switch (param.type)
 		{
 		case 0:
 			DrawRotaGraph(pos.x, pos.y, 2., angle, gh_ene00, true);
@@ -236,9 +224,9 @@ void Enemy::Draw()
 			break;
 		case 4:
 			DrawAnime(pos.x, pos.y, 2., 0., elapsedTime, _countof(gh_ene04), 8, gh_ene04);
-			if (s_time == stop_time ||
-				s_time == stop_time + 20 ||
-				s_time == stop_time + 40)
+			if (s_time == param.stop_time ||
+				s_time == param.stop_time + 20 ||
+				s_time == param.stop_time + 40)
 			{
 				DrawRotaGraph(pos.x + 70, pos.y - 30, 2.0, 0.0, gh_shot00, true);
 				DrawRotaGraph(pos.x + 50, pos.y, 2.0, 0.0, gh_shot00, true);
@@ -271,6 +259,51 @@ void Enemy::Draw()
 	DrawCircle(pos.x, pos.y, hitRange, GetColor(0, 255, 0), false);
 }
 
+const int Enemy::GetParam(eEnemyParam param)
+{
+	int tmpParam = NULL;
+	switch (param)
+	{
+	case eEnemyParam::type:	     return this->param.type;      break;
+	case eEnemyParam::stype:     return this->param.stype;	   break;
+	case eEnemyParam::m_pattern: return this->param.m_pattern; break;
+	case eEnemyParam::s_pattern: // I'm tired...
+		return this->param.s_pattern;
+		break;
+	case eEnemyParam::in_time:
+		return this->param.in_time;
+		break;
+	case eEnemyParam::stop_time:
+		return this->param.stop_time;
+		break;
+	case eEnemyParam::shot_time:
+		return this->param.shot_time;
+		break;
+	case eEnemyParam::out_time:
+		return this->param.out_time;
+		break;
+	case eEnemyParam::x_pos:
+		return this->param.x_pos;
+		break;
+	case eEnemyParam::y_pos:
+		return this->param.y_pos;
+		break;
+	case eEnemyParam::s_speed:
+		return this->param.s_speed;
+		break;
+	case eEnemyParam::hp:
+		return this->param.hp;
+		break;
+	case eEnemyParam::item:
+		return this->param.item;
+		break;
+	default:
+		assert(!"abnormality param");
+	}
+
+	return NULL;
+}
+
 
 bool Enemy::IsHit(const double & ColX, const double & ColY, const int& DAMAGE)
 {
@@ -278,7 +311,7 @@ bool Enemy::IsHit(const double & ColX, const double & ColY, const int& DAMAGE)
 
 	bool isHit;
 
-	switch (type)
+	switch (param.type)
 	{
 	case 0:
 		isHit = Vector2D::CirclesCollision(hitRange, 6, pos.x, pos.y + 9., ColX, ColY);	
@@ -322,14 +355,18 @@ bool Enemy::IsHit(const int & ColCircle, const double & ColX, const double & Col
 }
 
 
-void Enemy::AngleTarget(const double Target_x, const double Target_y){
+void Enemy::AngleTarget(const double Target_x, const double Target_y)
+{
 	angle = atan2(Target_y - pos.y, Target_x - pos.x) - DX_PI / 2;	// 自機に向く
+
+	Vector2D tmpVec = Vector2D(Target_x - pos.x, Target_y - pos.y);
+	tmpVec.Normalize();
 }
 
 
 void Enemy::Move()
 {
-	switch (m_pattern)
+	switch (param.m_pattern)
 	{
 	case 0:	Move_0();	break;
 	case 1:	Move_1();	break;
@@ -348,8 +385,8 @@ void Enemy::Move()
 
 void Enemy::Move_0()
 {
-	const bool& IS_IN = (elapsedTime >= 0 && elapsedTime <= stop_time);
-	const bool& IS_OUT = (elapsedTime >= out_time);
+	const bool& IS_IN = (elapsedTime >= 0 && elapsedTime <= param.stop_time);
+	const bool& IS_OUT = (elapsedTime >= param.out_time);
 	const double& BRAKE = 0.03;
 
 	// 最初の移動
@@ -390,15 +427,15 @@ void Enemy::Move_0()
 	}
 
 	// 自機に向く
-	if (elapsedTime < out_time)
+	if (elapsedTime < param.out_time)
 		AngleTarget(IPlayer::GetPos().x, IPlayer::GetPos().y);
 
 	// スピード変更
-	if (elapsedTime == out_time)
+	if (elapsedTime == param.out_time)
 		vSpeed.y = 0.;
 
 	// 帰る（笑）
-	if (elapsedTime >= out_time)
+	if (elapsedTime >= param.out_time)
 	{
 		// 加速
 		if (vSpeed.y > -SPEED_0)
@@ -467,8 +504,8 @@ void Enemy::Move_4()
 
 	vSpeed.SetVec(0.7, 0.2);
 
-	if (s_time < stop_time ||
-		s_time > stop_time + 40)
+	if (s_time < param.stop_time ||
+		s_time > param.stop_time + 40)
 	{
 		pos.y += vSpeed.y;
 	}
@@ -485,7 +522,7 @@ void Enemy::Move_4()
 
 void Enemy::Fire()
 {
-	switch (type)
+	switch (param.type)
 	{
 	case 0: Fire_0();	break;
 	case 1: Fire_1();	break;
@@ -507,12 +544,12 @@ void Enemy::Fire_0()
 	{
 		int dir = GetRand(1);
 		double addAng = (GetRand(3) / 15.);
-		double tspeed = s_speed;
+		double tspeed = param.s_speed;
 		if (dir == 0)
-			shot->Fire(s_speed, ANGLE - addAng);
+			shot->Fire(param.s_speed, ANGLE - addAng);
 			//TODO: IEneShotCreater::Fire(eEneShot::ball, eEneShotMove::straight, pos, tspeed);
 		else
-			shot->Fire(s_speed, ANGLE + addAng);
+			shot->Fire(param.s_speed, ANGLE + addAng);
 			//TODO: IEneShotCreater::Fire(eEneShot::ball, eEneShotMove::straight, pos, tspeed);
 	}
 
@@ -522,27 +559,27 @@ void Enemy::Fire_0()
 		double addAng = (GetRand(3) / 15.);
 		
 		if (dir == 0)
-			shot->Fire(s_speed, ANGLE - addAng);
+			shot->Fire(param.s_speed, ANGLE - addAng);
 		else
-			shot->Fire(s_speed, ANGLE + addAng);
+			shot->Fire(param.s_speed, ANGLE + addAng);
 	}
 
-	if (elapsedTime == out_time && isUngry)
+	if (elapsedTime == param.out_time && isUngry)
 	{
 		int dir = GetRand(1);
 		double addAng = (GetRand(3) / 15);
 
 		if (dir == 0)
 		{
-			shot->Fire(s_speed, (ANGLE + 0.3) - addAng);
-			shot->Fire(s_speed, ANGLE - addAng);
-			shot->Fire(s_speed, (ANGLE - 0.3) - addAng);
+			shot->Fire(param.s_speed, (ANGLE + 0.3) - addAng);
+			shot->Fire(param.s_speed, ANGLE - addAng);
+			shot->Fire(param.s_speed, (ANGLE - 0.3) - addAng);
 		}
 		else
 		{
-			shot->Fire(s_speed, (ANGLE + 0.3) - addAng);
-			shot->Fire(s_speed, ANGLE - addAng);
-			shot->Fire(s_speed, (ANGLE - 0.3) - addAng);
+			shot->Fire(param.s_speed, (ANGLE + 0.3) - addAng);
+			shot->Fire(param.s_speed, ANGLE - addAng);
+			shot->Fire(param.s_speed, (ANGLE - 0.3) - addAng);
 		}
 	}
 }
@@ -552,10 +589,10 @@ void Enemy::Fire_1()
 {
 	const double& ANGLE = atan2(IPlayer::GetPos().y - pos.y, IPlayer::GetPos().x - pos.x);
 
-	if (elapsedTime >= stop_time)
+	if (elapsedTime >= param.stop_time)
 	{
-		if (elapsedTime == stop_time + 10)	shot->Fire(s_speed, ANGLE);
-		if (elapsedTime == stop_time + 20)	shot->Fire(s_speed, ANGLE);
+		if (elapsedTime == param.stop_time + 10)	shot->Fire(param.s_speed, ANGLE);
+		if (elapsedTime == param.stop_time + 20)	shot->Fire(param.s_speed, ANGLE);
 	}
 }
 
@@ -573,40 +610,40 @@ void Enemy::Fire_3()
 void Enemy::Fire_4()
 {
 	// 自機狙い方向決め
-	if (s_time == stop_time - 30)
+	if (s_time == param.stop_time - 30)
 	{
 		vangle = atan2(IPlayer::GetPos().y - pos.y, IPlayer::GetPos().x - pos.x);
 	}
 
 	// 4WAY x 2
-	if (s_time == stop_time ||
-		s_time == stop_time + 20 ||
-		s_time == stop_time + 40)
+	if (s_time == param.stop_time ||
+		s_time == param.stop_time + 20 ||
+		s_time == param.stop_time + 40)
 	{
 		// 右側
-		shot->Fire(pos.x + 70., pos.y - 30., s_speed, DX_PI / 8);
-		shot->Fire(pos.x + 70., pos.y - 30., s_speed, DX_PI / 6);
-		shot->Fire(pos.x + 50., pos.y, s_speed, DX_PI / 4);
-		shot->Fire(pos.x + 50., pos.y, s_speed, DX_PI / 3);
+		shot->Fire(pos.x + 70., pos.y - 30., param.s_speed, DX_PI / 8);
+		shot->Fire(pos.x + 70., pos.y - 30., param.s_speed, DX_PI / 6);
+		shot->Fire(pos.x + 50., pos.y, param.s_speed, DX_PI / 4);
+		shot->Fire(pos.x + 50., pos.y, param.s_speed, DX_PI / 3);
 
 		// 左側
-		shot->Fire(pos.x - 70., pos.y - 30., s_speed, DX_PI * 0.85);
-		shot->Fire(pos.x - 70., pos.y - 30., s_speed, DX_PI * 0.8);
-		shot->Fire(pos.x - 50., pos.y, s_speed, DX_PI * 0.7);
-		shot->Fire(pos.x - 50., pos.y, s_speed, DX_PI * 0.6);
+		shot->Fire(pos.x - 70., pos.y - 30., param.s_speed, DX_PI * 0.85);
+		shot->Fire(pos.x - 70., pos.y - 30., param.s_speed, DX_PI * 0.8);
+		shot->Fire(pos.x - 50., pos.y, param.s_speed, DX_PI * 0.7);
+		shot->Fire(pos.x - 50., pos.y, param.s_speed, DX_PI * 0.6);
 	}
 
 	// 自機狙い発射
-	if (s_time == stop_time + 20 ||
-		s_time == stop_time + 30 ||
-		s_time == stop_time + 40 ||
-		s_time == stop_time + 50)
+	if (s_time == param.stop_time + 20 ||
+		s_time == param.stop_time + 30 ||
+		s_time == param.stop_time + 40 ||
+		s_time == param.stop_time + 50)
 	{
-		shot2->Fire(s_speed + 2, vangle);
+		shot2->Fire(param.s_speed + 2, vangle);
 	}
 
 	// ショットタイムリセット
-	if (s_time == stop_time + 160)	s_time = 0;
+	if (s_time == param.stop_time + 160)	s_time = 0;
 }
 
 
@@ -628,15 +665,15 @@ void Enemy::Fire_7()
 
 void Enemy::Damage(int damage)
 {
-	switch (type)
+	switch (param.type)
 	{
 	case 0:
-		hp -= damage;
+		param.hp -= damage;
 		isDamage = true;
 		IScore::AddScore(1);
 
 		// 元気ならここで返す
-		if (hp > 0)	return;
+		if (param.hp > 0)	return;
 
 		ItemDrop();
 		isExist = false;
@@ -647,12 +684,12 @@ void Enemy::Damage(int damage)
 	case 1:
 		break;
 	case 2:
-		hp -= damage;
+		param.hp -= damage;
 		isDamage = true;
 		IScore::AddScore(1);
 
 		// 元気ならここで返す
-		if (hp > 0)	return;
+		if (param.hp > 0)	return;
 
 		ItemDrop();
 
@@ -668,12 +705,12 @@ void Enemy::Damage(int damage)
 		break;
 
 	case 4:
-		hp -= damage;
+		param.hp -= damage;
 		isDamage = true;
 		IScore::AddScore(1);
 
 		// 元気ならここで返す
-		if (hp > 0)	return;
+		if (param.hp > 0)	return;
 
 		isExist = false;
 		
@@ -710,7 +747,7 @@ void Enemy::Damage(int damage)
 	default: assert(!"out of range");
 	}
 
-	if (hp <= 0)
+	if (param.hp <= 0)
 		IStage::Quake(eQuake::normal);
 }
 

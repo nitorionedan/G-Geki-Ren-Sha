@@ -8,23 +8,6 @@
 #include <vector>
 #include <string>
 
-struct tEnemyData
-{
-	int type,		// 敵種類
-		stype,		// 弾種類
-		m_pattern,	// 移動パターン
-		s_pattern,	// 発射パターン
-		in_time,	// 出現時間
-		stop_time,	// 停止時間
-		shot_time,	// 弾発射時間
-		out_time,	// 帰還時間
-		x_pos,		// x座標
-		y_pos,		// y座標
-		s_speed,	// 弾スピード
-		hp,			// HP
-		item;		// アイテム
-};
-
 
 class EnemyMng
 {

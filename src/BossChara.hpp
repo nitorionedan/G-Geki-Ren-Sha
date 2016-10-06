@@ -29,6 +29,15 @@ enum eBoss_num
 	eBoss_None,
 };
 
+// maybe not use
+enum class eBossState
+{
+	start,
+	normal,
+	weak,
+	end,
+};
+
 
 class BossChara
 {

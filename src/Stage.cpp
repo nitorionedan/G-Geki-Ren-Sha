@@ -4,6 +4,7 @@
 #include "BossChara.hpp"
 #include "EnemyMng.hpp"
 #include "Sound.hpp"
+#include "IScore.hpp"
 
 /* field */
 #include "Field.hpp"
@@ -18,16 +19,20 @@
 #undef min
 #undef max
 
-constexpr float CamX = 320.f;
-constexpr float CamY = 240.f;
-constexpr float CamZ = -415.6922f;
-constexpr int StageCallTime = 120;
+namespace
+{
+	constexpr float CamX = 320.f;
+	constexpr float CamY = 240.f;
+	constexpr float CamZ = -415.6922f;
+	constexpr int StageCallTime = 120;
+}
 
 
 Stage::Stage()
 	: c_quake( new Counter(30) )
 	, graphic( new Graphic )
-	, mField(static_cast<Field*>(new NullStage))
+	, mField( static_cast<Field*>(new NullStage) )
+	, c_fade(255)
 {
 	Screen = MakeScreen(640, 480, TRUE);
 
@@ -56,6 +61,8 @@ void Stage::Initialize()
 	time = 0;
 	rank = 0;
 	c_bossBgm = 0;
+	start_score = 0;
+	end_score = 0;
 	pos = Vector2D::ZERO;
 	f_quake = false;
 	isStanby = true;
@@ -76,7 +83,7 @@ void Stage::StageSet(eStage estage)
 	switch (estage)
 	{
 	case eStage::opening:
-		mField = static_cast<Field*>(new Stage1);
+		mField = static_cast<Field*>(new OpenigStage);
 		Sound::Play(eSound::opening);
 		break;
 	case eStage::stage1 :
@@ -100,16 +107,24 @@ void Stage::StageSet(eStage estage)
 	}
 
 	nowStage = estage;	// setting current stage
+
 	isStanby = true;
 }
 
 
 void Stage::Update()
 {
+	if (time == 0)
+		start_score = IScore::GetScore();
+
 	switch (state)
 	{
 	case Stage::eState::game:
 		UpdateField();
+
+		if (c_fade < 254)
+			++c_fade;
+
 		if (IEnemyMng::IsBossZone())
 		{
 			if (Sound::IsPlaySome() == false)
@@ -149,6 +164,7 @@ void Stage::Update()
 		}
 		break;
 	case Stage::eState::result:
+		UpdateField();
 		Update_Result();
 		break;
 	}
@@ -169,6 +185,8 @@ void Stage::Draw()
 	SetDrawScreen(Screen);
 	ClearDrawScreen();
 
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, c_fade);
+
 	switch (state)
 	{
 	case Stage::eState::game:
@@ -176,9 +194,12 @@ void Stage::Draw()
 		DrawStageCall();
 		break;
 	case Stage::eState::result:
+		mField->Draw();
 		DrawResult();
 		break;
 	}
+
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	SetDrawScreen(DX_SCREEN_BACK);
 	DrawGraph(pos.x, pos.y, Screen, TRUE);
@@ -220,7 +241,10 @@ void Stage::NextStage()
 {	
 	bool not_stage0 = (nowStage != eStage::stage0);
 	if (not_stage0)
+	{
 		nowStage = static_cast<eStage>(static_cast<int>(nowStage) + 1);
+		IEnemyMng::Load(nowStage);
+	}
 	else
 		AllClear();
 	Initialize();
@@ -236,6 +260,8 @@ void Stage::Clear()
 	
 	state = eState::result;
 	time = 0;
+	end_score = IScore::GetScore();
+	sum_score = end_score - start_score;
 }
 
 
@@ -261,6 +287,9 @@ void Stage::PlayQuake(eQuake aukeType)
 void Stage::Update_Result()
 {
 	++time;
+
+	if (c_fade > 0)
+		c_fade -= 255 / 300;
 
 	if (time == 300)
 		NextStage();
@@ -309,6 +338,7 @@ void Stage::DrawStageCall()
 
 void Stage::DrawResult()
 {
+	DrawFormatString(320, 240, GetColor(0, 255, 0), "STAGE 1 SCORE %d", sum_score);
 }
 
 
@@ -415,6 +445,7 @@ void IStage::set(std::shared_ptr<Stage> stage)
 void IStage::Load(){
 	mStage->StageSet( mStage->GetNowStage() );
 }
+
 
 void IStage::Quake(eQuake quakeType)
 {

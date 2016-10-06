@@ -27,6 +27,10 @@ public:
 	void IsShowScore(const bool& IsShow);
 	void ShowResult();
 	void AddScore(const int& point);
+	const int GetScore() const {
+		return score;
+	}
+
 	int secBonus; // –ˆ•b‰ÁŽZƒXƒRƒA // ‚È‚µ‚Ì•ûŒü‚Å(^^;
 	/*const t_Ranking& GetRanking() {
 		return tRanking;

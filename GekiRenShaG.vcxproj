@@ -25,6 +25,7 @@
     <ClCompile Include="src\Bezier.cpp" />
     <ClCompile Include="src\Bomb.cpp" />
     <ClCompile Include="src\BossA.cpp" />
+    <ClCompile Include="src\BossAAI.cpp" />
     <ClCompile Include="src\BossB.cpp" />
     <ClCompile Include="src\BossChara.cpp" />
     <ClCompile Include="src\Bullet.cpp" />
@@ -84,6 +85,7 @@
     <ClCompile Include="src\Title.cpp" />
     <ClCompile Include="src\Tutorial.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
+    <ClCompile Include="src\ZakoEasyAI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Another.hpp" />
@@ -92,6 +94,7 @@
     <ClInclude Include="src\Bezier.hpp" />
     <ClInclude Include="src\Bomb.hpp" />
     <ClInclude Include="src\BossA.hpp" />
+    <ClInclude Include="src\BossAAI.hpp" />
     <ClInclude Include="src\BossB.hpp" />
     <ClInclude Include="src\BossChara.hpp" />
     <ClInclude Include="src\BossTask.hpp" />
@@ -106,6 +109,7 @@
     <ClInclude Include="src\Effector.hpp" />
     <ClInclude Include="src\EffectTask.hpp" />
     <ClInclude Include="src\Enemy.hpp" />
+    <ClInclude Include="src\EnemyAI.hpp" />
     <ClInclude Include="src\EnemyMng.hpp" />
     <ClInclude Include="src\EnemyShot.hpp" />
     <ClInclude Include="src\EneShotCreater.hpp" />
@@ -162,6 +166,7 @@
     <ClInclude Include="src\Title.hpp" />
     <ClInclude Include="src\Tutorial.hpp" />
     <ClInclude Include="src\Vector2D.hpp" />
+    <ClInclude Include="src\ZakoEasyAI.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\EnemyTable1.csv" />

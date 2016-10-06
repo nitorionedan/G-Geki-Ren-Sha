@@ -117,7 +117,7 @@ void Sound::Load()
 				int x = CheckHandleASyncLoad(sound->handle);
 				if (x == -1)
 				{
-					MessageBox(NULL, "もう一度起動してください。根気よく・・・。", "サウンド読み込みエラー", MB_OK);
+					MessageBox(NULL, "もう一度起動してください。根気よく・・・。", "サウンド読み込みエラー（ヒープ領域が足りないorz）", MB_OK);
 					exit(-1);
 				}
 			}

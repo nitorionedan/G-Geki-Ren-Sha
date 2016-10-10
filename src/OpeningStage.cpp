@@ -12,16 +12,16 @@
 #undef max
 #undef min
 
-constexpr int TransTime = 180;
-constexpr int CenterX = 320;
-constexpr int CenterY = 240;
-constexpr double Cycle = 0.8;
-constexpr double Shake = 70.;
-constexpr double Harf = 0.5;
-
 namespace
 {
-	std::function<double(double val, double max, double min)> Wrap = 
+	constexpr int TransTime = 180;
+	constexpr int CenterX = 320;
+	constexpr int CenterY = 240;
+	constexpr double Cycle = 0.8;
+	constexpr double Shake = 70.;
+	constexpr double Harf = 0.5;
+
+	std::function<double (double, double, double)> Wrap = 
 		[](double val, double max, double min)
 		{
 			assert(max > min && "Stage::WrapPos()");
@@ -59,6 +59,7 @@ OpenigStage::~OpenigStage()
 void OpenigStage::Initialize()
 {
 	int GrSizeX, GrSizeY;
+
 	GetGraphSize(hg.at(eBG_back), &GrSizeX, &GrSizeY);
 	GrSizeX /= 2;
 	GrSizeY /= 2;

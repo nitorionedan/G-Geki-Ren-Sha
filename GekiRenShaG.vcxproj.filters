@@ -255,6 +255,9 @@
     <ClCompile Include="src\ZakoEasyAI.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="src\Stage2.cpp">
+      <Filter>ソース ファイル\Stage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Another.hpp">
@@ -493,6 +496,9 @@
     </ClInclude>
     <ClInclude Include="src\ZakoEasyAI.hpp">
       <Filter>ヘッダー ファイル\Enemy\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Stage2.hpp">
+      <Filter>ヘッダー ファイル\Stage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

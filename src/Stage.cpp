@@ -11,6 +11,7 @@
 #include "NullStage.hpp"
 #include "OpeningStage.hpp"
 #include "Stage1.hpp"
+#include "Stage2.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -57,6 +58,7 @@ void Stage::Initialize()
 {
 	state = eState::game;
 	quakeType = eQuake::normal;
+	nowStage = eStage::stage1;
 
 	time = 0;
 	rank = 0;
@@ -87,8 +89,8 @@ void Stage::StageSet(eStage estage)
 		Sound::Play(eSound::opening);
 		break;
 	case eStage::stage1 :
-		mField = static_cast<Field*>(new Stage1);
-		Sound::Play(eSound::stage1);
+		mField = static_cast<Field*>(new Stage2);
+		Sound::Play(eSound::stage2);
 		break;
 	case eStage::stage2 :
 		Sound::Play(eSound::stage2);
@@ -205,12 +207,17 @@ void Stage::Draw()
 	DrawGraph(pos.x, pos.y, Screen, TRUE);
 	SetDrawScreen(tmpSc);
 
+	int stime = GetCurrentPositionSoundMem(Sound::GetHandle(eSound::stage2));
+	if (Keyboard::Instance()->isPush(KEY_INPUT_S))
+		printfDx("%d\n", stime);
+
+
 	// TEST -------------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
 
 	//DrawFormatString(540, 20, GetColor(0, 255, 0), "TIME:%d sec", testTime);
 	//DrawFormatString(520, 20, GetColor(0, 255, 0), "TIME:%d", time);
-	DrawFormatString(520, 40, GetColor(0, 255, 0), "pos.x:%lf", pos.x); // 0.8 << good enough
+	//DrawFormatString(520, 40, GetColor(0, 255, 0), "pos.x:%lf", pos.x); // 0.8 << good enough
 }
 
 void Stage::UpdateField()
@@ -231,8 +238,8 @@ void Stage::UpdateField()
 	switch (quakeType)
 	{
 	case eQuake::smal:	 SmallQuale(); break;
-	case eQuake::normal: Quake(); break;
-	case eQuake::big: BigQuake(); break;
+	case eQuake::normal: Quake();      break;
+	case eQuake::big:	 BigQuake();   break;
 	}
 }
 

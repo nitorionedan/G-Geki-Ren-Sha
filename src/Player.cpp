@@ -141,7 +141,7 @@ void Player::Draw()
 	if (DebugMode::isTest == false)	return;
 
 	DrawCircle(pos.x, pos.y + 9, HIT_RANGE, GetColor(0, 255, 0), false);
-//	DrawFormatString(100, 100, GetColor(0, 255, 0), "rensha = %d", s_rensha);
+	DrawFormatString(320, 240, GetColor(0, 255, 0), "pos.x:%lf, pos.y=%lf", pos.x, pos.y);
 //	DrawFormatString(100, 100, GetColor(0, 255, 0), "D‚ÅŽ€‚É‚Ü‚·");
 }
 

@@ -68,7 +68,7 @@ int Image::DrawRota(const int& X, const int& Y, const double& ExRate, const doub
 
 	const int& Hdl = GetHandle(key);
 
-	return DrawRotaGraph(X, Y, ExRate, Angle, Hdl, TransFlag, TurnFlag);
+	return DrawRotaGraph(X, Y, ExRate, Angle, Hdl, TRUE, TurnFlag);
 
 	return 0;
 }

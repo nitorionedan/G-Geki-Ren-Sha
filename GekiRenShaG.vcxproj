@@ -77,6 +77,7 @@
     <ClCompile Include="src\Sound.cpp" />
     <ClCompile Include="src\Stage.cpp" />
     <ClCompile Include="src\Stage1.cpp" />
+    <ClCompile Include="src\Stage2.cpp" />
     <ClCompile Include="src\StageDate.cpp" />
     <ClCompile Include="src\StatusBoard.cpp" />
     <ClCompile Include="src\Test.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="src\Sound.hpp" />
     <ClInclude Include="src\Stage.hpp" />
     <ClInclude Include="src\Stage1.hpp" />
+    <ClInclude Include="src\Stage2.hpp" />
     <ClInclude Include="src\StageDate.hpp" />
     <ClInclude Include="src\StatusBoard.hpp" />
     <ClInclude Include="src\Task.hpp" />

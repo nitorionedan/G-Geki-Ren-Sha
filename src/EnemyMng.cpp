@@ -127,8 +127,11 @@ void EnemyMng::Update(const Player& player)
 {
 	bossShot->Update(player);
 
-	for (auto i : enemy)
-		i->Update();
+	if (enemyCount != 0)
+	{
+		for (auto i : enemy)
+			i->Update();
+	}
 
 	if (IBossChara::IsDead() && isBossZone)
 		isBossZone = false;

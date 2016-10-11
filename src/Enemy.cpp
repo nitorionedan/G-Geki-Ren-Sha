@@ -164,22 +164,25 @@ Enemy::~Enemy()
 
 void Enemy::Update()
 {
-	// “oêŽžŠÔ‚ª—ˆ‚½‚ço‚Ä‚­‚é
-	if (IStage::GetTime() == param.in_time)
-		isExist = true;
-
-	if (isExist)
+	if (IEnemyMng::GetEneNum() != 0) // TODO: ‚È‚ñ‚Æ‚©‚µ‚Ä‚­‚ê
 	{
-		++elapsedTime;		// “G‚É‚Æ‚Á‚Ä‚ÌŽžŠÔ‚ðŒo‰ß‚³‚¹‚é
-		++s_time;			// ‘S‘Ì‚Æ‚µ‚Ä‚ÌŽžŠÔ
+		// “oêŽžŠÔ‚ª—ˆ‚½‚ço‚Ä‚­‚é
+		if (IStage::GetTime() == param.in_time)
+			isExist = true;
 
-		isDamage = false;
+		if (isExist)
+		{
+			++elapsedTime;		// “G‚É‚Æ‚Á‚Ä‚ÌŽžŠÔ‚ðŒo‰ß‚³‚¹‚é
+			++s_time;			// ‘S‘Ì‚Æ‚µ‚Ä‚ÌŽžŠÔ
 
-		// UŒ‚‚³‚ê‚½‚ç‹N‚±‚é
-		if (Keyboard::Instance()->isPush(KEY_INPUT_Z))
-			isUngry = true;
+			isDamage = false;
 
-		Move();
+			// UŒ‚‚³‚ê‚½‚ç‹N‚±‚é
+			if (Keyboard::Instance()->isPush(KEY_INPUT_Z))
+				isUngry = true;
+
+			Move();
+		}
 	}
 
 	shot->Update(pos.x, pos.y);

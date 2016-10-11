@@ -99,6 +99,8 @@ private:
 	int start_score;
 	int end_score;
 	int sum_score;
+
+	static bool s_loaded;
 };
 
 

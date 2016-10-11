@@ -12,22 +12,19 @@ namespace
 	constexpr int POS_MIN = -240.;
 	constexpr int MOON_START_TIME = 1831473;
 	constexpr int FADEIN_TIME_MOON = 200;
-	constexpr int FADEOUT_TIME_CLOUD = 200;
+	constexpr int FADEOUT_TIME_CLOUD = 300;
 	constexpr double MOON_FIRST_POS_Y = -10;
 	constexpr double MOON_END_POS_Y = 240;
 	constexpr double ALPHA_FORE_AND_BACK = 130;
 	constexpr double ALPHA_MID = 80;
 
-
-	std::function<double (double, double, double)> Wrap =
-		[](double val, double max, double min)
+	auto Wrap = [](double val, double max, double min)
 	{
 		assert(max > min && "Stage2::Wrap");
 		const double& offset = std::fmod((val - min), (max - min));
 		return (offset >= 0) ? (offset + min) : (offset + max);
 	};
 }
-
 
 
 Stage2::Stage2()
@@ -83,6 +80,9 @@ void Stage2::Update()
 
 void Stage2::Draw()
 {
+	/* なんとなく　イルミネーション */
+	//DrawBox(0, 0, 640, 480, GetColor(c_moon, 0, c_moon), TRUE);
+
 	SetDrawMode(DX_DRAWMODE_BILINEAR);
 
 	// Middle

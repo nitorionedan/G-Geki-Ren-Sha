@@ -32,6 +32,7 @@
 #include <memory>
 #include <time.h>
 #include <DirectXMath.h>
+#include <fstream>
 
 namespace
 {
@@ -113,6 +114,9 @@ int main()
 	Sound::Delete();
 	LoadPauseGraph(NULL);
 	DxLib_End();																				// ＤＸライブラリ使用の終了処理
+	
+	DeleteFile("./data/continue.dat");
+
 	return 0;																					// ソフトの終了 
 }
 

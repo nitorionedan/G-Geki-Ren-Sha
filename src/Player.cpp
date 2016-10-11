@@ -106,6 +106,10 @@ void Player::Update()
 		IBomb::Fire();
 	}
 
+	/* force gaover */
+	if (CheckHitKey(KEY_INPUT_Q) != 0 && CheckHitKey(KEY_INPUT_W) != 0)
+		Game::GameOver();
+
 	// TEST------------------------------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
 

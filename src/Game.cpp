@@ -28,7 +28,7 @@
 #include "Vector2D.hpp"
 #include "Keyboard.hpp"
 #include "Sound.hpp"
-
+#include <fstream>
 #include <DxLib.h>
 #include <cassert>
 
@@ -231,6 +231,15 @@ void Game::Pause(){
 void Game::GameOver()
 {
 	isDead = true;
+
+	std::ofstream ofs("./data/continue.dat");
+
+	int tmp = static_cast<int>(IStage::GetNowStage());
+	ofs << tmp;
+
+	ofs.close();
+
+	Sound::Stop();
 }
 
 

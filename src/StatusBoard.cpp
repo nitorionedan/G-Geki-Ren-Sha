@@ -45,11 +45,16 @@ void StatusBoard::Update(const Player& player)
 
 void StatusBoard::Draw(const Player& player)
 {
+	if (IPlayer::GetPos().y )
+
+	/* guage board */
 	DrawRotaGraph(POS_BOARD_X, POS_BOARD_Y, 2.0, 0.0, gh_board, true);
+	
+	/* rensha kanji */
 	DrawRotaGraph(POS_KANJI_X, POS_KANJI_Y, 2.0, 0.0, gh_kanji[player.GetShiftLevel()], true);
 
-	// -----------------------------------------------------------------------------------------
-	switch (player.GetShiftLevel())
+	/* rensha guage 1 */
+	switch (IPlayer::GetShiftLevel())
 	{
 	case 0:	break;
 	case 1: break;
@@ -67,7 +72,8 @@ void StatusBoard::Draw(const Player& player)
 		break;
 	}
 
-	switch (player.GetShiftLevel())
+	/* rensha guage 2 */
+	switch (IPlayer::GetShiftLevel())
 	{
 	case 0: break;
 	case 1:
@@ -88,8 +94,11 @@ void StatusBoard::Draw(const Player& player)
 		break;
 	}
 
+	/* life stocks */
 	for (int i = 0; i < player.GetLife() - 1; i++)
 		DrawRotaGraph(POS_LIFE_X + (i * 18), POS_LIFE_Y, 2.0, 0.0, gh_life, true);
+	
+	/* bomb stocks */
 	for (int i = 0; i < player.GetBombNum(); i++)
 		DrawRotaGraph(POS_BOMB_X + (i * 18), POS_BOMB_Y, 2.0, 0.0, gh_bomb, true);
 }

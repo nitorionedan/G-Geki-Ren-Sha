@@ -27,6 +27,9 @@ public:
 	const bool IsBossZone() const { // Is here boss zone?
 		return isBossZone;
 	}
+	int GetEneNum() const {
+		return enemyCount;
+	}
 
 private:
 	void GetAllEnemyNum(int* enemyNum, std::string fileName);
@@ -53,6 +56,9 @@ public:
 	static bool IsHit(const int& ColCircle, const double& ColX, const double& ColY, const int& Damage);
 	static const bool IsBossZone() {
 		return mEnemyMng->IsBossZone();
+	}
+	static int GetEneNum() {
+		return mEnemyMng->GetEneNum();
 	}
 
 private:

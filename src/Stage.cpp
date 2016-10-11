@@ -26,7 +26,11 @@ namespace
 	constexpr float CamY = 240.f;
 	constexpr float CamZ = -415.6922f;
 	constexpr int StageCallTime = 120;
+	constexpr int RESULT_TIME = 1300;
 }
+
+
+bool Stage::s_loaded = false;
 
 
 Stage::Stage()
@@ -58,7 +62,24 @@ void Stage::Initialize()
 {
 	state = eState::game;
 	quakeType = eQuake::normal;
-	nowStage = eStage::stage1;
+
+	if (!s_loaded)
+	{
+		int h_file = FileRead_open("./data/continue.dat");
+		if (h_file != 0) // successful
+		{
+			while (1)
+			{
+				char tmpC = FileRead_getc(h_file);
+				if (tmpC == EOF)
+					break;
+			}
+		}
+		else // failed
+			nowStage = eStage::opening;
+		FileRead_close(h_file);
+		s_loaded = true;
+	}
 
 	time = 0;
 	rank = 0;
@@ -207,11 +228,6 @@ void Stage::Draw()
 	DrawGraph(pos.x, pos.y, Screen, TRUE);
 	SetDrawScreen(tmpSc);
 
-	int stime = GetCurrentPositionSoundMem(Sound::GetHandle(eSound::stage2));
-	if (Keyboard::Instance()->isPush(KEY_INPUT_S))
-		printfDx("%d\n", stime);
-
-
 	// TEST -------------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
 
@@ -298,7 +314,7 @@ void Stage::Update_Result()
 	if (c_fade > 0)
 		c_fade -= 255 / 300;
 
-	if (time == 300)
+	if (time == RESULT_TIME)
 		NextStage();
 }
 
@@ -345,7 +361,10 @@ void Stage::DrawStageCall()
 
 void Stage::DrawResult()
 {
-	DrawFormatString(320, 240, GetColor(0, 255, 0), "STAGE 1 SCORE %d", sum_score);
+	graphic->DrawMyString2(100, 240, "STAGE 1 SCORE", 16, false, 2.);
+
+	if (time >= 300)
+		graphic->DrawScore(480, 240, sum_score, 16, 2.);
 }
 
 

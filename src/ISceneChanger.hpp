@@ -1,16 +1,16 @@
 #pragma once
 
 
-typedef enum
+enum class eScene
 {
-	eScene_Menu,	// メニュー画面
-	eScene_Game,	// ゲーム画面
-	eScene_GameOver,// ガメオベラ
-	eScene_Config,	// 設定画面
-	eScene_Another,	// 秘密
+	menu,	  // メニュー画面
+	game,	  // ゲーム画面
+	gameOver, // ガメオベラ
+	config,	  // 設定画面
+	another,  // 秘密
 
-	eScene_None,	// 無し
-} eScene;
+	none,	  // 無し
+};
 
 
 //シーンを変更するためのインターフェイスクラス

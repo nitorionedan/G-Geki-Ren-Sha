@@ -71,7 +71,7 @@ public:
 	const int GetRank() const {
 		return rank;
 	}
-	
+	static bool s_isContinue;
 
 private:
 	void Update_Result();
@@ -99,8 +99,6 @@ private:
 	int start_score;
 	int end_score;
 	int sum_score;
-
-	static bool s_loaded;
 };
 
 

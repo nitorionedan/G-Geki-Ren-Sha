@@ -45,7 +45,8 @@ void StatusBoard::Update(const Player& player)
 
 void StatusBoard::Draw(const Player& player)
 {
-	if (IPlayer::GetPos().y )
+	if (IPlayer::GetPos().y > 434)
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
 
 	/* guage board */
 	DrawRotaGraph(POS_BOARD_X, POS_BOARD_Y, 2.0, 0.0, gh_board, true);
@@ -101,4 +102,7 @@ void StatusBoard::Draw(const Player& player)
 	/* bomb stocks */
 	for (int i = 0; i < player.GetBombNum(); i++)
 		DrawRotaGraph(POS_BOMB_X + (i * 18), POS_BOMB_Y, 2.0, 0.0, gh_bomb, true);
+
+	if (IPlayer::GetPos().y > 434)
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }

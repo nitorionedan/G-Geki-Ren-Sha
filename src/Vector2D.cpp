@@ -1,8 +1,8 @@
 #include "Vector2D.hpp"
-
 #include <algorithm>
 #include <cassert>
 #include <cmath>
+#include <DxLib.h>
 
 #undef min
 #undef max
@@ -88,4 +88,13 @@ const Vector2D & Vector2D::Normalize() const
 
 const double Vector2D::Length() const {
 	return std::sqrt(DotProduct(*this));
+}
+
+const double Vector2D::ToRad() const {
+	return std::atan2(x, y);
+}
+
+
+const double Vector2D::ToAngle() const {
+	return std::atan2(x, y) * 180 / DX_PI;
 }

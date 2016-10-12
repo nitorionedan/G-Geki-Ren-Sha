@@ -30,29 +30,6 @@ enum class eEneShotMove
 
 class EneShotCreater
 {
-public:
-	class EneShot
-	{
-	public:
-		EneShot(eEneShot shotType, eEneShotMove moveType, Vector2D firstPos, double speed);
-		~EneShot();
-		void Update(EneShotCreater* pEneShotCreater);
-		void Draw(EneShotCreater* pEneShotCreater);
-		bool HitCheck();
-
-		EneShotMove* mMove;
-		Vector2D pos;
-		double speed, angle;
-
-	private:
-		EneShot(){}
-		void Initialize();
-
-		eEneShot shotType;
-		int elapsedTime;
-		double hitRange;
-	};
-
 private:
 	static const double BD_LEFT;
 	static const double BD_RIGHT;
@@ -65,14 +42,6 @@ public:
 	void Update();
 	void Draw();
 	void Fire(eEneShot shotType, eEneShotMove moveType, Vector2D& firstPos, double& speed);
-
-private:
-	std::vector<std::shared_ptr<EneShot>> mEneShot;
-	int gh_power[24],
-		gh_ball[12],
-		gh_long[5],
-		gh_big[4],
-		gh_suriken[10];
 };
 
 

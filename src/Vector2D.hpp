@@ -1,6 +1,5 @@
 #pragma once
 
-
 class Vector2D
 {
 public:
@@ -39,8 +38,9 @@ public:
 	}
 
 	const Vector2D& Normalize() const;
-
 	const double Length() const;
+	const double ToRad() const;
+	const double ToAngle() const;
 
 	const double Distance(const Vector2D& other) const {
 		return (*this - other).Length();

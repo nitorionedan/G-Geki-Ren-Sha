@@ -22,7 +22,7 @@ public:
 	void DrawMyString(const int PosiX, const int PosiY, char* sentence, const int space, const bool IsBlueColor);
 
 	// àÍâûÇÃäÆê¨
-	void DrawMyString2(int PosiX, int PosiY, char* sentence, int space, bool IsBlueColor, double exrate);
+	void DrawMyString2(int PosiX, int PosiY, const char* sentence, int space, bool IsBlueColor, double exrate);
 	
 	// Ç‹Ç¡ÇΩÇ≠ïsñ{à”ÇæÇÌ
 	void DrawMyNumbers(const int PosiX, const int PosiY, char* sentence, const int space, const bool IsBlueColor);

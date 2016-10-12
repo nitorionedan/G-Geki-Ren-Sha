@@ -2,8 +2,18 @@
 #include "Main.hpp"
 #include "Keyboard.hpp"
 #include "DebugMode.hpp"
+#include "Stage.hpp"
 #include <iterator>
 #include <algorithm>
+
+
+namespace
+{
+	constexpr int SELECT_START = 0;
+	constexpr int SELECT_CONTI = 1;
+	constexpr int SELECT_CONFI = 2;
+	constexpr int SELECT_QUIT = 3;
+};
 
 
 Menu::Menu(ISceneChanger* changer)
@@ -52,6 +62,8 @@ void Menu::Update()
 	const bool& PUSH_KEY_UP    = (Keyboard::Instance()->isPush(KEY_INPUT_UP));
 	const bool& PUSH_KEY_DOWN  = (Keyboard::Instance()->isPush(KEY_INPUT_DOWN));
 	const bool& STATE_START    = selectNum == 0;
+	const bool& STATE_CONTI    = selectNum == 1;
+	const bool& STATE_CONFI    = selectNum == 2;
 	const bool& STATE_QUIT     = selectNum == 3;
 
 	y_cur = y[selectNum] - 2;											// カーソルの位置
@@ -61,19 +73,30 @@ void Menu::Update()
 
 	if(INPUT_OK)	// 決定キーを押したなら
 	{
-		if (STATE_START)
+		PlaySoundMem(hs_choice, DX_PLAYTYPE_BACK);	// ♪決定音
+
+		switch (selectNum)
 		{
-			PlaySoundMem(hs_choice, DX_PLAYTYPE_BACK);	// ♪決定音
+		case SELECT_START:
 			isGame = true;
+			break;
+		case SELECT_CONTI:
+			isGame = true;
+			Stage::s_isContinue = true;
+			break;
+		case SELECT_CONFI:
+			break;
+		case SELECT_QUIT:
+			QuitGame();
+			break;
 		}
-		if (STATE_QUIT)		QuitGame();	// ゲームをやめる
 	}
 
 	if(isGame)
 	{
 		c_game->Update();
 
-		if (c_game->isLast())	mSceneChanger->ChangeScene(eScene_Game);
+		if (c_game->isLast())	mSceneChanger->ChangeScene(eScene::game);
 	}
 
 	score->Update();													// スコアデータ更新
@@ -126,6 +149,6 @@ void Menu::AnotherUpdate()
 	if (KEY_PUSH_LEFT  && ano_tri < 16 && ano_tri >= 12)	ano_tri++;
 
 	if(ano_tri == 16){
-		mSceneChanger->ChangeScene(eScene_Another);
+		mSceneChanger->ChangeScene(eScene::another);
 	}
 }

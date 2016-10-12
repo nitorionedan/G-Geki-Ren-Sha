@@ -30,7 +30,7 @@ namespace
 }
 
 
-bool Stage::s_loaded = false;
+bool Stage::s_isContinue = false;
 
 
 Stage::Stage()
@@ -63,7 +63,7 @@ void Stage::Initialize()
 	state = eState::game;
 	quakeType = eQuake::normal;
 
-	if (!s_loaded)
+	if ( s_isContinue )
 	{
 		int h_file = FileRead_open("./data/continue.dat");
 		if (h_file != 0) // successful
@@ -73,12 +73,13 @@ void Stage::Initialize()
 				char tmpC = FileRead_getc(h_file);
 				if (tmpC == EOF)
 					break;
+				nowStage = static_cast<eStage>( std::atoi(&tmpC) );
 			}
 		}
 		else // failed
 			nowStage = eStage::opening;
 		FileRead_close(h_file);
-		s_loaded = true;
+		s_isContinue = false;
 	}
 
 	time = 0;
@@ -197,8 +198,6 @@ void Stage::Update()
 
 	/// TODO: Žž‚ª‚­‚é‚Ü‚Å••ˆó
 //	if (effect->getIsAnime() && !f_quake)	f_quake = true;
-	if (Keyboard::Instance()->isPush(KEY_INPUT_W))
-		Sound::FadeOutStop();
 }
 
 
@@ -275,10 +274,7 @@ void Stage::NextStage()
 
 
 void Stage::Clear()
-{
-	// TODO: implement
-	printfDx("Clear\n");
-	
+{	
 	Sound::FadeOutStop();
 	
 	state = eState::result;
@@ -361,7 +357,37 @@ void Stage::DrawStageCall()
 
 void Stage::DrawResult()
 {
-	graphic->DrawMyString2(100, 240, "STAGE 1 SCORE", 16, false, 2.);
+	std::string stageName;
+
+	switch (nowStage)
+	{
+	case eStage::opening:
+		stageName = "OPENING SCORE";
+		break;
+	case eStage::stage1:
+		stageName = "STAGE 1 SCORE";
+		break;
+	case eStage::stage2:
+		stageName = "STAGE 2 SCORE";
+		break;
+	case eStage::stage3:
+		stageName = "STAGE 3 SCORE";
+		break;
+	case eStage::stage4:
+		stageName = "STAGE 4 SCORE";
+		break;
+	case eStage::stage5:
+		stageName = "STAGE 5 SCORE";
+		break;
+	case eStage::stage6:
+		stageName = "STAGE 6 SCORE";
+		break;
+	case eStage::stage0:
+		stageName = "STAGE 0 SCORE";
+		break;
+	}
+
+	graphic->DrawMyString2(100, 240, stageName.c_str(), 16, false, 2.);
 
 	if (time >= 300)
 		graphic->DrawScore(480, 240, sum_score, 16, 2.);

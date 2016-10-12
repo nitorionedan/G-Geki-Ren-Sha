@@ -10,7 +10,7 @@
 #include "DebugMode.hpp"
 
 
-SceneMng::SceneMng() :	mNextScene(eScene_None){
+SceneMng::SceneMng() :	mNextScene(eScene::none){
 	mScene = static_cast<BaseScene*> (new Game(this));	// 最初のシーン
 }
 
@@ -26,29 +26,29 @@ void SceneMng::Update()
 {			
 	DebugMode::Update();
 
-	if (mNextScene != eScene_None)								// 次のシーンがセットされていたら
+	if (mNextScene != eScene::none)								// 次のシーンがセットされていたら
 	{    
 		delete mScene;											// 現在のシーンの終了処理を実行
 		switch (mNextScene)										// シーンによって処理を分岐
 		{
-		case eScene_Menu:										// 次の画面がメニューなら
+		case eScene::menu:										// 次の画面がメニューなら
 			mScene = static_cast<BaseScene*> (new Menu(this));	// メニュー画面のインスタンスを生成する
 			break;												// 以下略
-		case eScene_Game:
+		case eScene::game:
 			mScene = static_cast<BaseScene*> (new Game(this));
 			break;
-		case eScene_Config:
+		case eScene::config:
 			mScene = static_cast<BaseScene*> (new Config(this));
 			break;
-		case eScene_Another:
+		case eScene::another:
 			mScene = static_cast<BaseScene*> (new Another(this));
 			break;
-		case eScene_GameOver:
+		case eScene::gameOver:
 			mScene = static_cast<BaseScene*> (new GameOver(this));
 			break;
 		default:	assert(!"SceneMng::Update()");
 		}
-		mNextScene = eScene_None;								// 次のシーン情報をクリア
+		mNextScene = eScene::none;								// 次のシーン情報をクリア
 	}
 	mScene->Update();											// シーンの更新
 

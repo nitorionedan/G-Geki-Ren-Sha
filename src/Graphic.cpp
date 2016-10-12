@@ -62,7 +62,7 @@ void Graphic::DrawMyString(const int PosiX, const int PosiY, char* sentence, con
 }
 
 
-void Graphic::DrawMyString2(const int PosiX, const int PosiY, char* sentence, const int space, const bool IsBlueColor, const double exrate)
+void Graphic::DrawMyString2(const int PosiX, const int PosiY, const char* sentence, const int space, const bool IsBlueColor, const double exrate)
 {
 	// ©ìƒtƒHƒ“ƒg‰æ‘œ‚Ì•¶š‚Ì”Ô†‚É“™‚µ‚¢
 	int num[500];

@@ -28,6 +28,7 @@
 #include "Vector2D.hpp"
 #include "Keyboard.hpp"
 #include "Sound.hpp"
+#include "EneShot.hpp"
 #include <fstream>
 #include <DxLib.h>
 #include <cassert>
@@ -53,6 +54,7 @@ Game::Game(ISceneChanger* changer)
 	, itemMng(new ItemMng)
 	, hitEffect(new HitEffect)
 	, eneShotFactory(new EneShotCreater)
+	, eneShot(new EneShot)
 {
 	/* interface-class */
 	IScore::set(score);
@@ -65,6 +67,7 @@ Game::Game(ISceneChanger* changer)
 	IHitEffect::set(hitEffect);
 	IPshot::set(pshot);
 	IEneShotCreater::set(eneShotFactory);
+	IEneShot::set(eneShot);
 
 	Screen = MakeScreen(640, 480, TRUE);
 
@@ -84,6 +87,7 @@ Game::~Game()
 	IHitEffect::reset();
 	IPshot::reset();
 	IEneShotCreater::reset();
+	IEneShot::reset();
 }
 
 
@@ -107,7 +111,7 @@ void Game::Update()
 	{
 		if (Keyboard::Instance()->isPush(KEY_INPUT_P))
 		{
-			mSceneChanger->ChangeScene(eScene_Menu);
+			mSceneChanger->ChangeScene(eScene::menu);
 			Sound::Stop();
 		}
 		return;
@@ -128,6 +132,7 @@ void Game::Update()
 	// Shot
 	pshot->Update();
 	eneShotFactory->Update();
+	eneShot->Update();
 
 	// Bomber
 	bomb->Update();
@@ -136,13 +141,20 @@ void Game::Update()
 	board->Update(*player);
 	itemMng->Update(player);
 	
-	if (isDead)	mSceneChanger->ChangeScene(eScene_GameOver);
+	if (isDead)	mSceneChanger->ChangeScene(eScene::gameOver);
+
+	if (Keyboard::Instance()->isPush(KEY_INPUT_Z))
+	{
+		Vector2D dir = Vector2D::GetVec2(Vector2D::ZERO, IPlayer::GetPos());
+		Vector2D force = dir.Normalize() * 3;
+		IEneShot::Fire(eShotType::wave, Vector2D::ZERO, force, 1.01, 0);
+	}
 
 // TEST ----------------------------------------------
 	if (DebugMode::isTest == false)	return;
 
 	if (Keyboard::Instance()->isDown(KEY_INPUT_Q) && Keyboard::Instance()->isDown(KEY_INPUT_W))
-		mSceneChanger->ChangeScene(eScene_GameOver);
+		mSceneChanger->ChangeScene(eScene::gameOver);
 
 	if(Keyboard::Instance()->isPush(KEY_INPUT_F2))
 	{
@@ -176,6 +188,7 @@ void Game::Draw()
 
 	enemyMng->Draw();
 	eneShotFactory->Draw();
+	eneShot->Draw();
 
 	itemMng->Draw();
 

@@ -20,6 +20,8 @@ public:
 	static bool CirclePointCollision(const double& MyX, const double& MyY, const double& TarX, const double& TarY, const double& Radius);
 	static bool CirclesCollision(const double& Range1, const double& Range2,
 		const double& X1, const double& Y1, const double& X2, const double& Y2);
+	static bool CirclesCollision(const double& Range1, const double& Range2,
+		const Vector2D& Pos1, const Vector2D& Pos2);
 	static bool RectanglePointCollision(const double& MyX, const double& MyY, const double& Width, const double& Height, const double& TarX, const double& TarY);
 
 	// @brief				ベクトルを生成
@@ -34,7 +36,8 @@ public:
 	// @param[in]	vec2	相手
 	// @return				生成したベクトル
 	static Vector2D& GetVec2(const Vector2D& vec1, const Vector2D& vec2) {
-		return Vector2D(vec2.x - vec1.x, vec2.y - vec1.y);
+		Vector2D vec(vec2.x - vec1.x, vec2.y - vec1.y);
+		return vec;
 	}
 
 	const Vector2D& Normalize() const;

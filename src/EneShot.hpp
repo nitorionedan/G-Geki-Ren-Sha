@@ -10,12 +10,13 @@
 
 enum class eShotType
 {
-	normal, // small blue ball
-	star,   // like a star
-	wave,   // power shot
-	big_O,  // bossA's shot
-	laser,  // laser
-	longer, // long shot
+	normal,  // small blue ball
+	star,    // like a star
+	wave,    // power shot
+	big_O,   // bossA's shot
+	laser,   
+	longer,  // long shot
+	missile,
 };
 
 
@@ -59,8 +60,9 @@ public:
 	void Fire_Ang(eShotType type, Vector2D& pos, double force, double angle, double accel, int life);
 
 private:
-	std::vector<tShot> shot;
+	void HitCheck();
 
+	std::vector<tShot> shot;
 	int gh_wave[24],
 		gh_normal[12],
 		gh_long[5],

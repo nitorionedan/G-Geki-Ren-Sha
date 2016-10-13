@@ -4,6 +4,9 @@
 */
 #include "EneShot.hpp"
 #include "Graphics2D.hpp"
+#include "Player.hpp"
+#include "HitEffect.hpp"
+#include "DebugMode.hpp"
 #include <DxLib.h>
 #include <cassert>
 #include <algorithm>
@@ -67,28 +70,12 @@ void EneShot::Update()
 			(*itr).pos.y < BD_TOP  || (*itr).pos.y > BD_BOTTOM)
 		{
 			shot.erase(itr);
+			//shot.erase(std::remove(std::begin(shot), std::end(shot), *itr), std::end(shot));
 			break;
 		}
 	}
 
-	//shot.erase(std::remove_if(std::begin(shot), std::end(shot),
-	//	[](tShot& shot) 
-	//{
-	//	if (shot.pos.x < BD_LEFT || shot.pos.x > BD_RIGHT ||
-	//		shot.pos.y < BD_TOP || shot.pos.y > BD_BOTTOM)
-	//	{
-	//		return true;
-	//	}
-	//	return false;
-	//}));
-
-	for (auto& i : shot)
-	{
-		if (i.life == 0)
-			continue;
-
-		// TODO: HitCheck
-	}
+	HitCheck();
 }
 
 
@@ -125,6 +112,12 @@ void EneShot::Draw()
 		default: assert(!"abnormality val");
 		}
 	}
+
+	if ( DebugMode::isTest )
+	{
+		for (auto i : shot)
+			DrawCircle(i.pos.x, i.pos.y, i.hitRange, GetColor(0, 255, 0), TRUE);
+	}
 }
 
 
@@ -153,7 +146,53 @@ void EneShot::Fire_Ang(eShotType type, Vector2D & pos, double force, double angl
 	tmp.life = life;
 	tmp.time = 0;
 	tmp.rad = 0;
+
+	/* range of hit */
+	switch (type)
+	{
+	case eShotType::normal:
+		tmp.hitRange = 7;
+		break;
+	case eShotType::star:
+		tmp.hitRange = 7;
+		break;
+	case eShotType::wave:
+		tmp.hitRange = 7;
+		break;
+	case eShotType::big_O:
+		tmp.hitRange = 50;
+		break;
+	case eShotType::laser:
+		break;
+	case eShotType::longer:
+		break;
+	}
+
 	shot.emplace_back(tmp);
+}
+
+
+void EneShot::HitCheck()
+{
+	/* col Player */
+	for (auto itr = std::begin(shot); itr != std::end(shot); ++itr)
+	{
+		if (IPlayer::HitCheckCircl( (*itr).hitRange, (*itr).pos) == false)
+			continue;
+		IHitEffect::PlayAnime( (*itr).pos );
+		shot.erase(itr);
+		break;
+	}
+
+	/* col Player's shot */
+	for (auto& i : shot)
+	{
+		if (i.life == 0)
+			continue;
+
+		// TODO: HitCheck
+		break;
+	}
 }
 
 

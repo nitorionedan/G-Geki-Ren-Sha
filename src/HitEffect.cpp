@@ -28,7 +28,7 @@ HitEffect::~HitEffect()
 
 void HitEffect::Update()
 {
-	for (int i = 0; i < isHit.size(); ++i)
+	for (int i = 0; i != isHit.size(); ++i)
 	{
 		if (isHit[i] == false) continue;
 
@@ -46,7 +46,7 @@ void HitEffect::Update()
 
 void HitEffect::Draw()
 {
-	for (int i = 0; i < isHit.size(); ++i)
+	for (int i = 0; i != isHit.size(); ++i)
 	{
 		if (isHit[i] == false)
 			continue;

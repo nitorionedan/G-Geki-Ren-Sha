@@ -4,6 +4,9 @@
 #include <memory>
 
 
+constexpr double PLAYER_HITRANGE = 8;
+
+
 class Graphic;
 class Counter;
 //class Vector2D;

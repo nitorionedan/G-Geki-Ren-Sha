@@ -51,9 +51,7 @@ bool Vector2D::CirclePointCollision(const double& MyX, const double& MyY, const 
 	const double& HEIGHT = (TarY - MyY) * (TarY - MyY);
 	const double& DISTANCE = (WIDTH + HEIGHT);
 	const double& RADIUS = Radius * Radius;
-	const bool& isHit = (RADIUS >= DISTANCE);
-	
-	return isHit;
+	return (RADIUS >= DISTANCE);
 }
 
 
@@ -62,9 +60,14 @@ bool Vector2D::CirclesCollision(const double & Range1, const double & Range2, co
 	const double& hLengrth = (Range1 + Range2);
 	const double& xLength = (X1 - X2);
 	const double& yLength = (Y1 - Y2);
-	const bool& isHit = (hLengrth * hLengrth >= xLength * xLength + yLength * yLength);
+	return (hLengrth * hLengrth >= xLength * xLength + yLength * yLength);
+}
 
-	return isHit;
+bool Vector2D::CirclesCollision(const double & Range1, const double & Range2, const Vector2D & Pos1, const Vector2D & Pos2)
+{
+	const double& hLen = (Range1 + Range2);
+	const Vector2D& Len = Vector2D::GetVec2(Pos1, Pos2);
+	return (hLen * hLen >= std::pow(Len.x, 2) + std::pow(Len.y, 2));
 }
 
 

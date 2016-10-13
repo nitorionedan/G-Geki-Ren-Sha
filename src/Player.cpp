@@ -24,7 +24,7 @@
 const int Player::MaxPowLevel = 4;
 const int Player::MAX_RENSHA = 40;
 const int Player::MIN_RENSHA = 0;
-const int Player::HIT_RANGE = 8;
+const int Player::HIT_RANGE = PLAYER_HITRANGE;
 
 
 Player::Player()

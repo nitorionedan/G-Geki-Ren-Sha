@@ -1,3 +1,7 @@
+/*
+@brief  Define of Vector2D.hpp
+@author Shohei
+*/
 #include "Vector2D.hpp"
 #include <algorithm>
 #include <cassert>
@@ -22,17 +26,14 @@ Vector2D::Vector2D(double x, double y)
 }
 
 
-void Vector2D::SetZero()
-{
-	x = 0.;
-	y = 0.;
+void Vector2D::SetZero() {
+	x = y = 0.;
 }
 
 
 void Vector2D::BorderStop(double* pos, const double MIN, const double MAX)
 {
 	assert(MAX > MIN && "Vector2D::BorderStop()");
-
 	*pos = std::min(MAX, std::max(MIN, *pos));
 }
 
@@ -71,9 +72,7 @@ bool Vector2D::RectanglePointCollision(const double & MyX, const double & MyY, c
 {
 	const double& MyX2 = (MyX + Width);
 	const double& MyY2 = (MyY + Height);
-	const bool& isHit = (MyX <= TarX && TarX <= MyX2 && MyY <= TarY && TarY <= MyY2);
-
-	return isHit;
+	return (MyX <= TarX && TarX <= MyX2 && MyY <= TarY && TarY <= MyY2);
 }
 
 
@@ -95,6 +94,13 @@ const double Vector2D::ToRad() const {
 }
 
 
-const double Vector2D::ToAngle() const {
-	return std::atan2(x, y) * 180 / DX_PI;
+const double Vector2D::ToAngle() const
+{
+	double angle = std::acos(x / std::sqrt(x * x + y * y));
+	angle *= 180 / DX_PI;
+	if (y < 0) angle = 360 - angle;
+	return angle;
+
+	/* Is this correct? Unfortunately, I don't know... */
+	//return std::atan2(x, y) * 180 / DX_PI;
 }

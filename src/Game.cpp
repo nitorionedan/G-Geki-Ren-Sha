@@ -143,13 +143,6 @@ void Game::Update()
 	
 	if (isDead)	mSceneChanger->ChangeScene(eScene::gameOver);
 
-	if (Keyboard::Instance()->isPush(KEY_INPUT_Z))
-	{
-		Vector2D dir = Vector2D::GetVec2(Vector2D::ZERO, IPlayer::GetPos());
-		Vector2D force = dir.Normalize() * 3;
-		IEneShot::Fire(eShotType::wave, Vector2D::ZERO, force, 1.01, 0);
-	}
-
 // TEST ----------------------------------------------
 	if (DebugMode::isTest == false)	return;
 
@@ -164,6 +157,13 @@ void Game::Update()
 
 	if (Keyboard::Instance()->isPush(Input::KeyCode.C))
 		effector->PlayAnime(320, 240, eExplosion_small);
+
+	/*if (Keyboard::Instance()->isPush(KEY_INPUT_Z))
+	{
+	Vector2D dir = Vector2D::GetVec2(Vector2D::ZERO, IPlayer::GetPos());
+	Vector2D force = dir.Normalize() * 3;
+	IEneShot::Fire(eShotType::wave, Vector2D::ZERO, force, 1.01, 0);
+	}*/
 }
 
 

@@ -1,3 +1,7 @@
+/* 
+@brief  Define of Enemy.hpp
+@author Shohei
+*/
 #include "Enemy.hpp"
 #include "Graphics2D.hpp"
 #include "DebugMode.hpp"
@@ -15,15 +19,28 @@
 #include "EShot01.hpp"
 #include "EShot02.hpp"
 #include "Eshot04.hpp"
-#include "EneShotCreater.hpp" // TODO: attention
+#include "EneShot.hpp"
 
 #include <DxLib.h>
 #include <algorithm>
 #include <cmath>
 #include <cassert>
+#include <functional>
 
 #undef max // ざけんなこのカス必要ねえんだよ！
 #undef min // wtf
+
+
+namespace
+{
+	auto RadToAng = [](double rad) {
+		return rad * 180 / DX_PI;
+	};
+
+	auto AngToRad = [](double ang) {
+		return ang * DX_PI / 180;
+	};
+}
 
 
 Enemy::Enemy(tEnemyData param)
@@ -361,9 +378,6 @@ bool Enemy::IsHit(const int & ColCircle, const double & ColX, const double & Col
 void Enemy::AngleTarget(const double Target_x, const double Target_y)
 {
 	angle = atan2(Target_y - pos.y, Target_x - pos.x) - DX_PI / 2;	// 自機に向く
-
-	Vector2D tmpVec = Vector2D(Target_x - pos.x, Target_y - pos.y);
-	tmpVec.Normalize();
 }
 
 
@@ -547,13 +561,20 @@ void Enemy::Fire_0()
 	{
 		int dir = GetRand(1);
 		double addAng = (GetRand(3) / 15.);
+		double addAng2 = GetRand(3);
 		double tspeed = param.s_speed;
 		if (dir == 0)
-			shot->Fire(param.s_speed, ANGLE - addAng);
-			//TODO: IEneShotCreater::Fire(eEneShot::ball, eEneShotMove::straight, pos, tspeed);
+		{
+			//IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, ANGLE - addAng, 1, 0);
+
+			Vector2D dir = Vector2D::GetVec2(pos, IPlayer::GetPos());
+			Vector2D force;
+			force.x = dir.Length() * param.s_speed * std::cos(ANGLE - addAng);
+			force.y = dir.Length() * param.s_speed * std::sin(ANGLE - addAng);
+			IEneShot::Fire(eShotType::normal, pos, force, 0, 0);
+		}
 		else
-			shot->Fire(param.s_speed, ANGLE + addAng);
-			//TODO: IEneShotCreater::Fire(eEneShot::ball, eEneShotMove::straight, pos, tspeed);
+			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, ANGLE + addAng, 1, 0);
 	}
 
 	if (elapsedTime == 50)
@@ -562,11 +583,12 @@ void Enemy::Fire_0()
 		double addAng = (GetRand(3) / 15.);
 		
 		if (dir == 0)
-			shot->Fire(param.s_speed, ANGLE - addAng);
+			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, ANGLE - addAng, 1, 0);
 		else
-			shot->Fire(param.s_speed, ANGLE + addAng);
+			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, ANGLE + addAng, 1, 0);
 	}
 
+	// 3 ways shot
 	if (elapsedTime == param.out_time && isUngry)
 	{
 		int dir = GetRand(1);
@@ -574,15 +596,15 @@ void Enemy::Fire_0()
 
 		if (dir == 0)
 		{
-			shot->Fire(param.s_speed, (ANGLE + 0.3) - addAng);
-			shot->Fire(param.s_speed, ANGLE - addAng);
-			shot->Fire(param.s_speed, (ANGLE - 0.3) - addAng);
+			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, (ANGLE + 0.3) - addAng, 1, 0);
+			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed,  ANGLE - addAng,        1, 0);
+			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, (ANGLE - 0.3) - addAng, 1, 0);
 		}
 		else
 		{
-			shot->Fire(param.s_speed, (ANGLE + 0.3) - addAng);
-			shot->Fire(param.s_speed, ANGLE - addAng);
-			shot->Fire(param.s_speed, (ANGLE - 0.3) - addAng);
+			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, (ANGLE + 0.3) - addAng, 1, 0);
+			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, ANGLE - addAng, 1, 0);
+			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, (ANGLE - 0.3) - addAng, 1, 0);
 		}
 	}
 }

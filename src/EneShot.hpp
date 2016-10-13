@@ -1,32 +1,46 @@
+/*
+@file   EneShot class
+@brief  Enemy's shot creater
+@author Shohei
+*/
 #pragma once
 #include "Vector2D.hpp"
 #include <memory>
 #include <vector>
 
-
 enum class eShotType
 {
-	normal,
-	star,
-	wave,
-	big_O,
-	laser,
-	longer,
+	normal, // small blue ball
+	star,   // like a star
+	wave,   // power shot
+	big_O,  // bossA's shot
+	laser,  // laser
+	longer, // long shot
 };
 
 
-class tShot
+struct tShot
 {
-public:
 	eShotType shotType;
 	Vector2D pos, force;
 	double accel;
 	double rad;
+	double hitRange;
 	int life;
 	int time;
 
 	bool operator==(const tShot& other) {
-		return this->shotType != other.shotType || this->force != other.force || this->pos != other.pos || this->accel != other.accel || this->time != other.time || this->life != other.life;
+		const bool& isSame =
+			this->shotType != other.shotType ||
+			this->force    != other.force ||
+			this->pos      != other.pos ||
+			this->accel    != other.accel ||
+			this->rad      != other.rad ||
+			this->hitRange != other.hitRange ||
+			this->life     != other.life ||
+			this->time     != other.time;
+		
+		return isSame;
 	}
 };
 
@@ -39,6 +53,10 @@ public:
 	void Update();
 	void Draw();
 	void Fire(eShotType type, Vector2D& pos, Vector2D& force, double accel, int life);
+
+	// @brief       Fire in use a radian angle.
+	// @param[in]   ...
+	void Fire_Ang(eShotType type, Vector2D& pos, double force, double angle, double accel, int life);
 
 private:
 	std::vector<tShot> shot;
@@ -59,6 +77,9 @@ public:
 	static void reset();
 	static void Fire(eShotType type, Vector2D pos, Vector2D force, double accel, int life) {
 		mEneShot->Fire(type, pos, force, accel, life);
+	}
+	static void Fire_Ang(eShotType type, Vector2D pos, double force, double angle, double accel, int life) {
+		mEneShot->Fire_Ang(type, pos, force, angle, accel, life);
 	}
 
 private:

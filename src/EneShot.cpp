@@ -1,3 +1,7 @@
+/*
+@brief  Define of EneShot.hpp
+@author Shohei
+*/
 #include "EneShot.hpp"
 #include "Graphics2D.hpp"
 #include <DxLib.h>
@@ -135,6 +139,21 @@ void EneShot::Fire(eShotType type, Vector2D& pos, Vector2D& force, double accel,
 	tmp.time = 0;
 	tmp.rad = 0;
 	shot.emplace_back( tmp );
+}
+
+
+void EneShot::Fire_Ang(eShotType type, Vector2D & pos, double force, double angle, double accel, int life)
+{
+	tShot tmp;
+	tmp.shotType = type;
+	tmp.pos = pos;
+	tmp.force.x = force * std::cos(angle);
+	tmp.force.y = force * std::sin(angle);
+	tmp.accel = accel;
+	tmp.life = life;
+	tmp.time = 0;
+	tmp.rad = 0;
+	shot.emplace_back(tmp);
 }
 
 

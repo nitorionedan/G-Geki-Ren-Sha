@@ -8,6 +8,8 @@
 #include <memory>
 #include <vector>
 
+class EneShotAI;
+
 enum class eShotType
 {
 	normal,  // small blue ball
@@ -19,11 +21,19 @@ enum class eShotType
 	missile,
 };
 
+enum class eShotAI
+{
+	straight,
+	outsideCurve,
+	insideCurve,
+	wave,
+};
 
 struct tShot
 {
 	eShotType shotType;
 	Vector2D pos, force;
+	EneShotAI* mAI;
 	double accel;
 	double rad;
 	double hitRange;
@@ -33,14 +43,14 @@ struct tShot
 	bool operator==(const tShot& other) {
 		const bool& isSame =
 			this->shotType != other.shotType ||
-			this->force    != other.force ||
-			this->pos      != other.pos ||
-			this->accel    != other.accel ||
-			this->rad      != other.rad ||
+			this->force != other.force ||
+			this->pos != other.pos ||
+			this->accel != other.accel ||
+			this->rad != other.rad ||
 			this->hitRange != other.hitRange ||
-			this->life     != other.life ||
-			this->time     != other.time;
-		
+			this->life != other.life ||
+			this->time != other.time;
+
 		return isSame;
 	}
 };
@@ -54,13 +64,17 @@ public:
 	void Update();
 	void Draw();
 	void Fire(eShotType type, Vector2D& pos, Vector2D& force, double accel, int life);
+	void Fire(eShotType type, Vector2D& pos, Vector2D& force, double accel, int life, eShotAI aiType);
 
 	// @brief       Fire in use a radian angle.
 	// @param[in]   ...
 	void Fire_Ang(eShotType type, Vector2D& pos, double force, double angle, double accel, int life);
+	void Fire_Ang(eShotType type, Vector2D& pos, double force, double angle, double accel, int life, eShotAI aiType);
 
 private:
 	void HitCheck();
+	void SetRange(eShotType type, double& hitRange) const;
+	void SetAI(eShotAI aiType, EneShotAI* ai);
 
 	std::vector<tShot> shot;
 	int gh_wave[24],

@@ -40,6 +40,7 @@
     <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\EnemyMng.cpp" />
     <ClCompile Include="src\EneShot.cpp" />
+    <ClCompile Include="src\EneShotAI.cpp" />
     <ClCompile Include="src\EneShotCreater.cpp" />
     <ClCompile Include="src\Eshot.cpp" />
     <ClCompile Include="src\EShot00.cpp" />
@@ -113,6 +114,7 @@
     <ClInclude Include="src\EnemyMng.hpp" />
     <ClInclude Include="src\EnemyShot.hpp" />
     <ClInclude Include="src\EneShot.hpp" />
+    <ClInclude Include="src\EneShotAI.hpp" />
     <ClInclude Include="src\EneShotCreater.hpp" />
     <ClInclude Include="src\Eshot.hpp" />
     <ClInclude Include="src\EShot00.hpp" />

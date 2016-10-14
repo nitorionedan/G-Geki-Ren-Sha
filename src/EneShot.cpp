@@ -3,6 +3,7 @@
 @author Shohei
 */
 #include "EneShot.hpp"
+#include "EneShotAI.hpp"
 #include "Graphics2D.hpp"
 #include "Player.hpp"
 #include "HitEffect.hpp"
@@ -56,12 +57,7 @@ void EneShot::Update()
 {
 	/* move */
 	for (auto& i : shot)
-	{
-		++i.time;
-		i.pos += i.force;
-		i.force.x *= i.accel;
-		i.force.y *= i.accel;
-	}
+		i.mAI->Update(i);
 
 	/* erase */
 	for (auto itr = std::begin(shot); itr != std::end(shot); ++itr)
@@ -69,8 +65,8 @@ void EneShot::Update()
 		if ((*itr).pos.x < BD_LEFT || (*itr).pos.x > BD_RIGHT ||
 			(*itr).pos.y < BD_TOP  || (*itr).pos.y > BD_BOTTOM)
 		{
+			delete (*itr).mAI;
 			shot.erase(itr);
-			//shot.erase(std::remove(std::begin(shot), std::end(shot), *itr), std::end(shot));
 			break;
 		}
 	}
@@ -131,7 +127,27 @@ void EneShot::Fire(eShotType type, Vector2D& pos, Vector2D& force, double accel,
 	tmp.life = life;
 	tmp.time = 0;
 	tmp.rad = 0;
+	SetRange(type, tmp.hitRange);
+	tmp.mAI = static_cast<EneShotAI*>(new EneShotAI_Straight);
+
 	shot.emplace_back( tmp );
+}
+
+
+void EneShot::Fire(eShotType type, Vector2D & pos, Vector2D & force, double accel, int life, eShotAI aiType)
+{
+	tShot tmp;
+	tmp.shotType = type;
+	tmp.pos = pos;
+	tmp.force = force;
+	tmp.accel = accel;
+	tmp.life = life;
+	tmp.time = 0;
+	tmp.rad = 0;
+	SetRange(type, tmp.hitRange);
+	SetAI(aiType, tmp.mAI);
+
+	shot.emplace_back(tmp);
 }
 
 
@@ -146,27 +162,25 @@ void EneShot::Fire_Ang(eShotType type, Vector2D & pos, double force, double angl
 	tmp.life = life;
 	tmp.time = 0;
 	tmp.rad = 0;
+	SetRange(type, tmp.hitRange);
+	tmp.mAI = static_cast<EneShotAI*>(new EneShotAI_Straight);
 
-	/* range of hit */
-	switch (type)
-	{
-	case eShotType::normal:
-		tmp.hitRange = 7;
-		break;
-	case eShotType::star:
-		tmp.hitRange = 7;
-		break;
-	case eShotType::wave:
-		tmp.hitRange = 7;
-		break;
-	case eShotType::big_O:
-		tmp.hitRange = 50;
-		break;
-	case eShotType::laser:
-		break;
-	case eShotType::longer:
-		break;
-	}
+	shot.emplace_back(tmp);
+}
+
+void EneShot::Fire_Ang(eShotType type, Vector2D & pos, double force, double angle, double accel, int life, eShotAI aiType)
+{
+	tShot tmp;
+	tmp.shotType = type;
+	tmp.pos = pos;
+	tmp.force.x = force * std::cos(angle);
+	tmp.force.y = force * std::sin(angle);
+	tmp.accel = accel;
+	tmp.life = life;
+	tmp.time = 0;
+	tmp.rad = 0;
+	SetRange(type, tmp.hitRange);
+	SetAI(aiType, tmp.mAI);
 
 	shot.emplace_back(tmp);
 }
@@ -180,6 +194,7 @@ void EneShot::HitCheck()
 		if (IPlayer::HitCheckCircl( (*itr).hitRange, (*itr).pos) == false)
 			continue;
 		IHitEffect::PlayAnime( (*itr).pos );
+		delete (*itr).mAI;
 		shot.erase(itr);
 		break;
 	}
@@ -191,12 +206,57 @@ void EneShot::HitCheck()
 			continue;
 
 		// TODO: HitCheck
+		//delete (*itr).mAI;
 		break;
 	}
 }
 
+void EneShot::SetRange(eShotType type, double & hitRange) const
+{
+	/* range of hit */
+	switch (type)
+	{
+	case eShotType::normal:
+		hitRange = 7;
+		break;
+	case eShotType::star:
+		hitRange = 7;
+		break;
+	case eShotType::wave:
+		hitRange = 7;
+		break;
+	case eShotType::big_O:
+		hitRange = 50;
+		break;
+	case eShotType::laser:
+		break;
+	case eShotType::longer:
+		break;
+	case eShotType::missile:
+		break;
+	}
+}
 
-// ============================================================================
+void EneShot::SetAI(eShotAI aiType, EneShotAI* ai)
+{
+	switch (aiType)
+	{
+	case eShotAI::straight:
+		ai = static_cast<EneShotAI*>(new EneShotAI_Straight);
+		break;
+	case eShotAI::outsideCurve:
+		break;
+	case eShotAI::insideCurve:
+		break;
+	case eShotAI::wave:
+		break;
+	default: assert( !"abnormality var" );
+	}
+}
+
+
+
+// Interface============================================================================
 std::shared_ptr<EneShot> IEneShot::mEneShot;
 
 

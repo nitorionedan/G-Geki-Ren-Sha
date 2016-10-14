@@ -30,7 +30,6 @@
 #undef max // ‚´‚¯‚ñ‚È‚±‚ÌƒJƒX•K—v‚Ë‚¦‚ñ‚¾‚æI
 #undef min // wtf
 
-
 namespace
 {
 	auto RadToAng = [](double rad) {
@@ -194,7 +193,7 @@ void Enemy::Update()
 
 			isDamage = false;
 
-			// UŒ‚‚³‚ê‚½‚ç‹N‚±‚é
+			// UŒ‚‚³‚ê‚½‚ç“{‚é
 			if (Keyboard::Instance()->isPush(KEY_INPUT_Z))
 				isUngry = true;
 
@@ -561,18 +560,9 @@ void Enemy::Fire_0()
 	{
 		int dir = GetRand(1);
 		double addAng = (GetRand(3) / 15.);
-		double addAng2 = GetRand(3);
 		double tspeed = param.s_speed;
 		if (dir == 0)
-		{
-			//IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, ANGLE - addAng, 1, 0);
-
-			Vector2D dir = Vector2D::GetVec2(pos, IPlayer::GetPos());
-			Vector2D force;
-			force.x = dir.Length() * param.s_speed * std::cos(ANGLE - addAng);
-			force.y = dir.Length() * param.s_speed * std::sin(ANGLE - addAng);
-			IEneShot::Fire(eShotType::normal, pos, force, 0, 0);
-		}
+			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, ANGLE - addAng, 1, 0);
 		else
 			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, ANGLE + addAng, 1, 0);
 	}
@@ -581,7 +571,6 @@ void Enemy::Fire_0()
 	{
 		int dir = GetRand(1);
 		double addAng = (GetRand(3) / 15.);
-		
 		if (dir == 0)
 			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, ANGLE - addAng, 1, 0);
 		else
@@ -593,7 +582,6 @@ void Enemy::Fire_0()
 	{
 		int dir = GetRand(1);
 		double addAng = (GetRand(3) / 15);
-
 		if (dir == 0)
 		{
 			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, (ANGLE + 0.3) - addAng, 1, 0);
@@ -613,11 +601,14 @@ void Enemy::Fire_0()
 void Enemy::Fire_1()
 {
 	const double& ANGLE = atan2(IPlayer::GetPos().y - pos.y, IPlayer::GetPos().x - pos.x);
+	const Vector2D& dir = Vector2D::GetVec2(pos, IPlayer::GetPos());
+	Vector2D force = dir.Normalize() * param.s_speed;
 
 	if (elapsedTime >= param.stop_time)
 	{
-		if (elapsedTime == param.stop_time + 10)	shot->Fire(param.s_speed, ANGLE);
-		if (elapsedTime == param.stop_time + 20)	shot->Fire(param.s_speed, ANGLE);
+		if (elapsedTime == param.stop_time + 10 ||
+			elapsedTime == param.stop_time + 20)
+			IEneShot::Fire(eShotType::normal, pos, force, 0, 0);
 	}
 }
 

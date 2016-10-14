@@ -560,7 +560,6 @@ void Enemy::Fire_0()
 	{
 		int dir = GetRand(1);
 		double addAng = (GetRand(3) / 15.);
-		double tspeed = param.s_speed;
 		if (dir == 0)
 			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, ANGLE - addAng, 1, 0);
 		else
@@ -627,26 +626,24 @@ void Enemy::Fire_4()
 {
 	// Ž©‹@‘_‚¢•ûŒüŒˆ‚ß
 	if (s_time == param.stop_time - 30)
-	{
 		vangle = atan2(IPlayer::GetPos().y - pos.y, IPlayer::GetPos().x - pos.x);
-	}
 
 	// 4WAY x 2
 	if (s_time == param.stop_time ||
 		s_time == param.stop_time + 20 ||
 		s_time == param.stop_time + 40)
 	{
-		// ‰E‘¤
-		shot->Fire(pos.x + 70., pos.y - 30., param.s_speed, DX_PI / 8);
-		shot->Fire(pos.x + 70., pos.y - 30., param.s_speed, DX_PI / 6);
-		shot->Fire(pos.x + 50., pos.y, param.s_speed, DX_PI / 4);
-		shot->Fire(pos.x + 50., pos.y, param.s_speed, DX_PI / 3);
+		/* Right */
+		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x + 70, pos.y - 30), param.s_speed, DX_PI / 8., 1, 0);
+		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x + 70, pos.y - 30), param.s_speed, DX_PI / 6., 1, 0);
+		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x + 50, pos.y),      param.s_speed, DX_PI / 4., 1, 0);
+		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x + 50, pos.y),      param.s_speed, DX_PI / 3., 1, 0);
 
-		// ¶‘¤
-		shot->Fire(pos.x - 70., pos.y - 30., param.s_speed, DX_PI * 0.85);
-		shot->Fire(pos.x - 70., pos.y - 30., param.s_speed, DX_PI * 0.8);
-		shot->Fire(pos.x - 50., pos.y, param.s_speed, DX_PI * 0.7);
-		shot->Fire(pos.x - 50., pos.y, param.s_speed, DX_PI * 0.6);
+		/* Left */
+		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x - 70, pos.y - 30), param.s_speed, DX_PI * 0.85, 1, 0);
+		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x - 70, pos.y - 30), param.s_speed, DX_PI * 0.8,  1, 0);
+		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x - 50, pos.y),      param.s_speed, DX_PI * 0.7,  1, 0);
+		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x - 50, pos.y),      param.s_speed, DX_PI * 0.6,  1, 0);
 	}
 
 	// Ž©‹@‘_‚¢”­ŽË

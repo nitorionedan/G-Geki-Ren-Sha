@@ -29,13 +29,19 @@ enum class eShotAI
 	wave,
 };
 
-struct tShot
+class tShot
 {
+public:
+	tShot(){}
+	explicit tShot(EneShotAI* ai);
+	~tShot(){}
+
 	eShotType shotType;
 	Vector2D pos, force;
 	EneShotAI* mAI;
 	double accel;
 	double rad;
+	double rotate;
 	double hitRange;
 	int life;
 	int time;
@@ -47,10 +53,10 @@ struct tShot
 			this->pos != other.pos ||
 			this->accel != other.accel ||
 			this->rad != other.rad ||
+			this->rotate != other.rotate ||
 			this->hitRange != other.hitRange ||
 			this->life != other.life ||
 			this->time != other.time;
-
 		return isSame;
 	}
 };
@@ -63,18 +69,15 @@ public:
 	~EneShot();
 	void Update();
 	void Draw();
-	void Fire(eShotType type, Vector2D& pos, Vector2D& force, double accel, int life);
-	void Fire(eShotType type, Vector2D& pos, Vector2D& force, double accel, int life, eShotAI aiType);
+	void Fire(eShotType type, Vector2D& pos, double rotate, Vector2D& force, double accel, int life, eShotAI aiType);
 
 	// @brief       Fire in use a radian angle.
 	// @param[in]   ...
-	void Fire_Ang(eShotType type, Vector2D& pos, double force, double angle, double accel, int life);
-	void Fire_Ang(eShotType type, Vector2D& pos, double force, double angle, double accel, int life, eShotAI aiType);
+	void Fire_Ang(eShotType type, Vector2D& pos, double rotate, double force, double angle, double accel, int life, eShotAI aiType);
 
 private:
 	void HitCheck();
 	void SetRange(eShotType type, double& hitRange) const;
-	void SetAI(eShotAI aiType, EneShotAI* ai);
 
 	std::vector<tShot> shot;
 	int gh_wave[24],
@@ -91,11 +94,17 @@ public:
 	~IEneShot(){}
 	static void set(std::shared_ptr<EneShot> eneShot);
 	static void reset();
-	static void Fire(eShotType type, Vector2D pos, Vector2D force, double accel, int life) {
-		mEneShot->Fire(type, pos, force, accel, life);
+	/*
+	@attention accel‚Í“™‘¬’¼ü‚Å‚P‚ð“ü‚ê‚Ä‚­‚¾‚³‚¢
+	*/
+	static void Fire(eShotType type, Vector2D& pos, double rotate, Vector2D& force, double accel, int life, eShotAI aiType = eShotAI::straight) {
+		mEneShot->Fire(type, pos, rotate, force, accel, life, aiType);
 	}
-	static void Fire_Ang(eShotType type, Vector2D pos, double force, double angle, double accel, int life) {
-		mEneShot->Fire_Ang(type, pos, force, angle, accel, life);
+	/*
+	@attention accel‚Í“™‘¬’¼ü‚Å‚P‚ð“ü‚ê‚Ä‚­‚¾‚³‚¢
+	*/
+	static void Fire_Ang(eShotType type, Vector2D& pos, double rotate, double force, double angle, double accel, int life, eShotAI aiType = eShotAI::straight) {
+		mEneShot->Fire_Ang(type, pos, rotate, force, angle, accel, life, aiType);
 	}
 
 private:

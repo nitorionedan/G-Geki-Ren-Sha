@@ -17,7 +17,7 @@ public:
 class EneShotAI_OutsideCurve : public EneShotAI
 {
 public:
-	virtual void Update(tShot& shot) override {}
+	virtual void Update(tShot& shot) override;
 };
 
 class EneShotAI_InsideCurve : public EneShotAI

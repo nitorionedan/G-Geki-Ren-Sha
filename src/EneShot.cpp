@@ -55,6 +55,10 @@ EneShot::~EneShot()
 
 void EneShot::Update()
 {
+	/* time count */
+	for (auto& i : shot)
+		++i.time;
+
 	/* move */
 	for (auto& i : shot)
 		i.mAI->Update(i);
@@ -62,7 +66,7 @@ void EneShot::Update()
 	/* erase */
 	for (auto itr = std::begin(shot); itr != std::end(shot); ++itr)
 	{
-		if ((*itr).pos.x < BD_LEFT || (*itr).pos.x > BD_RIGHT ||
+		if ((*itr).pos.x < BD_LEFT || (*itr).pos.x > BD_RIGHT  ||
 			(*itr).pos.y < BD_TOP  || (*itr).pos.y > BD_BOTTOM)
 		{
 			delete (*itr).mAI;
@@ -71,6 +75,7 @@ void EneShot::Update()
 		}
 	}
 
+	/* col check */
 	HitCheck();
 }
 
@@ -117,7 +122,7 @@ void EneShot::Draw()
 }
 
 
-void EneShot::Fire(eShotType type, Vector2D& pos, Vector2D& force, double accel, int life)
+void EneShot::Fire(eShotType type, Vector2D & pos, double rotate, Vector2D & force, double accel, int life, eShotAI aiType)
 {
 	tShot tmp;
 	tmp.shotType = type;
@@ -128,30 +133,27 @@ void EneShot::Fire(eShotType type, Vector2D& pos, Vector2D& force, double accel,
 	tmp.time = 0;
 	tmp.rad = 0;
 	SetRange(type, tmp.hitRange);
-	tmp.mAI = static_cast<EneShotAI*>(new EneShotAI_Straight);
-
-	shot.emplace_back( tmp );
-}
-
-
-void EneShot::Fire(eShotType type, Vector2D & pos, Vector2D & force, double accel, int life, eShotAI aiType)
-{
-	tShot tmp;
-	tmp.shotType = type;
-	tmp.pos = pos;
-	tmp.force = force;
-	tmp.accel = accel;
-	tmp.life = life;
-	tmp.time = 0;
-	tmp.rad = 0;
-	SetRange(type, tmp.hitRange);
-	SetAI(aiType, tmp.mAI);
+	switch (aiType)
+	{
+	case eShotAI::straight:
+		tmp.mAI = static_cast<EneShotAI*>(new EneShotAI_Straight);
+		break;
+	case eShotAI::outsideCurve:
+		tmp.mAI = static_cast<EneShotAI*>(new EneShotAI_OutsideCurve);
+		break;
+	case eShotAI::insideCurve:
+		tmp.mAI = static_cast<EneShotAI*>(new EneShotAI_InsideCurve);
+		break;
+	case eShotAI::wave:
+		tmp.mAI = static_cast<EneShotAI*>(new EneShotAI_Wave);
+		break;
+	}
 
 	shot.emplace_back(tmp);
 }
 
 
-void EneShot::Fire_Ang(eShotType type, Vector2D & pos, double force, double angle, double accel, int life)
+void EneShot::Fire_Ang(eShotType type, Vector2D & pos, double rotate, double force, double angle, double accel, int life, eShotAI aiType)
 {
 	tShot tmp;
 	tmp.shotType = type;
@@ -163,25 +165,21 @@ void EneShot::Fire_Ang(eShotType type, Vector2D & pos, double force, double angl
 	tmp.time = 0;
 	tmp.rad = 0;
 	SetRange(type, tmp.hitRange);
-	tmp.mAI = static_cast<EneShotAI*>(new EneShotAI_Straight);
-
-	shot.emplace_back(tmp);
-}
-
-void EneShot::Fire_Ang(eShotType type, Vector2D & pos, double force, double angle, double accel, int life, eShotAI aiType)
-{
-	tShot tmp;
-	tmp.shotType = type;
-	tmp.pos = pos;
-	tmp.force.x = force * std::cos(angle);
-	tmp.force.y = force * std::sin(angle);
-	tmp.accel = accel;
-	tmp.life = life;
-	tmp.time = 0;
-	tmp.rad = 0;
-	SetRange(type, tmp.hitRange);
-	SetAI(aiType, tmp.mAI);
-
+	switch (aiType)
+	{
+	case eShotAI::straight:
+		tmp.mAI = static_cast<EneShotAI*>(new EneShotAI_Straight);
+		break;
+	case eShotAI::outsideCurve:
+		tmp.mAI = static_cast<EneShotAI*>(new EneShotAI_OutsideCurve);
+		break;
+	case eShotAI::insideCurve:
+		tmp.mAI = static_cast<EneShotAI*>(new EneShotAI_InsideCurve);
+		break;
+	case eShotAI::wave:
+		tmp.mAI = static_cast<EneShotAI*>(new EneShotAI_Wave);
+		break;
+	}
 	shot.emplace_back(tmp);
 }
 
@@ -206,7 +204,8 @@ void EneShot::HitCheck()
 			continue;
 
 		// TODO: HitCheck
-		//delete (*itr).mAI;
+		delete i.mAI;
+		// erase
 		break;
 	}
 }
@@ -237,25 +236,6 @@ void EneShot::SetRange(eShotType type, double & hitRange) const
 	}
 }
 
-void EneShot::SetAI(eShotAI aiType, EneShotAI* ai)
-{
-	switch (aiType)
-	{
-	case eShotAI::straight:
-		ai = static_cast<EneShotAI*>(new EneShotAI_Straight);
-		break;
-	case eShotAI::outsideCurve:
-		break;
-	case eShotAI::insideCurve:
-		break;
-	case eShotAI::wave:
-		break;
-	default: assert( !"abnormality var" );
-	}
-}
-
-
-
 // Interface============================================================================
 std::shared_ptr<EneShot> IEneShot::mEneShot;
 
@@ -267,4 +247,9 @@ void IEneShot::set(std::shared_ptr<EneShot> eneShot) {
 
 void IEneShot::reset() {
 	mEneShot.reset();
+}
+
+
+tShot::tShot(EneShotAI * ai) {
+	this->mAI = ai;
 }

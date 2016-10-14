@@ -27,7 +27,7 @@ public:
 	// @brief				ベクトルを生成
 	// @param[in]	x, y	座標
 	// @return				生成したベクトル
-	static Vector2D& GetVec(double x, double y) {
+	static Vector2D GetVec(double x, double y) {
 		return  Vector2D(x, y);
 	}
 

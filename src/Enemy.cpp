@@ -154,13 +154,13 @@ Enemy::~Enemy()
 	case 1:
 		break;
 	case 2:
-		for (int i = 0; i < _countof(gh_ene02); i++)
+		for (int i = 0; i < _countof(gh_ene02); ++i)
 			DeleteGraph(gh_ene02[i]);
 		break;
 	case 3:
 		break;
 	case 4:
-		for (int i = 0; i < _countof(gh_ene04); i++)
+		for (int i = 0; i < _countof(gh_ene04); ++i)
 			DeleteGraph(gh_ene04[i]);
 		break;
 	case 5:
@@ -561,9 +561,9 @@ void Enemy::Fire_0()
 		int dir = GetRand(1);
 		double addAng = (GetRand(3) / 15.);
 		if (dir == 0)
-			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, ANGLE - addAng, 1, 0);
+			IEneShot::Fire_Ang(eShotType::normal, pos, 0, param.s_speed, ANGLE - addAng, 1, 0);
 		else
-			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, ANGLE + addAng, 1, 0);
+			IEneShot::Fire_Ang(eShotType::normal, pos, 0, param.s_speed, ANGLE + addAng, 1, 0);
 	}
 
 	if (elapsedTime == 50)
@@ -571,9 +571,9 @@ void Enemy::Fire_0()
 		int dir = GetRand(1);
 		double addAng = (GetRand(3) / 15.);
 		if (dir == 0)
-			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, ANGLE - addAng, 1, 0);
+			IEneShot::Fire_Ang(eShotType::normal, pos, 0, param.s_speed, ANGLE - addAng, 1, 0);
 		else
-			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, ANGLE + addAng, 1, 0);
+			IEneShot::Fire_Ang(eShotType::normal, pos, 0, param.s_speed, ANGLE + addAng, 1, 0);
 	}
 
 	// 3 ways shot
@@ -583,15 +583,15 @@ void Enemy::Fire_0()
 		double addAng = (GetRand(3) / 15);
 		if (dir == 0)
 		{
-			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, (ANGLE + 0.3) - addAng, 1, 0);
-			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed,  ANGLE - addAng,        1, 0);
-			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, (ANGLE - 0.3) - addAng, 1, 0);
+			IEneShot::Fire_Ang(eShotType::normal, pos, 0, param.s_speed, (ANGLE + 0.3) - addAng, 1, 0);
+			IEneShot::Fire_Ang(eShotType::normal, pos, 0, param.s_speed,  ANGLE - addAng,        1, 0);
+			IEneShot::Fire_Ang(eShotType::normal, pos, 0, param.s_speed, (ANGLE - 0.3) - addAng, 1, 0);
 		}
 		else
 		{
-			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, (ANGLE + 0.3) - addAng, 1, 0);
-			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, ANGLE - addAng, 1, 0);
-			IEneShot::Fire_Ang(eShotType::normal, pos, param.s_speed, (ANGLE - 0.3) - addAng, 1, 0);
+			IEneShot::Fire_Ang(eShotType::normal, pos, 0, param.s_speed, (ANGLE + 0.3) - addAng, 1, 0);
+			IEneShot::Fire_Ang(eShotType::normal, pos, 0, param.s_speed, ANGLE - addAng, 1, 0);
+			IEneShot::Fire_Ang(eShotType::normal, pos, 0, param.s_speed, (ANGLE - 0.3) - addAng, 1, 0);
 		}
 	}
 }
@@ -599,7 +599,6 @@ void Enemy::Fire_0()
 
 void Enemy::Fire_1()
 {
-	const double& ANGLE = atan2(IPlayer::GetPos().y - pos.y, IPlayer::GetPos().x - pos.x);
 	const Vector2D& dir = Vector2D::GetVec2(pos, IPlayer::GetPos());
 	Vector2D force = dir.Normalize() * param.s_speed;
 
@@ -607,7 +606,7 @@ void Enemy::Fire_1()
 	{
 		if (elapsedTime == param.stop_time + 10 ||
 			elapsedTime == param.stop_time + 20)
-			IEneShot::Fire(eShotType::normal, pos, force, 0, 0);
+			IEneShot::Fire(eShotType::normal, pos, 0, force, 0, 0);
 	}
 }
 
@@ -624,39 +623,42 @@ void Enemy::Fire_3()
 
 void Enemy::Fire_4()
 {
-	// 自機狙い方向決め
+	/* snipe shot */
 	if (s_time == param.stop_time - 30)
 		vangle = atan2(IPlayer::GetPos().y - pos.y, IPlayer::GetPos().x - pos.x);
 
-	// 4WAY x 2
+	/* 4WAY x 2 */
 	if (s_time == param.stop_time ||
 		s_time == param.stop_time + 20 ||
 		s_time == param.stop_time + 40)
 	{
 		/* Right */
-		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x + 70, pos.y - 30), param.s_speed, DX_PI / 8., 1, 0);
-		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x + 70, pos.y - 30), param.s_speed, DX_PI / 6., 1, 0);
-		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x + 50, pos.y),      param.s_speed, DX_PI / 4., 1, 0);
-		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x + 50, pos.y),      param.s_speed, DX_PI / 3., 1, 0);
+		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x + 70, pos.y - 30), -0.2, param.s_speed, DX_PI / 8., 1, 0);
+		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x + 70, pos.y - 30), -0.2, param.s_speed, DX_PI / 6., 1, 0);
+		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x + 50, pos.y), -0.2,      param.s_speed, DX_PI / 4., 1, 0);
+		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x + 50, pos.y), -0.2,      param.s_speed, DX_PI / 3., 1, 0);
 
 		/* Left */
-		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x - 70, pos.y - 30), param.s_speed, DX_PI * 0.85, 1, 0);
-		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x - 70, pos.y - 30), param.s_speed, DX_PI * 0.8,  1, 0);
-		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x - 50, pos.y),      param.s_speed, DX_PI * 0.7,  1, 0);
-		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x - 50, pos.y),      param.s_speed, DX_PI * 0.6,  1, 0);
+		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x - 70, pos.y - 30), -0.2, param.s_speed, DX_PI * 0.85, 1, 0);
+		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x - 70, pos.y - 30), -0.2, param.s_speed, DX_PI * 0.8,  1, 0);
+		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x - 50, pos.y), -0.2,      param.s_speed, DX_PI * 0.7,  1, 0);
+		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x - 50, pos.y), -0.2,      param.s_speed, DX_PI * 0.6,  1, 0);
 	}
 
-	// 自機狙い発射
+	/* snipe shot */
 	if (s_time == param.stop_time + 20 ||
 		s_time == param.stop_time + 30 ||
 		s_time == param.stop_time + 40 ||
 		s_time == param.stop_time + 50)
 	{
-		shot2->Fire(param.s_speed + 2, vangle);
+		Vector2D dir = Vector2D::GetVec2(pos, IPlayer::GetPos());
+		Vector2D force = dir.Normalize() * param.s_speed;
+		IEneShot::Fire(eShotType::wave, pos, 0, force, 1, 0);
 	}
 
-	// ショットタイムリセット
-	if (s_time == param.stop_time + 160)	s_time = 0;
+	/* reset shot_time */
+	if (s_time == param.stop_time + 160)
+		s_time = 0;
 }
 
 

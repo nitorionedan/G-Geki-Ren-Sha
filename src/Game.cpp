@@ -103,9 +103,13 @@ void Game::Initialize()
 
 void Game::Update()
 {	 
-	/* ƒ|[ƒY */
+	/* pause */
 	if (Keyboard::Instance()->isPush(KEY_INPUT_Q))
 		Pause();
+
+	/* force gaover */
+	if (CheckHitKey(KEY_INPUT_Q) != 0 && CheckHitKey(KEY_INPUT_W) != 0)
+		Game::GameOver();
 
 	if(f_pause)
 	{
@@ -157,13 +161,6 @@ void Game::Update()
 
 	if (Keyboard::Instance()->isPush(Input::KeyCode.C))
 		effector->PlayAnime(320, 240, eExplosion_small);
-
-	/*if (Keyboard::Instance()->isPush(KEY_INPUT_Z))
-	{
-	Vector2D dir = Vector2D::GetVec2(Vector2D::ZERO, IPlayer::GetPos());
-	Vector2D force = dir.Normalize() * 3;
-	IEneShot::Fire(eShotType::wave, Vector2D::ZERO, force, 1.01, 0);
-	}*/
 }
 
 

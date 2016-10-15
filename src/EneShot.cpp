@@ -11,11 +11,12 @@
 #include <DxLib.h>
 #include <cassert>
 #include <algorithm>
+#include <functional>
 
 
 namespace
 {
-	constexpr double BD_LEFT = -10.;
+	constexpr double BD_LEFT = -30.;
 	constexpr double BD_RIGHT = 660.;
 	constexpr double BD_TOP = BD_LEFT;
 	constexpr double BD_BOTTOM = 500.;
@@ -56,12 +57,14 @@ EneShot::~EneShot()
 void EneShot::Update()
 {
 	/* time count */
-	for (auto& i : shot)
-		++i.time;
+	std::for_each(std::begin(shot), std::end(shot), [](tShot& shot) { ++shot.time; });
 
 	/* move */
+	std::for_each(std::begin(shot), std::end(shot), [](tShot& shot) { shot.mAI->Update(shot); });
+
+	/* rotation */
 	for (auto& i : shot)
-		i.mAI->Update(i);
+		i.rad += i.rotate;
 
 	/* erase */
 	for (auto itr = std::begin(shot); itr != std::end(shot); ++itr)
@@ -74,7 +77,6 @@ void EneShot::Update()
 			break;
 		}
 	}
-
 	/* col check */
 	HitCheck();
 }
@@ -87,11 +89,11 @@ void EneShot::Draw()
 		switch (i.shotType)
 		{
 		case eShotType::normal:
-			DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad(), i.time,
+			DrawAnime(i.pos.x, i.pos.y, 2., -i.force.ToRad(), i.time,
 				_countof(gh_normal), 2, gh_normal);
 			break;
 		case eShotType::star:
-			DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad(), i.time,
+			DrawAnime(i.pos.x, i.pos.y, 2., i.rad, i.time,
 				_countof(gh_star), 2, gh_star);
 			break;
 		case eShotType::wave:
@@ -99,14 +101,14 @@ void EneShot::Draw()
 				_countof(gh_wave), 2, gh_wave);
 			break;
 		case eShotType::big_O:
-			DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad(), i.time,
+			DrawAnime(i.pos.x, i.pos.y, 2., -i.force.ToRad(), i.time,
 				_countof(gh_big_O), 2, gh_big_O);
 			break;
 		case eShotType::laser:
 			// TODO: 
 			break;
 		case eShotType::longer:
-			DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad(), i.time,
+			DrawAnime(i.pos.x, i.pos.y, 2., -i.force.ToRad(), i.time,
 				_countof(gh_long), 2, gh_long);
 			break;
 
@@ -127,6 +129,8 @@ void EneShot::Fire(eShotType type, Vector2D & pos, double rotate, Vector2D & for
 	tShot tmp;
 	tmp.shotType = type;
 	tmp.pos = pos;
+	tmp.rad = 0;
+	tmp.rotate = rotate;
 	tmp.force = force;
 	tmp.accel = accel;
 	tmp.life = life;
@@ -148,7 +152,6 @@ void EneShot::Fire(eShotType type, Vector2D & pos, double rotate, Vector2D & for
 		tmp.mAI = static_cast<EneShotAI*>(new EneShotAI_Wave);
 		break;
 	}
-
 	shot.emplace_back(tmp);
 }
 
@@ -158,6 +161,8 @@ void EneShot::Fire_Ang(eShotType type, Vector2D & pos, double rotate, double for
 	tShot tmp;
 	tmp.shotType = type;
 	tmp.pos = pos;
+	tmp.rad = 0;
+	tmp.rotate = rotate;
 	tmp.force.x = force * std::cos(angle);
 	tmp.force.y = force * std::sin(angle);
 	tmp.accel = accel;

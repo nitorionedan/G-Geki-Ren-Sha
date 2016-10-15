@@ -106,10 +106,6 @@ void Player::Update()
 		IBomb::Fire();
 	}
 
-	/* force gaover */
-	if (CheckHitKey(KEY_INPUT_Q) != 0 && CheckHitKey(KEY_INPUT_W) != 0)
-		Game::GameOver();
-
 	// TEST------------------------------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
 
@@ -117,8 +113,6 @@ void Player::Update()
 		Shift(false);
 	if (Keyboard::Instance()->isPush(Input::KeyCode.P))
 		Shift(true);
-	if (Keyboard::Instance()->isPush(KEY_INPUT_0))
-		IStage::Quake(eQuake::normal);
 }
 
 
@@ -145,7 +139,7 @@ void Player::Draw()
 	if (DebugMode::isTest == false)	return;
 
 	DrawCircle(pos.x, pos.y + 9, HIT_RANGE, GetColor(0, 255, 0), false);
-	DrawFormatString(320, 240, GetColor(0, 255, 0), "pos.x:%lf, pos.y=%lf", pos.x, pos.y);
+	//DrawFormatString(320, 240, GetColor(0, 255, 0), "pos.x:%lf, pos.y=%lf", pos.x, pos.y);
 //	DrawFormatString(100, 100, GetColor(0, 255, 0), "D‚ÅŽ€‚É‚Ü‚·");
 }
 

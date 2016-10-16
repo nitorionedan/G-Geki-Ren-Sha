@@ -20,6 +20,8 @@ namespace
 	constexpr double BD_RIGHT = 660.;
 	constexpr double BD_TOP = BD_LEFT;
 	constexpr double BD_BOTTOM = 500.;
+	constexpr double RECT_ANGLE_R = -90 * DX_PI / 180;
+	constexpr double RECT_ANGLE_L =  90 * DX_PI / 180;
 };
 
 
@@ -57,10 +59,12 @@ EneShot::~EneShot()
 void EneShot::Update()
 {
 	/* time count */
-	std::for_each(std::begin(shot), std::end(shot), [](tShot& shot) { ++shot.time; });
+	std::for_each(std::begin(shot), std::end(shot),
+		[](tShot& shot) { ++shot.time; });
 
 	/* move */
-	std::for_each(std::begin(shot), std::end(shot), [](tShot& shot) { shot.mAI->Update(shot); });
+	std::for_each(std::begin(shot), std::end(shot),
+		[](tShot& shot) { shot.mAI->Update(shot); });
 
 	/* rotation */
 	for (auto& i : shot)
@@ -96,22 +100,11 @@ void EneShot::Draw()
 			DrawAnime(i.pos.x, i.pos.y, 2., i.rad, i.time,
 				_countof(gh_star), 2, gh_star);
 			break;
-		case eShotType::wave:
-			DrawAnime(i.pos.x, i.pos.y, 2., -i.force.ToRad(), i.time,
-				_countof(gh_wave), 2, gh_wave);
+		case eShotType::wave:  DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad() + RECT_ANGLE_R, i.time, _countof(gh_wave), 2, gh_wave); break;
+		case eShotType::big_O: DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad() + RECT_ANGLE_R, i.time, _countof(gh_big_O), 2, gh_big_O); break;
+		case eShotType::laser:	// TODO: 
 			break;
-		case eShotType::big_O:
-			DrawAnime(i.pos.x, i.pos.y, 2., -i.force.ToRad(), i.time,
-				_countof(gh_big_O), 2, gh_big_O);
-			break;
-		case eShotType::laser:
-			// TODO: 
-			break;
-		case eShotType::longer:
-			DrawAnime(i.pos.x, i.pos.y, 2., -i.force.ToRad(), i.time,
-				_countof(gh_long), 2, gh_long);
-			break;
-
+		case eShotType::longer:	DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad() + RECT_ANGLE_R, i.time, _countof(gh_long), 2, gh_long); break;
 		default: assert(!"abnormality val");
 		}
 	}

@@ -46,8 +46,9 @@ public:
 	int life;
 	int time;
 
-	bool operator==(const tShot& other) {
-		const bool& isSame =
+	bool operator==(const tShot& other)
+	{
+		const bool& isDifferent =
 			this->shotType != other.shotType ||
 			this->force != other.force ||
 			this->pos != other.pos ||
@@ -57,7 +58,7 @@ public:
 			this->hitRange != other.hitRange ||
 			this->life != other.life ||
 			this->time != other.time;
-		return isSame;
+		return !isDifferent;
 	}
 };
 

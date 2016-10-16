@@ -147,6 +147,14 @@ void Game::Update()
 	
 	if (isDead)	mSceneChanger->ChangeScene(eScene::gameOver);
 
+	if (Keyboard::Instance()->isPush(KEY_INPUT_Z))
+	{
+		Vector2D pos = Vector2D(320, 240);
+		Vector2D dir = Vector2D::GetVec2(pos, IPlayer::GetPos());
+		Vector2D force = dir.Normalize() * 4;
+		IEneShot::Fire_Ang(eShotType::normal, pos, 0, 4, dir.ToRad(), 1, 0, eShotAI::outsideCurve);
+	}
+
 // TEST ----------------------------------------------
 	if (DebugMode::isTest == false)	return;
 

@@ -624,7 +624,7 @@ void Enemy::Fire_3()
 void Enemy::Fire_4()
 {
 	/* snipe shot */
-	if (s_time == param.stop_time - 30)
+	if (s_time == param.stop_time - 10)
 		vangle = atan2(IPlayer::GetPos().y - pos.y, IPlayer::GetPos().x - pos.x);
 
 	/* 4WAY x 2 */
@@ -632,13 +632,13 @@ void Enemy::Fire_4()
 		s_time == param.stop_time + 20 ||
 		s_time == param.stop_time + 40)
 	{
-		/* Right */
+		/* right side */
 		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x + 70, pos.y - 30), -0.2, param.s_speed, DX_PI / 8., 1, 0);
 		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x + 70, pos.y - 30), -0.2, param.s_speed, DX_PI / 6., 1, 0);
 		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x + 50, pos.y), -0.2,      param.s_speed, DX_PI / 4., 1, 0);
 		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x + 50, pos.y), -0.2,      param.s_speed, DX_PI / 3., 1, 0);
 
-		/* Left */
+		/* left side */
 		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x - 70, pos.y - 30), -0.2, param.s_speed, DX_PI * 0.85, 1, 0);
 		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x - 70, pos.y - 30), -0.2, param.s_speed, DX_PI * 0.8,  1, 0);
 		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x - 50, pos.y), -0.2,      param.s_speed, DX_PI * 0.7,  1, 0);
@@ -651,9 +651,7 @@ void Enemy::Fire_4()
 		s_time == param.stop_time + 40 ||
 		s_time == param.stop_time + 50)
 	{
-		Vector2D dir = Vector2D::GetVec2(pos, IPlayer::GetPos());
-		Vector2D force = dir.Normalize() * param.s_speed;
-		IEneShot::Fire(eShotType::wave, pos, 0, force, 1, 0);
+		IEneShot::Fire_Ang(eShotType::wave, pos, 0, param.s_speed + 2, vangle, 1, 0);
 	}
 
 	/* reset shot_time */

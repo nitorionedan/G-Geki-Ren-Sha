@@ -110,9 +110,7 @@ public:
 	const Vector2D operator * (const double& scalar) const {
 		return Vector2D(scalar * x, scalar * y);
 	}
-	const Vector2D operator / (const double& scalar) const {
-		return Vector2D(x / scalar, y / scalar);
-	}
+	const Vector2D operator / (const double& scalar) const;
 	bool operator == (const Vector2D& other) const {
 		return (x == other.x) && (y == other.y);
 	}

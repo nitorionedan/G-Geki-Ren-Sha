@@ -34,10 +34,12 @@ void GameOver::Update()
 
 	time_in -= 255 / 120;
 	
-	if (time_in == 0)	mSceneChanger->ChangeScene(eScene::menu);
+	if (time_in == 0)
+		mSceneChanger->ChangeScene(eScene::menu);
 	
 	/* skip cmd */
-	if (Keyboard::Instance()->isPush(KEY_INPUT_Z))	mSceneChanger->ChangeScene(eScene::menu);
+	if (Keyboard::Instance()->isPush(KEY_INPUT_Z))
+		mSceneChanger->ChangeScene(eScene::menu);
 }
 
 

@@ -15,10 +15,6 @@
 #include "Stage.hpp"
 
 // Shots
-#include "EShot00.hpp"
-#include "EShot01.hpp"
-#include "EShot02.hpp"
-#include "Eshot04.hpp"
 #include "EneShot.hpp"
 
 #include <DxLib.h>
@@ -44,14 +40,11 @@ namespace
 
 Enemy::Enemy(tEnemyData param)
 	: SCREEN_LIMIT_XL(-10)
-	, SCREEN_LIMIT_XR(650)
-	, SCREEN_LIMIT_YT(-10)
-	, SCREEN_LIMIT_YB(490)
+	, SCREEN_LIMIT_XR(640 + 30)
+	, SCREEN_LIMIT_YT(SCREEN_LIMIT_XL)
+	, SCREEN_LIMIT_YB(480 + 120)
 	, MAX_HP(param.hp)
 	, DROP_RATE(2)
-	, shot(nullptr)
-	, shot2(nullptr)
-	, shot3(nullptr)
 	, SPEED_0(4.)
 	, gh_shot00(NULL)
 	, sh_voice(NULL)
@@ -119,32 +112,12 @@ Enemy::Enemy(tEnemyData param)
 		break;
 	}
 
-	// 弾ロード
-	switch (param.s_pattern)
-	{
-	case 0:	shot = new Shot(new EShot00);	break;
-	case 1:	break;
-	case 2:	shot = new Shot(new EShot00);	break;
-	case 3:	break;
-	case 4:
-		shot = new Shot(new EShot04);
-		shot2 = new Shot(new EShot01);	break;
-	case 5:	break;
-	case 6:	break;
-	case 7:	break;
-	default: assert(!"Enemy.cpp:ERROR");	break;
-	}
-
 	gh_shot00 = LoadGraph("GRAPH/GAME/Eshot/efire0.png");
 }
 
 
 Enemy::~Enemy()
 {
-	delete shot;
-	delete shot2;
-	delete shot3;
-
 	// 画像アンロード
 	switch (param.type)
 	{
@@ -201,14 +174,6 @@ void Enemy::Update()
 		}
 	}
 
-	shot->Update(pos.x, pos.y);
-	
-	if (shot2 != nullptr)
-		shot2->Update(pos.x, pos.y);
-	
-	if (shot3 != nullptr)	
-		shot3->Update(pos.x, pos.y);
-
 	if (!isExist)	return;
 	
 	Fire();
@@ -264,10 +229,6 @@ void Enemy::Draw()
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 		SetDrawBright(255, 255, 255);
 	}
-
-	shot->Draw();
-	if (shot2 != nullptr)	shot2->Draw();
-	if (shot3 != nullptr)	shot3->Draw();
 
 	// TEST
 	if (!DebugMode::isTest)	return;
@@ -416,7 +377,8 @@ void Enemy::Move_0()
 		}
 
 		// 降りる
-		if (isMove)	pos.y += vSpeed.y;
+		if (isMove)
+			pos.y += vSpeed.y;
 
 		// 横移動：左から右
 		if (pos.x < IPlayer::GetPos().x - 10. && isMove)
@@ -528,7 +490,7 @@ void Enemy::Move_4()
 
 	pos.x += vSpeed.x * std::cos(c_move);
 
-	if (pos.y > 490.)
+	if (pos.y > SCREEN_LIMIT_YB)
 	{
 		isExist = false;
 		IEnemyMng::CountDownEneNum();

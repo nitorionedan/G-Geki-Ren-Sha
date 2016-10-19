@@ -10,6 +10,7 @@
 #include "Effector.hpp"
 #include "PieceEffect.hpp"
 #include "Stage.hpp"
+#include "EneShot.hpp"
 
 #include <DxLib.h>
 #include <cmath>
@@ -22,6 +23,8 @@
 constexpr int DEAD_TIME = 530;
 constexpr int StartStayTime = 600;
 constexpr double HitBrake = 0.6;
+constexpr float MODEL_BODY_ROTA_Z = 0.03f;
+constexpr float MODEL_CORE_ROTA_X = 0.1f;
 
 const float BossA::SC_LIMIT_XL = 78.f;
 const float BossA::SC_LIMIT_XR = 560.f;
@@ -44,7 +47,6 @@ BossA::BossA()
 	, c_starting(new Counter(3000)) // about 5sec
 	, c_end(new Counter(18000))
 	, c_atk1(new Counter(370))
-	, shot3(new EShot03)
 	, bomber(new Effect(new ChargeEffect(100, 10, 70, 10)))		// 200, 10, 70, 10
 	, big_time(0)
 	, angle(0.0f)
@@ -57,7 +59,7 @@ BossA::BossA()
 	hs_break = LoadSoundMem("SOUND/SE/break00.wav");
 
 	hm = MV1LoadModel("GRAPH/MODEL/BossA_3.x");
-	
+
 	hmWeaking = MV1LoadModel("GRAPH/MODEL/BossA_3.x");
 	hm_core = MV1LoadModel("GRAPH/MODEL/ring.x");
 	Screen = MakeScreen(640, 480, TRUE);
@@ -107,21 +109,18 @@ BossA::~BossA()
 
 void BossA::Update()
 {
-	if(state != eBossA_Dead)
-		shot3->Update(pos.x, pos.y);
-
 	if (!isExist)	return;
 
 	time++;	// 経過時間加算
 	
 	if (!isDead)	c_end->Update();	
 
-	rota.z += 0.03f;												// モデルを回転
+	rota.z += MODEL_BODY_ROTA_Z;												// モデルを回転
 
 	if (isHit)
-		rota_core.x += 0.005f;
+		rota_core.x += MODEL_CORE_ROTA_X / 500;
 	else
-		rota_core.x += 0.1f;
+		rota_core.x += MODEL_CORE_ROTA_X;
 
 	startPos = ConvScreenPosToWorldPos(VGet(pos.x, pos.y, 0.5f));	// スクリーン座標からワールド座標へ
 	mPos = startPos;												// モデル座標をスクリーン座標系に調節
@@ -210,9 +209,6 @@ void BossA::Draw()
 	/* エフェクト関連 */
 	bomber->Draw();
 
-	/* 弾 */
-	shot3->Draw();
-
 	// TEST-------------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
 	
@@ -221,7 +217,9 @@ void BossA::Draw()
 }
 
 
-int BossA::GetTime() { return time; }
+int BossA::GetTime() {
+	return time;
+}
 
 
 bool BossA::HitCheck(const double & ColX, const double & ColY, const int& DamagePoint)
@@ -274,7 +272,9 @@ void BossA::Normal_Update()
 	{
 		pos.x += std::cos(angle) * SPEED * HitBrake;
 		pos.y += std::sin(angle) * SPEED * HitBrake;
-	} else {
+	}
+	else
+	{
 		pos.x += std::cos(angle) * SPEED;
 		pos.y += std::sin(angle) * SPEED;
 	}
@@ -325,7 +325,10 @@ void BossA::Weak_Update()
 		PlaySoundMem(hs_big, DX_PLAYTYPE_BACK);
 		Effector::PlayShock(pos.x, pos.y);
 		Effector::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_SmallOrange);
-		shot3->Fire(10, std::atan2(playerY - pos.y, playerX - pos.x));
+		
+		Vector2D dir = Vector2D::GetVec2(pos, IPlayer::GetPos());
+		Vector2D force = dir.Normalize() * 10;
+		IEneShot::Fire(eShotType::big_O, pos, 0., force, 1.01, 0);
 	}
 
 	// 大きい弾
@@ -334,7 +337,9 @@ void BossA::Weak_Update()
 		PlaySoundMem(hs_big, DX_PLAYTYPE_BACK);
 		Effector::PlayShock(pos.x, pos.y);
 		Effector::PlaySpread(pos.x, pos.y, GetRand(100), eSpread_SmallOrange);
-		shot3->Fire(10, std::atan2(playerY - pos.y, playerX - pos.x));
+		Vector2D dir = Vector2D::GetVec2(pos, IPlayer::GetPos());
+		Vector2D force = dir.Normalize() * 10;
+		IEneShot::Fire(eShotType::big_O, pos, 0., force, 1.01, 0);
 	}
 
 	if(big_time == 530)	big_time = 0;
@@ -361,7 +366,6 @@ void BossA::Dead_Update()
 			Effector::PlayAnime(pos.x, pos.y, eExplosion_big);
 		
 		PlaySoundMem(hs_exp, DX_PLAYTYPE_BACK);
-
 		IStage::Clear();
 	}
 }
@@ -372,7 +376,7 @@ void BossA::End_Update()
 }
 
 
-bool BossA::isFine(){
+bool BossA::isFine() {
 	return (hp >= MAX_HP / 3) ? true : false;
 }
 

@@ -2,7 +2,6 @@
 
 #include "BossTask.hpp"
 #include "Counter.hpp"
-#include "EShot03.hpp"
 #include "Effect.hpp"
 #include "Vector2D.hpp"
 #include <memory>
@@ -72,7 +71,6 @@ private:
 	std::unique_ptr<Counter>	c_starting;
 	std::unique_ptr<Counter>	c_end;
 	std::unique_ptr<Counter>	c_atk1;
-	std::unique_ptr<EShot03>	shot3;
 	std::shared_ptr<Effect>		bomber;
 
 	Vector2D pos;							// モデルのスクリーン座標

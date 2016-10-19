@@ -44,10 +44,7 @@
     <ClCompile Include="src\EneShotCreater.cpp" />
     <ClCompile Include="src\Eshot.cpp" />
     <ClCompile Include="src\EShot00.cpp" />
-    <ClCompile Include="src\EShot01.cpp" />
     <ClCompile Include="src\EShot02.cpp" />
-    <ClCompile Include="src\EShot03.cpp" />
-    <ClCompile Include="src\EShot04.cpp" />
     <ClCompile Include="src\EshotMng.cpp" />
     <ClCompile Include="src\Explosion.cpp" />
     <ClCompile Include="src\ExplosionEffect.cpp" />
@@ -87,6 +84,7 @@
     <ClCompile Include="src\Tutorial.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
     <ClCompile Include="src\ZakoEasyAI.cpp" />
+    <ClCompile Include="src\ZakoEnemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Another.hpp" />
@@ -118,10 +116,7 @@
     <ClInclude Include="src\EneShotCreater.hpp" />
     <ClInclude Include="src\Eshot.hpp" />
     <ClInclude Include="src\EShot00.hpp" />
-    <ClInclude Include="src\EShot01.hpp" />
     <ClInclude Include="src\EShot02.hpp" />
-    <ClInclude Include="src\EShot03.hpp" />
-    <ClInclude Include="src\EShot04.hpp" />
     <ClInclude Include="src\EshotMng.hpp" />
     <ClInclude Include="src\Explosion.hpp" />
     <ClInclude Include="src\ExplosionEffect.hpp" />
@@ -168,6 +163,7 @@
     <ClInclude Include="src\Tutorial.hpp" />
     <ClInclude Include="src\Vector2D.hpp" />
     <ClInclude Include="src\ZakoEasyAI.hpp" />
+    <ClInclude Include="src\ZakoEnemy.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\EnemyTable1.csv" />

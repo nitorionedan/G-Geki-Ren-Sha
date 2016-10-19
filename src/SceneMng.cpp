@@ -8,6 +8,7 @@
 #include "Another.hpp"
 #include "Keyboard.hpp"
 #include "DebugMode.hpp"
+#include "Sound.hpp"
 
 
 SceneMng::SceneMng() :	mNextScene(eScene::none){
@@ -67,4 +68,8 @@ void SceneMng::Draw()
 
 
 // 引数 nextScene にシーンを変更する
-void SceneMng::ChangeScene(eScene NextScene){	mNextScene = NextScene;	}	// 次のシーンをセット
+void SceneMng::ChangeScene(eScene NextScene)
+{
+	mNextScene = NextScene; // set next scene
+	Sound::Stop();
+}

@@ -2,7 +2,6 @@
 #define DEF_ENEMY_HPP
 
 #include "Counter.hpp"
-#include "Shot.hpp"
 #include "Vector2D.hpp"
 #include "Player.hpp"
 #include <memory>
@@ -124,11 +123,6 @@ private:
 	bool isMove;		// 動いているか？
 	bool isDamage;		// ダメージを受けたか？
 	bool isUngry;		// プレイヤーが攻撃したか？
-
-	// 弾
-	Shot* shot;
-	Shot* shot2;
-	Shot* shot3;
 
 	// 構造体データに合わせる
 	tEnemyData param;

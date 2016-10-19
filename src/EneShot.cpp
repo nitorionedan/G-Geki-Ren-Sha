@@ -8,6 +8,7 @@
 #include "Player.hpp"
 #include "HitEffect.hpp"
 #include "DebugMode.hpp"
+#include "Bomb.hpp"
 #include <DxLib.h>
 #include <cassert>
 #include <algorithm>
@@ -184,7 +185,7 @@ void EneShot::Fire_Ang(eShotType type, Vector2D & pos, double rotate, double for
 
 void EneShot::HitCheck()
 {
-	/* col Player */
+	/* col to Player */
 	for (auto itr = std::begin(shot); itr != std::end(shot); ++itr)
 	{
 		if (IPlayer::HitCheckCircl( (*itr).hitRange, (*itr).pos) == false)
@@ -195,7 +196,19 @@ void EneShot::HitCheck()
 		break;
 	}
 
-	/* col Player's shot */
+	/* col to Bomb */
+	for (auto itr = std::begin(shot); itr != std::end(shot); ++itr)
+	{
+		const bool& Is_hit = (IBomb::IsHit( (*itr).hitRange, (*itr).pos.x, (*itr).pos.y));
+		if (Is_hit)
+		{
+			IHitEffect::PlayAnime((*itr).pos);
+			delete (*itr).mAI;
+			shot.erase(itr);
+		}
+	}
+
+	/* col to Player's shot */
 	for (auto& i : shot)
 	{
 		if (i.life == 0)

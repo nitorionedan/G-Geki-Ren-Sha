@@ -35,6 +35,7 @@
 
 static VECTOR const DefLightPos = VGet(100.f, 100.f, 200.f);
 static int 	Screen;
+static int gh_flyer;
 
 bool Game::isDead;
 
@@ -70,6 +71,7 @@ Game::Game(ISceneChanger* changer)
 	IEneShot::set(eneShot);
 
 	Screen = MakeScreen(640, 480, TRUE);
+	gh_flyer = LoadGraph("GRAPH/GAME/ENEMY/flyer_test.png");
 
 	Initialize();
 }
@@ -88,6 +90,8 @@ Game::~Game()
 	IPshot::reset();
 	IEneShotCreater::reset();
 	IEneShot::reset();
+
+	DeleteGraph(gh_flyer);
 }
 
 
@@ -114,10 +118,7 @@ void Game::Update()
 	if(f_pause)
 	{
 		if (Keyboard::Instance()->isPush(KEY_INPUT_P))
-		{
 			mSceneChanger->ChangeScene(eScene::menu);
-			Sound::Stop();
-		}
 		return;
 	}
 
@@ -149,10 +150,10 @@ void Game::Update()
 
 	if (Keyboard::Instance()->isPush(KEY_INPUT_Z))
 	{
-		Vector2D pos = Vector2D(320, 240);
-		Vector2D dir = Vector2D::GetVec2(pos, IPlayer::GetPos());
-		Vector2D force = dir.Normalize() * 4;
-		IEneShot::Fire_Ang(eShotType::normal, pos, 0, 4, dir.ToRad(), 1, 0, eShotAI::outsideCurve);
+		//Vector2D pos = Vector2D(320, 240);
+		//Vector2D dir = Vector2D::GetVec2(pos, IPlayer::GetPos());
+		//Vector2D force = dir.Normalize() * 4;
+		//IEneShot::Fire_Ang(eShotType::normal, pos, 0, 4, dir.ToRad(), 1, 0, eShotAI::outsideCurve);
 	}
 
 // TEST ----------------------------------------------
@@ -162,10 +163,7 @@ void Game::Update()
 		mSceneChanger->ChangeScene(eScene::gameOver);
 
 	if(Keyboard::Instance()->isPush(KEY_INPUT_F2))
-	{
 		IBossChara::Start();
-		//IStage::SkipTo(1000);
-	}
 
 	if (Keyboard::Instance()->isPush(Input::KeyCode.C))
 		effector->PlayAnime(320, 240, eExplosion_small);
@@ -215,6 +213,10 @@ void Game::Draw()
 	Draw_Status();
 
 	score->Draw();
+
+	static float count = 0;
+	count += 0.01f;
+	DrawRotaGraph(320 + std::cos(count) * 30, 170 + std::sin(count) * 30, 2, 0, gh_flyer, true);
 
 	//DrawRasterScroll(320, 240, 600, 100, time, Screen, TRUE); // << super noise
 

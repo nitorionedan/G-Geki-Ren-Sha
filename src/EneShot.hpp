@@ -110,5 +110,6 @@ public:
 
 private:
 	IEneShot() { mEneShot = nullptr; }
+	explicit IEneShot(IEneShot&){}
 	static std::shared_ptr<EneShot> mEneShot;
 };

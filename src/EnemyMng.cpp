@@ -54,7 +54,6 @@ void EnemyMng::Load(eStage stage)
 	GetAllEnemyNum(&enemyCount, fname);
 
 	/* Create enemys data */
-
 	tEnemyData* ene_date;
 	ene_date = new tEnemyData[enemyCount];
 
@@ -84,7 +83,7 @@ void EnemyMng::Load(eStage stage)
 		switch (nowCol)
 		{
 		/* num of column is one which is enemy type */
-		case 1:	ene_date[nowRow].type       = std::stoi(buf); break;
+		case 1:	ene_date[nowRow].type = std::stoi(buf); break;
 		/* omitted below */
 		case 2:	 ene_date[nowRow].stype     = std::stoi(buf); break;
 		case 3:	 ene_date[nowRow].m_pattern = std::stoi(buf); break;
@@ -117,7 +116,7 @@ out:
 
 	// create enemys
 	for (int i = 0; i < enemyCount; i++)
-		enemy.emplace_back(new Enemy(ene_date[i]));
+		enemy.emplace_back(new Enemys(ene_date[i]));
 
 	delete[] ene_date;
 }
@@ -142,6 +141,7 @@ void EnemyMng::Draw()
 	for (auto i : enemy)
 		i->Draw();
 
+	/* Debug */
 	if(DebugMode::isTest)
 		DrawFormatString(200, 200, GetColor(0, 255, 0), "“G‚Ì”F%d", enemyCount);
 }
@@ -181,12 +181,10 @@ bool EnemyMng::IsHit(const double & ColX, const double & ColY, const int& DAMAGE
 
 	for(auto i : enemy)
 	{
-		isHit = i->IsHit(ColX, ColY, DAMAGE);
+		isHit = i->IsHit(1., ColX, ColY, DAMAGE);
 		if (isHit)	return true;
 	}
-
-	// ‚±‚±‚Ü‚Å—ˆ‚½‚Æ‚¢‚¤‚±‚Æ‚Í“–‚½‚Á‚Ä‚¢‚È‚¢‚Æ‚¢‚¤‚±‚Æ
-	return false;
+	return false;	// ‚±‚±‚Ü‚Å—ˆ‚½‚Æ‚¢‚¤‚±‚Æ‚Í“–‚½‚Á‚Ä‚¢‚È‚¢‚Æ‚¢‚¤‚±‚Æ
 }
 
 
@@ -199,9 +197,7 @@ bool EnemyMng::IsHit(const int & ColCircle, const double & ColX, const double & 
 		isHit = i->IsHit(ColCircle, ColX, ColY, Damage);
 		if (isHit)	return true;
 	}
-
-	// ‚±‚±‚Ü‚Å—ˆ‚½‚Æ‚¢‚¤‚±‚Æ‚Í“–‚½‚Á‚Ä‚¢‚È‚¢‚Æ‚¢‚¤‚±‚Æ
-	return false;
+	return false;	// ‚±‚±‚Ü‚Å—ˆ‚½‚Æ‚¢‚¤‚±‚Æ‚Í“–‚½‚Á‚Ä‚¢‚È‚¢‚Æ‚¢‚¤‚±‚Æ
 }
 
 

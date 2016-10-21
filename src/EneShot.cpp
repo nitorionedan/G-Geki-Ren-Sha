@@ -9,6 +9,8 @@
 #include "HitEffect.hpp"
 #include "DebugMode.hpp"
 #include "Bomb.hpp"
+#include "Effector.hpp"
+#include "ExplosionEffect.hpp"
 #include <DxLib.h>
 #include <cassert>
 #include <algorithm>
@@ -190,6 +192,11 @@ void EneShot::HitCheck()
 	{
 		if (IPlayer::HitCheckCircl( (*itr).hitRange, (*itr).pos) == false)
 			continue;
+		if ((*itr).shotType == eShotType::big_O)
+		{
+			Effector::PlayAnime((*itr).pos.x, (*itr).pos.y, eExplosion_small);
+			break;
+		}
 		IHitEffect::PlayAnime( (*itr).pos );
 		delete (*itr).mAI;
 		shot.erase(itr);
@@ -205,6 +212,7 @@ void EneShot::HitCheck()
 			IHitEffect::PlayAnime((*itr).pos);
 			delete (*itr).mAI;
 			shot.erase(itr);
+			break;
 		}
 	}
 

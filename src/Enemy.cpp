@@ -63,7 +63,7 @@ Enemy::Enemy(tEnemyData param)
 
 	// データ設定
 	this->param = param;
-	pos.SetVec(static_cast<double>(param.x_pos), static_cast<double>(param.y_pos));
+	pos.SetVec(param.x_pos, param.y_pos);
 
 	// タイプに合わせた
 	switch (this->param.type)
@@ -162,7 +162,7 @@ void Enemy::Update()
 		if (isExist)
 		{
 			++elapsedTime;		// 敵にとっての時間を経過させる
-			++s_time;			// 全体としての時間
+			s_time = elapsedTime % (param.stop_time + 160);
 
 			isDamage = false;
 
@@ -208,9 +208,9 @@ void Enemy::Draw()
 			break;
 		case 4:
 			DrawAnime(pos.x, pos.y, 2., 0., elapsedTime, _countof(gh_ene04), 8, gh_ene04);
-			if (s_time == param.stop_time ||
-				s_time == param.stop_time + 20 ||
-				s_time == param.stop_time + 40)
+			if (s_time ==  0||
+				s_time == 20 ||
+				s_time == 40)
 			{
 				DrawRotaGraph(pos.x + 70, pos.y - 30, 2.0, 0.0, gh_shot00, true);
 				DrawRotaGraph(pos.x + 50, pos.y, 2.0, 0.0, gh_shot00, true);
@@ -482,13 +482,17 @@ void Enemy::Move_4()
 
 	vSpeed.SetVec(0.7, 0.2);
 
-	if (s_time < param.stop_time ||
-		s_time > param.stop_time + 40)
+	if (pos.y < 240)
 	{
-		pos.y += vSpeed.y;
+		if (s_time < param.stop_time ||
+			s_time > param.stop_time + 40)
+		{
+			pos.y += vSpeed.y;
+		}
+		pos.x += vSpeed.x * std::cos(c_move);
 	}
-
-	pos.x += vSpeed.x * std::cos(c_move);
+	else
+		pos.y += vSpeed.y * 2;
 
 	if (pos.y > SCREEN_LIMIT_YB)
 	{
@@ -523,7 +527,7 @@ void Enemy::Fire_0()
 		int dir = GetRand(1);
 		double addAng = (GetRand(3) / 15.);
 		if (dir == 0)
-			IEneShot::Fire_Ang(eShotType::normal, pos, 0, param.s_speed, ANGLE - addAng, 1, 0);
+			IEneShot::Fire_Ang(eShotType::big_O, pos, 0, param.s_speed, ANGLE - addAng, 1, 0);
 		else
 			IEneShot::Fire_Ang(eShotType::normal, pos, 0, param.s_speed, ANGLE + addAng, 1, 0);
 	}
@@ -586,13 +590,13 @@ void Enemy::Fire_3()
 void Enemy::Fire_4()
 {
 	/* snipe shot */
-	if (s_time == param.stop_time - 10)
+	if (s_time == 10);
 		vangle = atan2(IPlayer::GetPos().y - pos.y, IPlayer::GetPos().x - pos.x);
 
 	/* 4WAY x 2 */
-	if (s_time == param.stop_time ||
-		s_time == param.stop_time + 20 ||
-		s_time == param.stop_time + 40)
+	if (s_time == 0 ||
+		s_time == 20 ||
+		s_time == 40)
 	{
 		/* right side */
 		IEneShot::Fire_Ang(eShotType::star, Vector2D::GetVec(pos.x + 70, pos.y - 30), -0.2, param.s_speed, DX_PI / 8., 1, 0);
@@ -608,17 +612,13 @@ void Enemy::Fire_4()
 	}
 
 	/* snipe shot */
-	if (s_time == param.stop_time + 20 ||
-		s_time == param.stop_time + 30 ||
-		s_time == param.stop_time + 40 ||
-		s_time == param.stop_time + 50)
+	if (s_time == 20 ||
+		s_time == 30 ||
+		s_time == 40 ||
+		s_time == 50)
 	{
 		IEneShot::Fire_Ang(eShotType::wave, pos, 0, param.s_speed + 2, vangle, 1, 0);
 	}
-
-	/* reset shot_time */
-	if (s_time == param.stop_time + 160)
-		s_time = 0;
 }
 
 

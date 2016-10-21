@@ -18,6 +18,7 @@ public:
 	static void BorderStop(double* pos, const double MIN, const double MAX);
 	static void AddVecAngele(double* PosX, double* PosY, const double& angle, const double& force);
 	static bool CirclePointCollision(const double& MyX, const double& MyY, const double& TarX, const double& TarY, const double& Radius);
+	static bool CirclePointCollision(const Vector2D& MyPos, const Vector2D& OtherPos, const double& Range);
 	static bool CirclesCollision(const double& Range1, const double& Range2,
 		const double& X1, const double& Y1, const double& X2, const double& Y2);
 	static bool CirclesCollision(const double& Range1, const double& Range2,

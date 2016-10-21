@@ -1,7 +1,7 @@
 #ifndef ENEMY_CSV_HPP
 #define ENEMY_CSV_HPP
 
-#include "Enemy.hpp"
+#include "Enemys.hpp"
 #include "Stage.hpp"
 #include "BossShotMgr.hpp"
 #include "BossChara.hpp"
@@ -35,7 +35,7 @@ private:
 	void GetAllEnemyNum(int* enemyNum, std::string fileName);
 
 	//std::vector<std::shared_ptr<Enemy>> enemy;				// G‹›“G
-	std::vector<Enemy*> enemy;									// G‹›“G
+	std::vector<Enemys*> enemy;									// G‹›“G
 	std::shared_ptr<BossShotMgr> bossShot;
 	int enemyCount;							// ¶‚«c‚Á‚Ä‚¢‚é“G‚Ì”
 	bool isBossZone;						// “G‚Ì”

@@ -55,6 +55,16 @@ bool Vector2D::CirclePointCollision(const double& MyX, const double& MyY, const 
 }
 
 
+bool Vector2D::CirclePointCollision(const Vector2D & MyPos, const Vector2D & OtherPos, const double & Range)
+{
+	const double& WIDTH = (OtherPos.x - MyPos.x) * (OtherPos.x - MyPos.x);
+	const double& HEIGHT = (OtherPos.y - MyPos.y) * (OtherPos.y - MyPos.y);
+	const double& DISTANCE = (WIDTH + HEIGHT);
+	const double& RADIUS = Range * Range;
+	return (RADIUS >= DISTANCE);
+}
+
+
 bool Vector2D::CirclesCollision(const double & Range1, const double & Range2, const double & X1, const double & Y1, const double & X2, const double & Y2)
 {
 	const double& hLengrth = (Range1 + Range2);

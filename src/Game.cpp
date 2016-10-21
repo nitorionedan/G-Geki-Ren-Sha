@@ -214,9 +214,9 @@ void Game::Draw()
 
 	score->Draw();
 
-	static float count = 0;
-	count += 0.01f;
-	DrawRotaGraph(320 + std::cos(count) * 30, 170 + std::sin(count) * 30, 2, 0, gh_flyer, true);
+	//static float count = 0;
+	//count += 0.01f;
+	//DrawRotaGraph(320 + std::cos(count) * 30, 170 + std::sin(count) * 30, 2, 0, gh_flyer, true);
 
 	//DrawRasterScroll(320, 240, 600, 100, time, Screen, TRUE); // << super noise
 

@@ -89,7 +89,7 @@ private:
 	eStage	nowStage;					// 現在のステージ
 	eState state;						// 状態
 	eQuake quakeType;
-	int Screen;
+	int Screen, gh_black;
 	int time;							// ステージの経過時間
 	int rank;							// ランク
 	int c_bossBgm;

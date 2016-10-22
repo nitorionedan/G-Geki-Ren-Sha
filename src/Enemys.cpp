@@ -30,6 +30,9 @@ Enemys::~Enemys()
 
 void Enemys::Update()
 {
+	if (IEnemyMng::GetEneNum() == 0)
+		return;
+
 	m_enemy->StartCheck();
 	if ( !m_enemy->IsExist() )
 		return;
@@ -42,17 +45,20 @@ void Enemys::Update()
 
 void Enemys::Draw()
 {
+	if (IEnemyMng::GetEneNum() == 0)
+		return;
+
 	if ( !m_enemy->IsExist() )
 		return;
 
-	/* Flushing */
+	/* Weaking EFCT */
 	if (m_enemy->IsWeak() && m_enemy->GetElapsedTime() % 12 >= 10)
 	{
 		SetDrawBlendMode(DX_BLENDMODE_INVSRC, 255);
 		SetDrawBright(255, 0, 0);
 	}
 
-	/* Damage */
+	/* Damage EFCT */
 	if (m_enemy->IsHit())
 		SetDrawBlendMode(DX_BLENDMODE_INVSRC, 255);
 

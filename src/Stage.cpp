@@ -37,9 +37,10 @@ Stage::Stage()
 	: c_quake( new Counter(30) )
 	, graphic( new Graphic )
 	, mField( static_cast<Field*>(new NullStage) )
-	, c_fade(255)
+	, c_fade(0)
 {
 	Screen = MakeScreen(640, 480, TRUE);
+	gh_black = LoadGraph("GRAPH/GAME/BACKGROUND/blackbg.png");
 
 	// LoadStage(*.dat);		// TODO: こういう風にロードしたい 
 
@@ -54,6 +55,7 @@ Stage::Stage()
 
 Stage::~Stage()
 {
+	DeleteGraph(gh_black);
 	Finalize();
 }
 
@@ -102,7 +104,7 @@ void Stage::Finalize()
 void Stage::StageSet(eStage estage)
 {
 	delete mField;
-
+	
 	// ステージ用素材ロード
 	switch (estage)
 	{
@@ -146,7 +148,7 @@ void Stage::Update()
 	case Stage::eState::game:
 		UpdateField();
 
-		if (c_fade < 254)
+		if (c_fade < 255)
 			++c_fade;
 
 		if (IEnemyMng::IsBossZone())
@@ -203,29 +205,32 @@ void Stage::Update()
 
 void Stage::Draw()
 {
-	int tmpSc = GetDrawScreen();
-	SetDrawScreen(Screen);
-	ClearDrawScreen();
-
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, c_fade);
-
+	int tmpSc = NULL;
 	switch (state)
 	{
 	case Stage::eState::game:
+		tmpSc = GetDrawScreen();
+		SetDrawScreen(Screen);
+		ClearDrawScreen();
+
 		mField->Draw();
+
+		SetDrawScreen(DX_SCREEN_BACK);
+		DrawGraph(pos.x, pos.y, Screen, TRUE);
+		SetDrawScreen(tmpSc);
+
 		DrawStageCall();
 		break;
 	case Stage::eState::result:
 		mField->Draw();
+
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 - c_fade);
+		DrawGraph(0, 0, gh_black, FALSE);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
 		DrawResult();
 		break;
 	}
-
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
-	SetDrawScreen(DX_SCREEN_BACK);
-	DrawGraph(pos.x, pos.y, Screen, TRUE);
-	SetDrawScreen(tmpSc);
 
 	// TEST -------------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
@@ -307,8 +312,11 @@ void Stage::Update_Result()
 {
 	++time;
 
+	/* Blackout */
 	if (c_fade > 0)
-		c_fade -= 255 / 300;
+		--c_fade;
+	if (c_fade < 0)
+		c_fade = 0;
 
 	if (time == RESULT_TIME)
 		NextStage();
@@ -453,9 +461,9 @@ void Stage::BigQuake()
 
 	c_quake->Update();
 
-	double offsetB = GetRand(4) + 4;
-	double offsetF = GetRand(4) + 4;
-
+	double offsetB = GetRand(4) + 4; // back
+	double offsetF = GetRand(4) + 4; // fore
+	
 	if (c_quake->Remainder(4) >= 2)
 	{
 		pos.x += GetRand(4);

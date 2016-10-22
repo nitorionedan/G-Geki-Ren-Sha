@@ -27,6 +27,7 @@ enum class eShotAI
 	outsideCurve,
 	insideCurve,
 	wave,
+	homing,
 };
 
 class tShot
@@ -45,6 +46,7 @@ public:
 	double hitRange;
 	int life;
 	int time;
+	bool hasHP;
 
 	bool operator==(const tShot& other)
 	{
@@ -75,6 +77,7 @@ public:
 	// @brief       Fire in use a radian angle.
 	// @param[in]   ...
 	void Fire_Ang(eShotType type, Vector2D& pos, double rotate, double force, double angle, double accel, int life, eShotAI aiType);
+	bool HitCheck(const double& Range, const double& X, const double& Y);
 
 private:
 	void HitCheck();
@@ -85,7 +88,8 @@ private:
 		gh_normal[12],
 		gh_long[5],
 		gh_big_O[4],
-		gh_star[10];
+		gh_star[10],
+		gh_missile;
 };
 
 
@@ -106,6 +110,9 @@ public:
 	*/
 	static void Fire_Ang(eShotType type, Vector2D& pos, double rotate, double force, double angle, double accel, int life, eShotAI aiType = eShotAI::straight) {
 		mEneShot->Fire_Ang(type, pos, rotate, force, angle, accel, life, aiType);
+	}
+	static bool HitCheck(const double & Range, const double & X, const double & Y) {
+		return mEneShot->HitCheck(Range, X, Y);
 	}
 
 private:

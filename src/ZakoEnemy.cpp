@@ -72,7 +72,7 @@ void ZakoEnemy_Ze::Update()
 	//{
 	//case 0: 
 	//	break;
-	//default: assert(!"out of range");
+	//default: assert(!"out of range in Ze");
 	//}
 }
 
@@ -135,7 +135,7 @@ void ZakoEnemy_Ze::Move0()
 	if (data.time == data.param.out_time)
 		data.vspeed.y = 0.;
 
-	// ‹A‚éiÎj
+	// go home lol
 	if (data.time >= data.param.out_time)
 	{
 		// ‰Á‘¬
@@ -149,8 +149,8 @@ void ZakoEnemy_Ze::Move0()
 		if (data.rad >= 0.)	data.rad += 0.02;
 		if (data.rad < 0.)	data.rad -= 0.02;
 	}
-
-	// ‘Þê
+	
+	// go home
 	if (IS_OUT)
 	{
 		if (data.pos.y > -40)
@@ -202,13 +202,6 @@ void ZakoEnemy_Ze::Fire()
 			IEneShot::Fire_Ang(eShotType::normal, data.pos, 0, data.param.s_speed, (ANGLE - 0.3) - addAng, 1, 0);
 		}
 	}
-}
-
-void ZakoEnemy_Ze::UngryCheck()
-{
-	// UŒ‚‚³‚ê‚½‚ç“{‚é
-	if (Keyboard::Instance()->isPush(KEY_INPUT_Z))
-		data.isUngry = true;
 }
 
 bool ZakoEnemy_Ze::HitCheck(const double & Range, const Vector2D pos, const double & damage)
@@ -307,24 +300,11 @@ void ZakoEnemy_Career::StartCheck()
 		data.isExist = true;
 }
 
-void ZakoEnemy_Career::UngryCheck()
-{
-	// UŒ‚‚³‚ê‚½‚ç“{‚é
-	if (Keyboard::Instance()->isPush(KEY_INPUT_Z))
-		data.isUngry = true;
-}
-
 bool ZakoEnemy_Career::HitCheck(const double & Range, const Vector2D pos, const double & damage)
 {
 	const bool& IsHit = Vector2D::CirclesCollision(this->data.hitRange, Range, this->data.pos, pos);
-
-	clsDx();
-	printfDx("my.x:%lf, my.y:%lf, my.range:%lf\n", this->data.pos.x, this->data.pos.y, data.hitRange);
-	printfDx("ot.x:%lf, ot.y:%lf, ot.range:%lf\n", pos.x, pos.y, Range);
-	
 	if (IsHit)
 		CalcDamage(damage);
-
 	return IsHit;
 }
 
@@ -380,7 +360,7 @@ void ZakoEnemy_Career::CalcDamage(int damage)
 void ZakoEnemy_Career::Fire()
 {
 	/* snipe shot */
-	if (data.loopTime == 0);
+	if (data.loopTime == 0)
 		data.vangle = atan2(IPlayer::GetPos().y - data.pos.y, IPlayer::GetPos().x - data.pos.x);
 
 	/* 4WAY x 2 */
@@ -487,13 +467,6 @@ void ZakoEnemy_Den::StartCheck()
 		data.isExist = true;
 }
 
-void ZakoEnemy_Den::UngryCheck()
-{
-	// UŒ‚‚³‚ê‚½‚ç“{‚é
-	if (Keyboard::Instance()->isPush(KEY_INPUT_Z))
-		data.isUngry = true;
-}
-
 bool ZakoEnemy_Den::HitCheck(const double & Range, const Vector2D pos, const double & damage)
 {
 	const bool& IsHit = Vector2D::CirclesCollision(this->data.hitRange, Range, this->data.pos, pos);
@@ -534,4 +507,53 @@ void ZakoEnemy_Den::Fire()
 }
 
 
-// ==========================================================
+// ==========================================================Flower
+ZakoEnemy_Flower::ZakoEnemy_Flower(const tEnemyData & data)
+{
+}
+
+ZakoEnemy_Flower::~ZakoEnemy_Flower()
+{
+}
+
+void ZakoEnemy_Flower::Update()
+{
+}
+
+void ZakoEnemy_Flower::Draw()
+{
+}
+
+void ZakoEnemy_Flower::StartCheck()
+{
+}
+
+bool ZakoEnemy_Flower::HitCheck(const double & Range, const Vector2D pos, const double & damage)
+{
+	return false;
+}
+
+bool ZakoEnemy_Flower::HitCheck(const double & Range, const double X, const double Y, const double Damage)
+{
+	return false;
+}
+
+bool ZakoEnemy_Flower::HitCheck(const double X, const double Y, const double Damage)
+{
+	return false;
+}
+
+void ZakoEnemy_Flower::CalcDamage(int damage)
+{
+}
+
+void ZakoEnemy_Flower::Move()
+{
+}
+
+void ZakoEnemy_Flower::Fire()
+{
+}
+
+
+// ==========================================================Flower

@@ -9,6 +9,7 @@
 #include "Bullet.hpp"
 #include "Effect.hpp"
 #include "HitEffect.hpp"
+#include "EneShot.hpp"
 
 #include <DxLib.h>
 #include <algorithm>
@@ -16,6 +17,12 @@
 
 #undef min
 #undef max
+
+namespace
+{
+	constexpr double HIT_RANGE_1 = 20;
+	constexpr double HIT_RANGE_2 = 4;
+}
 
 std::array<Vector2D, 20>	Pshot::s_Apos;
 std::array<Vector2D, 30>	Pshot::s_Bpos;
@@ -719,7 +726,8 @@ void Pshot::HitCheck()
 	{
 		if (!shot->f_exist)	continue;
 		const bool& IS_HIT = (IBossChara::HitCheck(shot->x_pos, shot->y_pos, shot->atk) ||
-							  IEnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk));
+							  IEnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk)) ||
+							  IEneShot::HitCheck(HIT_RANGE_1, shot->x_pos, shot->y_pos);
 		if (IS_HIT)	shot->f_exist = false;
 		if (IS_HIT)	PlaySoundMem(hs_hit, DX_PLAYTYPE_BACK);
 		if (IS_HIT)	IHitEffect::PlayAnime(Vector2D(shot->x_pos, shot->y_pos));
@@ -729,7 +737,8 @@ void Pshot::HitCheck()
 	{
 		if (!shot->f_exist)	continue;
 		const bool& IS_HIT = (IBossChara::HitCheck(shot->x_pos, shot->y_pos, shot->atk) ||
-							  IEnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk));
+			IEnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk)) ||
+			IEneShot::HitCheck(HIT_RANGE_1, shot->x_pos, shot->y_pos);
 		if (IS_HIT)	shot->f_exist = false;
 		if (IS_HIT)	PlaySoundMem(hs_hit, DX_PLAYTYPE_BACK);
 		if (IS_HIT)	IHitEffect::PlayAnime(Vector2D(shot->x_pos, shot->y_pos));
@@ -739,7 +748,8 @@ void Pshot::HitCheck()
 	{
 		if (!shot->f_exist)	continue;
 		const bool& IS_HIT = (IBossChara::HitCheck(shot->x_pos, shot->y_pos, shot->atk) ||
-							  IEnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk));
+			IEnemyMng::IsHit(shot->x_pos, shot->y_pos, shot->atk)) ||
+			IEneShot::HitCheck(HIT_RANGE_1, shot->x_pos, shot->y_pos);
 		if (IS_HIT)	shot->f_exist = false;
 		if (IS_HIT)	PlaySoundMem(hs_hit, DX_PLAYTYPE_BACK);
 		if (IS_HIT)	IHitEffect::PlayAnime(Vector2D(shot->x_pos, shot->y_pos));

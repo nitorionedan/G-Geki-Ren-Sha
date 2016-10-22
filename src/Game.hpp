@@ -15,7 +15,7 @@ class Bomb;
 class EshotMng;
 class EnemyMng;
 class BossChara;
-class EneShotCreater;
+class EneShot;
 
 /* other */
 class Score;
@@ -26,7 +26,6 @@ class Effector;
 class HitEffect;
 class Vector2D;
 class Graphic;
-class EneShot;
 
 enum eColKind
 {
@@ -70,7 +69,6 @@ private:
 	std::shared_ptr<EnemyMng> enemyMng;
 	std::shared_ptr<ItemMng> itemMng;
 	std::shared_ptr<HitEffect> hitEffect;
-	std::shared_ptr<EneShotCreater> eneShotFactory;
 	std::shared_ptr<EneShot> eneShot;
 	
 	bool f_pause;

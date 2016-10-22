@@ -21,9 +21,8 @@ public:
 	virtual void Draw() = 0;
 
 	virtual void UpdateTime() = 0;
-	virtual void ResetState() = 0;
 	virtual void StartCheck() = 0;
-	virtual void UngryCheck() = 0;
+	virtual void CalcDamage(int damage) = 0;
 	virtual int GetElapsedTime() const = 0;
 	virtual bool IsHit() const = 0;
 	virtual bool HitCheck(const double& Range, const Vector2D pos, const double& damage) = 0;
@@ -32,9 +31,9 @@ public:
 	virtual bool IsWeak() const = 0;
 	virtual bool IsExist() const = 0;
 
-protected:
-	virtual void CalcDamage(int damage) = 0;
 	tEnemyDataEx data;
+
+protected:
 	int maxHP;
 	int id;
 
@@ -55,13 +54,9 @@ public:
 		data.loopTime = data.time % data.param.stop_time;
 	}
 	virtual void StartCheck() override;
-	virtual void ResetState() override {
-		data.isHit = false;
-	}
 	virtual int GetElapsedTime() const override {
 		return data.time;
 	}
-	virtual void UngryCheck() override;
 	virtual bool HitCheck(const double& Range, const Vector2D pos, const double& damage) override;
 	virtual bool HitCheck(const double& Range, const double X, const double Y, const double Damage) override;
 	virtual bool HitCheck(const double X, const double Y, const double Damage) override;
@@ -76,7 +71,7 @@ public:
 	}
 
 private:
-	ZakoEnemy_Ze() : Speed(4), Brake(0.03), Easing(0.99999999) {}
+	ZakoEnemy_Ze() : Speed(0), Brake(0), Easing(0) {}
 	virtual void CalcDamage(int damage) override;
 
 	void Move0();
@@ -101,13 +96,9 @@ public:
 		data.loopTime = data.time % (data.param.stop_time + 160);
 	}
 	virtual void StartCheck() override;
-	virtual void ResetState() override {
-		data.isHit = false;
-	}
 	virtual int GetElapsedTime() const override {
 		return data.time;
 	}
-	virtual void UngryCheck() override;
 	virtual bool HitCheck(const double& Range, const Vector2D pos, const double& damage) override;
 	virtual bool HitCheck(const double& Range, const double X, const double Y, const double Damage) override;
 	virtual bool HitCheck(const double X, const double Y, const double Damage) override;
@@ -146,13 +137,9 @@ public:
 		data.loopTime = data.time % data.param.stop_time;
 	}
 	virtual void StartCheck() override;
-	virtual void ResetState() override {
-		data.isHit = false;
-	}
 	virtual int GetElapsedTime() const override {
 		return data.time;
 	}
-	virtual void UngryCheck() override;
 	virtual bool HitCheck(const double& Range, const Vector2D pos, const double& damage) override;
 	virtual bool HitCheck(const double& Range, const double X, const double Y, const double Damage) override;
 	virtual bool HitCheck(const double X, const double Y, const double Damage) override;
@@ -174,4 +161,47 @@ private:
 	void Fire();
 
 	int gh[4];
+};
+
+
+// ==========================================================
+class ZakoEnemy_Flower : public ZakoEnemy
+{
+public:
+	explicit ZakoEnemy_Flower(const tEnemyData& data);
+	~ZakoEnemy_Flower();
+	virtual void Update() override;
+	virtual void Draw() override;
+	virtual void UpdateTime() override {
+		++data.time;
+		data.loopTime = data.time % data.param.stop_time;
+	}
+	virtual void StartCheck() override;
+	virtual int GetElapsedTime() const override {
+		return data.time;
+	}
+	virtual bool HitCheck(const double& Range, const Vector2D pos, const double& damage) override;
+	virtual bool HitCheck(const double& Range, const double X, const double Y, const double Damage) override;
+	virtual bool HitCheck(const double X, const double Y, const double Damage) override;
+	virtual bool IsHit() const {
+		return data.isHit;
+	}
+	virtual bool IsWeak() const override {
+		return (data.param.hp <= maxHP / 3) ? true : false;
+	}
+	virtual bool IsExist() const override {
+		return data.isExist;
+	}
+
+private:
+	ZakoEnemy_Flower() {}
+	virtual void CalcDamage(int damage) override;
+
+	void Move();
+	void Fire();
+
+	int gh_core,
+		gh_petal,
+		gh_missile,
+		gh_all; // ‚¢‚é‚©H
 };

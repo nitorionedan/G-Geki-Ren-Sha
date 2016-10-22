@@ -13,7 +13,6 @@
 #include "EnemyMng.hpp"
 #include "BossChara.hpp"
 #include "NullBoss.hpp"
-#include "EneShotCreater.hpp"
 
 /* other */
 #include "Score.hpp"
@@ -54,7 +53,6 @@ Game::Game(ISceneChanger* changer)
 	, stage(new Stage)
 	, itemMng(new ItemMng)
 	, hitEffect(new HitEffect)
-	, eneShotFactory(new EneShotCreater)
 	, eneShot(new EneShot)
 {
 	/* interface-class */
@@ -67,7 +65,6 @@ Game::Game(ISceneChanger* changer)
 	IBomb::set(bomb);
 	IHitEffect::set(hitEffect);
 	IPshot::set(pshot);
-	IEneShotCreater::set(eneShotFactory);
 	IEneShot::set(eneShot);
 
 	Screen = MakeScreen(640, 480, TRUE);
@@ -88,7 +85,6 @@ Game::~Game()
 	IBomb::reset();
 	IHitEffect::reset();
 	IPshot::reset();
-	IEneShotCreater::reset();
 	IEneShot::reset();
 
 	DeleteGraph(gh_flyer);
@@ -136,7 +132,6 @@ void Game::Update()
 	
 	// Shot
 	pshot->Update();
-	eneShotFactory->Update();
 	eneShot->Update();
 
 	// Bomber
@@ -150,10 +145,10 @@ void Game::Update()
 
 	if (Keyboard::Instance()->isPush(KEY_INPUT_Z))
 	{
-		//Vector2D pos = Vector2D(320, 240);
-		//Vector2D dir = Vector2D::GetVec2(pos, IPlayer::GetPos());
-		//Vector2D force = dir.Normalize() * 4;
-		//IEneShot::Fire_Ang(eShotType::normal, pos, 0, 4, dir.ToRad(), 1, 0, eShotAI::outsideCurve);
+		Vector2D pos = Vector2D(320, 240);
+		Vector2D dir = Vector2D::GetVec((GetRand(20) - 10) / 10., (GetRand(20) - 10) / 10.);
+		Vector2D force = dir.Normalize() * 4;
+		IEneShot::Fire_Ang(eShotType::missile, pos, 0, 4, dir.ToRad(), 1.01, 0, eShotAI::homing);
 	}
 
 // TEST ----------------------------------------------
@@ -190,7 +185,6 @@ void Game::Draw()
 	effector->Draw();
 
 	enemyMng->Draw();
-	eneShotFactory->Draw();
 	eneShot->Draw();
 
 	itemMng->Draw();

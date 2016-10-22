@@ -1,5 +1,6 @@
 #include "Enemys.hpp"
 #include "ZakoEnemy.hpp"
+#include "Keyboard.hpp"
 #include <cassert>
 
 
@@ -37,9 +38,10 @@ void Enemys::Update()
 	if ( !m_enemy->IsExist() )
 		return;
 	m_enemy->UpdateTime();
-	m_enemy->ResetState();
-	m_enemy->UngryCheck();
+	m_enemy->data.isHit = false; // reset state
+	UngryCheck();
 	m_enemy->Update();
+	HitCheckToPlayer();
 }
 
 
@@ -67,6 +69,18 @@ void Enemys::Draw()
 	/* Reset normal render */
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	SetDrawBright(255, 255, 255);
+}
+
+void Enemys::UngryCheck()
+{
+	if (Keyboard::Instance()->isPush(KEY_INPUT_Z))
+		m_enemy->data.isUngry = true;
+}
+
+void Enemys::HitCheckToPlayer()
+{
+	const bool& IS_HIT = IPlayer::HitCheckCircl(m_enemy->data.hitRange, m_enemy->data.pos);
+	if (IS_HIT)	m_enemy->CalcDamage(1);
 }
 
 bool Enemys::IsHit(const double& Range, const double& ColX, const double& ColY, const double& DAMAGE) const {

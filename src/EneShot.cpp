@@ -28,6 +28,15 @@ namespace
 };
 
 
+// ==========================================--
+tShot::tShot(EneShotAI * ai)
+{
+	this->mAI = ai;
+	hasHP = false;
+}
+
+
+// ==========================================--
 EneShot::EneShot()
 {
 	LoadDivGraph("GRAPH/GAME/Eshot/eshot00.png", 12, 4, 3, 8, 8, gh_normal);
@@ -39,6 +48,7 @@ EneShot::EneShot()
 	gh_long[4] = LoadGraph("GRAPH/GAME/Eshot/enaga4.png");
 	LoadDivGraph("GRAPH/GAME/Eshot/bigshot.png", 4, 4, 1, 60, 60, gh_big_O);
 	LoadDivGraph("GRAPH/GAME/Eshot/eshot04.png", 10, 5, 2, 13, 12, gh_star);
+	gh_missile = LoadGraph("GRAPH/GAME/Eshot/missile.png");
 
 	shot.reserve(100);
 }
@@ -56,6 +66,7 @@ EneShot::~EneShot()
 		DeleteGraph(i);
 	for (auto i : gh_star)
 		DeleteGraph(i);
+	DeleteGraph(gh_missile);
 }
 
 
@@ -63,11 +74,11 @@ void EneShot::Update()
 {
 	/* time count */
 	std::for_each(std::begin(shot), std::end(shot),
-		[](tShot& shot) { ++shot.time; });
+		[](tShot& shot) { ++shot.time; }); // ƒ‰ƒ€ƒ_Ž®Žg‚¤—ûKB‚¾‚¯‚Çrange-base-for‚Ì•û‚ª’Z‚¢‚µŠÈŒ‰
 
 	/* move */
-	std::for_each(std::begin(shot), std::end(shot),
-		[](tShot& shot) { shot.mAI->Update(shot); });
+	for (auto& i : shot)
+		i.mAI->Update(i);
 
 	/* rotation */
 	for (auto& i : shot)
@@ -108,6 +119,7 @@ void EneShot::Draw()
 		case eShotType::laser:	// TODO: 
 			break;
 		case eShotType::longer:	DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad() + RECT_ANGLE_R, i.time, _countof(gh_long), 2, gh_long); break;
+		case eShotType::missile: DrawRotaGraph(i.pos.x, i.pos.y, 2, i.force.ToRad() + RECT_ANGLE_R, gh_missile, TRUE); break;
 		default: assert(!"abnormality val");
 		}
 	}
@@ -133,6 +145,10 @@ void EneShot::Fire(eShotType type, Vector2D & pos, double rotate, Vector2D & for
 	tmp.time = 0;
 	tmp.rad = 0;
 	SetRange(type, tmp.hitRange);
+
+	if (tmp.life > 0)
+		tmp.hasHP = true;
+
 	switch (aiType)
 	{
 	case eShotAI::straight:
@@ -166,6 +182,10 @@ void EneShot::Fire_Ang(eShotType type, Vector2D & pos, double rotate, double for
 	tmp.time = 0;
 	tmp.rad = 0;
 	SetRange(type, tmp.hitRange);
+
+	if (tmp.life > 0)
+		tmp.hasHP = true;
+
 	switch (aiType)
 	{
 	case eShotAI::straight:
@@ -180,8 +200,40 @@ void EneShot::Fire_Ang(eShotType type, Vector2D & pos, double rotate, double for
 	case eShotAI::wave:
 		tmp.mAI = static_cast<EneShotAI*>(new EneShotAI_Wave);
 		break;
+	case eShotAI::homing:
+		tmp.mAI = static_cast<EneShotAI*>(new EneShotAI_Homing);
+		break;
 	}
 	shot.emplace_back(tmp);
+}
+
+bool EneShot::HitCheck(const double & Range, const double & X, const double & Y)
+{
+	bool isHit = false;
+
+	/* col to Player's shot */
+	for (auto itr = std::begin(shot); itr != std::end(shot); ++itr)
+	{
+		if ((*itr).hasHP == false)
+			continue;
+
+		isHit = Vector2D::CirclesCollision((*itr).hitRange, Range, (*itr).pos.x, (*itr).pos.y, X, Y);
+
+		if (isHit == false)
+			continue;
+
+		--(*itr).life;
+
+		if ((*itr).life <= 0)
+		{
+			Effector::PlayAnime((*itr).pos.x, (*itr).pos.y, eExplosion_small);
+			delete (*itr).mAI;
+			shot.erase(itr);
+		}
+		break;
+	}
+
+	return isHit;
 }
 
 
@@ -214,18 +266,6 @@ void EneShot::HitCheck()
 			shot.erase(itr);
 			break;
 		}
-	}
-
-	/* col to Player's shot */
-	for (auto& i : shot)
-	{
-		if (i.life == 0)
-			continue;
-
-		// TODO: HitCheck
-		delete i.mAI;
-		// erase
-		break;
 	}
 }
 
@@ -269,6 +309,3 @@ void IEneShot::reset() {
 }
 
 
-tShot::tShot(EneShotAI * ai) {
-	this->mAI = ai;
-}

@@ -43,3 +43,17 @@ class EneShotAI_Wave : public EneShotAI
 public:
 	virtual void Update(tShot& shot) override {}
 };
+
+
+// @referenced	http://www7.plala.or.jp/kfb/program/stg2dvec.html
+class EneShotAI_Homing : public EneShotAI
+{
+public:
+	EneShotAI_Homing();
+	virtual void Update(tShot& shot) override;
+
+private:
+	int time;
+	double addSin, addCos;
+	bool canHoming;
+};

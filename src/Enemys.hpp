@@ -33,6 +33,8 @@ public:
 	~Enemys();
 	void Update();
 	void Draw();
+	void UngryCheck();
+	void HitCheckToPlayer();
 	bool IsHit(const double& Range, const double& ColX, const double& ColY, const double& DAMAGE) const;
 	bool IsHit(const double X, const double Y, const double Damage);
 

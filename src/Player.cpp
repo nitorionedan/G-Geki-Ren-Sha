@@ -282,14 +282,7 @@ void Player::Draw_Dead()
 {
 	const bool& isRed = ( elapsedTime % 4 >= 2 );
 	if (isRed)	// 2fps毎に元の色に戻す
-	{
-		//SetDrawBlendMode(DX_BLENDMODE_INVSRC, 100);	// On-Damage-Effect
-		//SetDrawBright(255, 0, 0);
-		//SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
-		//SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
-
 		SetDrawBright(255, 0, 0);	// 赤色に設定
-	}
 
 	switch (keydir)
 	{
@@ -324,11 +317,8 @@ void Player::InputMng()
 	const bool& PUSH_Z_KEY = (Keyboard::Instance()->isPush(KEY_INPUT_Z));
 
 	keydir = eInputDir::Neutral;						// キーをニュートラルにする
-	
 	if (KEY_STAY_RIGHT)	keydir = eInputDir::Right;
-
 	if (KEY_STAY_LEFT)	keydir = eInputDir::Left;
-
 	if (PUSH_Z_KEY && powlv == 0)	Shift(true);	// 無の状態で押すと無条件で１段階アップ
 }
 
@@ -344,7 +334,7 @@ void Player::Move()
 	const bool& KEY_STAY_UP       = Keyboard::Instance()->isDown(KEY_INPUT_UP);
 	const bool& KEY_STAY_DOWN     = Keyboard::Instance()->isDown(KEY_INPUT_DOWN);
 	
-	double speed;
+	double speed = NULL;
 	// スピード設定
 	if(INPUT_HORIZONTAL)
 	{

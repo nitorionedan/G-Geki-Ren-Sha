@@ -6,6 +6,7 @@
 #include "ExplosionS.hpp"
 #include "Piece.hpp"
 #include "ChargeEffect.hpp"
+#include "FileDef.h"
 #include <DxLib.h>
 
 constexpr int EX_NUM = 4;
@@ -18,7 +19,7 @@ SmokeEffect* Effector::smoke;
 
 Effector::Effector()
 {
-	img_shock = LoadGraph("GRAPH/GAME/EFFECT/circle.png");
+	img_shock = LoadGraph(MyFile::Gr::SHOCK);
 
 	pieceef = new PieceEffect;
 
@@ -78,11 +79,12 @@ void Effector::Update()
 void Effector::Draw()
 {
 	pieceef->Draw();
+}
 
+void Effector::Draw_Explosion()
+{
 	for (int i = 0; i < EX_NUM; i++)
 		effect[i]->Draw();
-
-	smoke->Draw();
 }
 
 
@@ -102,6 +104,11 @@ void Effector::Draw_Shock()
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 	SetDrawMode(DX_DRAWMODE_NEAREST);
+}
+
+void Effector::Draw_Smoke()
+{
+	smoke->Draw();
 }
 
 

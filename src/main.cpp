@@ -81,6 +81,7 @@ int main()
 	SetMainWindowText("激連射");																// タイトルを設定
 	SetChangeScreenModeGraphicsSystemResetFlag(FALSE);											// 画面モード変更後、素材メモリをリセットしない
 	SetWaitVSyncFlag(FALSE);																	// 垂直同期信号を待たない
+	SetOutApplicationLogValidFlag(FALSE);														// ログ出力しない
 	FrameStartTime = GetNowCount();																// 開始時間を設定
 	FPS = 60;
 

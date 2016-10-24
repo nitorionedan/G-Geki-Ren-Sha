@@ -9,6 +9,8 @@
 #include "ExplosionEffect.hpp"
 #include "PieceEffect.hpp"
 #include "ItemMng.hpp"
+#include "Bezier.hpp"
+#include "FileDef.h"
 #include <DxLib.h>
 #include <cassert>
 #include <cmath>
@@ -29,6 +31,7 @@ namespace
 	};
 }
 
+using namespace MyFile;
 
 // ==========================================================Ze
 int ZakoEnemy_Ze::num = 0;
@@ -38,7 +41,19 @@ ZakoEnemy_Ze::ZakoEnemy_Ze(const tEnemyData & data)
 	, Brake(0.03)
 	, Easing(0.99999999)
 {
-	gh = LoadGraph("GRAPH/GAME/ENEMY/ene00.png");
+	int gh_tmp = LoadGraph(Gr::ENEMY_ZE);
+	switch (data.m_pattern) 
+	{
+	case 0:	gh = DerivationGraph(0,   0,  29, 19, gh_tmp); break;
+	case 1: gh = DerivationGraph(30,  0,  29, 19, gh_tmp); break;
+	case 2: gh = DerivationGraph(60,  0,  29, 19, gh_tmp); break;
+	case 4: gh = DerivationGraph(0,   20, 29, 19, gh_tmp); break;
+	case 5: gh = DerivationGraph(30,  20, 29, 19, gh_tmp); break;
+	case 6: gh = DerivationGraph(60,  20, 29, 19, gh_tmp); break;
+	default: assert(!"out of range (ZakoEnemy_Ze)");
+	}
+	DeleteGraph(gh_tmp);
+
 	this->data.param = data;
 	this->data.rad = 0;
 	this->data.pos.SetVec(data.x_pos, data.y_pos);
@@ -64,20 +79,23 @@ ZakoEnemy_Ze::~ZakoEnemy_Ze()
 
 void ZakoEnemy_Ze::Update()
 {
-	Fire();
-	Move0();
-
 	/* Move */
-	//switch (data.param.m_pattern)
-	//{
-	//case 0: 
-	//	break;
-	//default: assert(!"out of range in Ze");
-	//}
+	switch (data.param.m_pattern)
+	{
+	case 0: Move0(); break;
+	default: assert(!"out of range in Ze");
+	}
+
+	Fire();
 }
 
 void ZakoEnemy_Ze::Draw()
 {
+	switch (data.param.m_pattern)
+	{
+	case 0: 
+	default: break;
+	}
 	DrawRotaGraph(data.pos.x, data.pos.y, 2., data.rad, gh, true);
 }
 
@@ -174,7 +192,7 @@ void ZakoEnemy_Ze::Fire()
 			IEneShot::Fire_Ang(eShotType::normal, data.pos, 0, data.param.s_speed, ANGLE + addAng, 1, 0);
 	}
 
-	if (data.time == 50)
+	if (data.time == 30)
 	{
 		int dir = GetRand(1);
 		double addAng = (GetRand(3) / 15.);
@@ -248,8 +266,8 @@ void ZakoEnemy_Ze::CalcDamage(int damage)
 // ==========================================================Career
 ZakoEnemy_Career::ZakoEnemy_Career(const tEnemyData & data)
 {
-	LoadDivGraph("GRAPH/GAME/ENEMY/career.png", _countof(gh), 4, 2, 124, 78, gh);
-	gh_fire = LoadGraph("GRAPH/GAME/Eshot/efire0.png");
+	LoadDivGraph(Gr::ENEMY_CAREER, _countof(gh), 4, 2, 124, 78, gh);
+	gh_fire = LoadGraph(MyFile::Gr::FIRE);
 	this->data.param = data;
 	this->data.rad = 0;
 	this->data.pos.SetVec(data.x_pos, data.y_pos);
@@ -420,7 +438,7 @@ void ZakoEnemy_Career::Move()
 // ==========================================================Raide
 ZakoEnemy_Den::ZakoEnemy_Den(const tEnemyData & data)
 {
-	LoadDivGraph("GRAPH/GAME/ENEMY/ene02.png", _countof(gh), 4, 1, 31, 16, gh);
+	LoadDivGraph(Gr::ENEMY_DE00, _countof(gh), 4, 1, 31, 16, gh);
 	this->data.param = data;
 	this->data.rad = 0;
 	this->data.pos.SetVec(data.x_pos, data.y_pos);

@@ -150,7 +150,7 @@ void Game::Update()
 		for (int i = 0; i < 3; ++i)
 		{
 			Vector2D dir = Vector2D::GetVec((GetRand(20) - 10) / 10., (GetRand(20) - 10) / 10.);
-			Vector2D force = dir.Normalize() * 4;
+			Vector2D force = dir.Normalize() * 7;
 			IEneShot::Fire_Ang(eShotType::missile, pos, 0, 4, dir.ToRad(), 1.01, 2, eShotAI::homing);
 		}
 	}
@@ -187,22 +187,24 @@ void Game::Draw()
 
 	// Effect
 	effector->Draw();
-
 	enemyMng->Draw();
-	eneShot->Draw();
-
+	effector->Draw_Smoke();
+	effector->Draw_Explosion();
 	itemMng->Draw();
 
 	// Character
 	player->Draw();
 
+	// Bomb
+	bomb->Draw();
+
+	// bullet
+	eneShot->Draw();
+
 	hitEffect->Draw();
 
 	// Shot
 	pshot->Draw();
-
-	// Bomb
-	bomb->Draw();
 
 	// ステータスボード
 	board->Draw(*player);

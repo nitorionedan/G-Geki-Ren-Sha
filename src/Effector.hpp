@@ -22,7 +22,9 @@ public:
 	~Effector();
 	void Update();
 	void Draw();
+	void Draw_Explosion();
 	void Draw_Shock();
+	void Draw_Smoke();
 	static void PlayAnime(const double& PlayX, const double& PlayY, eExplosion_t type);
 	static void PlaySpread(const double & PosX, const double & PosY, const double & ANGLE, eSpread_t type);
 	static void PlayShock(double x, double y);

@@ -143,12 +143,16 @@ void Game::Update()
 	
 	if (isDead)	mSceneChanger->ChangeScene(eScene::gameOver);
 
-	if (Keyboard::Instance()->isPush(KEY_INPUT_Z))
+	if (Keyboard::Instance()->isPush(KEY_INPUT_C))
 	{
-		Vector2D pos = Vector2D(320, 240);
-		Vector2D dir = Vector2D::GetVec((GetRand(20) - 10) / 10., (GetRand(20) - 10) / 10.);
-		Vector2D force = dir.Normalize() * 4;
-		IEneShot::Fire_Ang(eShotType::missile, pos, 0, 4, dir.ToRad(), 1.01, 0, eShotAI::homing);
+		Vector2D pos(320, 240);
+
+		for (int i = 0; i < 3; ++i)
+		{
+			Vector2D dir = Vector2D::GetVec((GetRand(20) - 10) / 10., (GetRand(20) - 10) / 10.);
+			Vector2D force = dir.Normalize() * 4;
+			IEneShot::Fire_Ang(eShotType::missile, pos, 0, 4, dir.ToRad(), 1.01, 2, eShotAI::homing);
+		}
 	}
 
 // TEST ----------------------------------------------

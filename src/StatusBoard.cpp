@@ -4,6 +4,7 @@
 #include "Player.hpp"
 #include "Keyboard.hpp"
 #include "DebugMode.hpp"
+#include "IScore.hpp"
 
 
 StatusBoard::StatusBoard()
@@ -38,6 +39,9 @@ StatusBoard::~StatusBoard()
 
 void StatusBoard::Update(const Player& player)
 {
+	if (IPlayer::GetShiftLevel() == 4)
+		IScore::AddScore(10);
+
 	// TEST------------------------------------------
 	if (!DebugMode::isTest)	return;
 }

@@ -88,7 +88,7 @@ void DrawAnime(const double& PosX, const double& PosY, const double& ExRate, con
 // @pram[in]	TIME_FRAME	１コマの表示時間（フレーム数）
 // @pram[in]	Gr_Handle[]	画像ハンドル配列
 // @attention				配列の総合計を超えた値を入れないでください。倍率は２倍にされています。
-void DrawAnime(const double& PosX, const double& PosY, const double& ExRate, const double& ANGLE, const int& FRAME_NUM, const int& TIME_FRAME, int Gr_Handle[], const bool& TurnFlag = 0);
+void DrawAnime(const double& PosX, const double& PosY, const double& ExRate, const double& ANGLE,                  const int& FRAME_NUM, const int& TIME_FRAME, int Gr_Handle[], const bool& TurnFlag = 0);
 
 
 int DrawRasterScroll(const int & X, const int & Y, const double & Cycle, const double & Shake, const int & Time, const int & GrHandle, const bool & isVertical);

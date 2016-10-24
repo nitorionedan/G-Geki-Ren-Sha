@@ -13,6 +13,7 @@ constexpr int EX_NUM = 4;
 PieceEffect*	Effector::pieceef;
 Effect**		Effector::effect;
 Effector::Shock Effector::s_shock[10];
+SmokeEffect* Effector::smoke;
 
 
 Effector::Effector()
@@ -26,6 +27,7 @@ Effector::Effector()
 	effect[1] = new Effect(new ExplosionEffect(eExplosion_normal));
 	effect[2] = new Effect(new ExplosionEffect(eExplosion_big));
 	effect[3] = new Effect(new ExplosionEffect(eExplosion_long));
+	smoke = new SmokeEffect;
 
 	for (auto& i : s_shock)
 	{
@@ -46,6 +48,7 @@ Effector::~Effector()
 	for (int i = 0; i < EX_NUM; i++)
 		delete effect[i];
 	delete[] effect;
+	delete smoke;
 }
 
 
@@ -67,6 +70,8 @@ void Effector::Update()
 			i.exrate = 1.;
 		}
 	}
+
+	smoke->Update();
 }
 
 
@@ -76,6 +81,8 @@ void Effector::Draw()
 
 	for (int i = 0; i < EX_NUM; i++)
 		effect[i]->Draw();
+
+	smoke->Draw();
 }
 
 
@@ -131,4 +138,9 @@ void Effector::PlayShock(double x, double y)
 		i.y = y;
 		break;
 	}
+}
+
+
+void Effector::PlaySmoke(double x, double y, eSmokeColor colorType) {
+	smoke->PlayAnime(x, y, colorType);
 }

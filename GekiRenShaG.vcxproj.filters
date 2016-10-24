@@ -249,6 +249,9 @@
     <ClCompile Include="src\Enemys.cpp">
       <Filter>ソース ファイル\Enemy\Zako</Filter>
     </ClCompile>
+    <ClCompile Include="src\SmokeEffect.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Another.hpp">
@@ -470,14 +473,20 @@
     <ClInclude Include="src\EneShot.hpp">
       <Filter>ヘッダー ファイル\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="src\EneShotAI.hpp">
-      <Filter>ソース ファイル\Enemy\Zako</Filter>
-    </ClInclude>
     <ClInclude Include="src\ZakoEnemy.hpp">
       <Filter>ヘッダー ファイル\Enemy\Zako</Filter>
     </ClInclude>
     <ClInclude Include="src\Enemys.hpp">
       <Filter>ヘッダー ファイル\Enemy\Zako</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SmokeEffect.hpp">
+      <Filter>ヘッダー ファイル\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EneShotAI.hpp">
+      <Filter>ヘッダー ファイル\Enemy\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FileDef.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

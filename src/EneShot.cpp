@@ -11,6 +11,7 @@
 #include "Bomb.hpp"
 #include "Effector.hpp"
 #include "ExplosionEffect.hpp"
+#include "IScore.hpp"
 #include <DxLib.h>
 #include <cassert>
 #include <algorithm>
@@ -84,6 +85,19 @@ void EneShot::Update()
 	for (auto& i : shot)
 		i.rad += i.rotate;
 
+	/* effect */
+	for (auto i : shot)
+	{
+		switch (i.shotType)
+		{
+		case eShotType::missile:
+			if (i.time % 3 == 0)
+				Effector::PlaySmoke(i.pos.x, i.pos.y, eSmokeColor::green);
+			break;
+		default: break;
+		}
+	}
+
 	/* erase */
 	for (auto itr = std::begin(shot); itr != std::end(shot); ++itr)
 	{
@@ -95,6 +109,7 @@ void EneShot::Update()
 			break;
 		}
 	}
+
 	/* col check */
 	HitCheck();
 }
@@ -207,6 +222,7 @@ void EneShot::Fire_Ang(eShotType type, Vector2D & pos, double rotate, double for
 	shot.emplace_back(tmp);
 }
 
+
 bool EneShot::HitCheck(const double & Range, const double & X, const double & Y)
 {
 	bool isHit = false;
@@ -227,6 +243,7 @@ bool EneShot::HitCheck(const double & Range, const double & X, const double & Y)
 		if ((*itr).life <= 0)
 		{
 			Effector::PlayAnime((*itr).pos.x, (*itr).pos.y, eExplosion_small);
+			IScore::AddScore(200);
 			delete (*itr).mAI;
 			shot.erase(itr);
 		}
@@ -244,11 +261,19 @@ void EneShot::HitCheck()
 	{
 		if (IPlayer::HitCheckCircl( (*itr).hitRange, (*itr).pos) == false)
 			continue;
-		if ((*itr).shotType == eShotType::big_O)
+		
+		if ((*itr).shotType == eShotType::big_O )
 		{
 			Effector::PlayAnime((*itr).pos.x, (*itr).pos.y, eExplosion_small);
 			break;
 		}
+
+		if ((*itr).shotType == eShotType::missile)
+		{
+			Effector::PlayAnime((*itr).pos.x, (*itr).pos.y, eExplosion_small);
+			IScore::AddScore(200);
+		}
+
 		IHitEffect::PlayAnime( (*itr).pos );
 		delete (*itr).mAI;
 		shot.erase(itr);
@@ -261,6 +286,12 @@ void EneShot::HitCheck()
 		const bool& Is_hit = (IBomb::IsHit( (*itr).hitRange, (*itr).pos.x, (*itr).pos.y));
 		if (Is_hit)
 		{
+			if ((*itr).shotType == eShotType::missile)
+			{
+				Effector::PlayAnime((*itr).pos.x, (*itr).pos.y, eExplosion_small);
+				IScore::AddScore(200);
+			}
+
 			IHitEffect::PlayAnime((*itr).pos);
 			delete (*itr).mAI;
 			shot.erase(itr);
@@ -291,6 +322,7 @@ void EneShot::SetRange(eShotType type, double & hitRange) const
 	case eShotType::longer:
 		break;
 	case eShotType::missile:
+		hitRange = 7;
 		break;
 	}
 }

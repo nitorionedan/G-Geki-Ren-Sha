@@ -1,3 +1,5 @@
+#include "SmokeEffect.hpp"
+
 class PieceEffect;
 class Effect;
 
@@ -24,10 +26,12 @@ public:
 	static void PlayAnime(const double& PlayX, const double& PlayY, eExplosion_t type);
 	static void PlaySpread(const double & PosX, const double & PosY, const double & ANGLE, eSpread_t type);
 	static void PlayShock(double x, double y);
+	static void PlaySmoke(double x, double y, eSmokeColor colorType);
 
 private:
 	int img_shock;
 	static PieceEffect* pieceef;
 	static Effect** effect;
 	static Shock s_shock[];
+	static SmokeEffect* smoke;
 };

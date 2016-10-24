@@ -157,7 +157,7 @@ void DrawAnime(const double & PosX, const double & PosY, const double& ExRate, c
 }
 
 
-void DrawAnime(const double & PosX, const double & PosY, const double& ExRate, const double & ANGLE, const int & FRAME_NUM, const int & TIME_FRAME, int Gr_Handle[], const bool& TurnFlag)
+void DrawAnime(const double & PosX, const double & PosY, const double& ExRate, const double & ANGLE,                   const int & FRAME_NUM, const int & TIME_FRAME, int Gr_Handle[], const bool& TurnFlag)
 {
 	// ó]ÇËÇÇ‡Ç∆ÇﬂÇÈÇΩÇﬂÅAÇPÇë´ÇµÇƒí≤êÆ
 	const int& SUM_FRAME_TIME = (FRAME_NUM * TIME_FRAME + 1);

@@ -11,8 +11,8 @@ namespace
 	const double Sin_deg10 = std::sin(10 * DX_PI / 180);
 	const double Cos_deg20 = std::cos(20 * DX_PI / 180);
 	const double Sin_deg20 = std::sin(20 * DX_PI / 180);
-	const double Cos_deg30 = std::cos(40 * DX_PI / 180);
-	const double Sin_deg30 = std::sin(40 * DX_PI / 180);
+	const double Cos_deg30 = std::cos(30 * DX_PI / 180);
+	const double Sin_deg30 = std::sin(30 * DX_PI / 180);
 	const double Cos_deg40 = std::cos(40 * DX_PI / 180);
 	const double Sin_deg40 = std::sin(40 * DX_PI / 180);
 
@@ -63,6 +63,8 @@ void EneShotAI_OutsideCurve::Update(tShot & shot)
 	}
 
 	/* calc force */
+
+
 	/* move */
 	shot.pos += shot.force;
 	/* accel */
@@ -91,8 +93,8 @@ void EneShotAI_Homing::Update(tShot & shot)
 	}
 	if (time == 40)
 	{
-		addSin = Sin_deg30;
-		addCos = Cos_deg30;
+		addSin = Sin_deg40;
+		addCos = Cos_deg40;
 	}
 	if (time == 60)
 	{
@@ -108,8 +110,6 @@ void EneShotAI_Homing::Update(tShot & shot)
 		
 		if (dot > 0.9)
 			canHoming = false;
-		//clsDx();
-		//printfDx("%lf", dot);
 
 		/* Rotate */
 		if (cross > 0)	// left side

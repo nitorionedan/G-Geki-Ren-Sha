@@ -112,7 +112,7 @@ void Stage::StageSet(eStage estage)
 	switch (estage)
 	{
 	case eStage::opening:
-		mField = static_cast<Field*>(new Stage2);
+		mField = static_cast<Field*>(new OpenigStage);
 		Sound::Play(eSound::opening);
 		break;
 	case eStage::stage1 :
@@ -134,10 +134,7 @@ void Stage::StageSet(eStage estage)
 		break;
 	default: assert(!"Stage::StageSet()");
 	}
-	printfDx("Play\n");
-
 	nowStage = estage;	// setting current stage
-
 	isStanby = true;
 }
 
@@ -189,7 +186,6 @@ void Stage::Update()
 					Sound::Play(eSound::bossH);
 					break;
 				}
-				printfDx("PlayBoss\n");
 				c_bossBgm = 0;
 			}
 		}
@@ -219,6 +215,10 @@ void Stage::Draw()
 	{
 	case Stage::eState::game:
 		mField->Draw();
+
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 - c_fade);
+		DrawGraph(0, 0, gh_black, FALSE);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 		DrawStageCall();
 		break;
@@ -287,7 +287,6 @@ void Stage::NextStage()
 void Stage::Clear()
 {	
 	Sound::FadeOutStop();
-	printfDx("FadeStop\n");
 
 	state = eState::result;
 	time = 0;

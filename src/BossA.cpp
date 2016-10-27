@@ -135,23 +135,6 @@ void BossA::Update()
 	/* エフェクト系 */
 	bomber->Update(pos.x, pos.y);
 
-	/*
-	if (!isMove)
-	{
-		s_isHit = false;
-		StartMove();
-		return;
-	}
-
-	Move1();	// 動き
-	AttackMng();
-
-	if (hp <= 0)	isDead = true;
-	c_atk1->Update();
-
-	s_isHit = false;
-	*/
-
 	// TEST-------------------------------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
 }

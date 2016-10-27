@@ -19,6 +19,7 @@ enum class eShotType
 	laser,   
 	longer,  // long shot
 	missile,
+	short_laser,
 };
 
 enum class eShotAI
@@ -86,6 +87,7 @@ private:
 	std::vector<tShot> shot;
 	int gh_wave[24],
 		gh_normal[12],
+		gh_short,
 		gh_long[5],
 		gh_big_O[4],
 		gh_star[10],

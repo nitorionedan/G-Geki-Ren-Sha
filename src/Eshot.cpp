@@ -5,6 +5,8 @@
 #include "Game.hpp"
 #include "Bomb.hpp"
 #include "HitEffect.hpp"
+#include "EneShot.hpp"
+
 #include <cmath>
 
 
@@ -156,32 +158,48 @@ void Eshot::Fire()
 				break;
 			}
 
-			// Œ‚‚Á‚½’e‚Ì”‚ð”‚¦‚é
+			 // Œ‚‚Á‚½’e‚Ì”‚ð”‚¦‚é
 			shotCount++;
 			switch (shotCount)
 			{
 			case 1:
-				shotA[i]->f_exist = true;
-				shotA[i]->angle = loopCount * (-A_BASE_ANGLE / 4.0);			// –ñ22.5‹‚¸‚Â
-				shotA[i]->x_pos = IBossChara::GetPos().x + std::cos(shotA[i]->angle) * 60.;
-				shotA[i]->y_pos = IBossChara::GetPos().y + std::sin(shotA[i]->angle) * 60.;
-				x_fireA[0] = shotA[i]->x_pos;
-				y_fireA[0] = shotA[i]->y_pos;
-				PlaySoundMem(hs_shotA, DX_PLAYTYPE_BACK);
+				//shotA[i]->f_exist = true;
+				//shotA[i]->angle = loopCount * (-A_BASE_ANGLE / 4.0);			// –ñ22.5‹‚¸‚Â
+				//shotA[i]->x_pos = IBossChara::GetPos().x + std::cos(shotA[i]->angle) * 60.;
+				//shotA[i]->y_pos = IBossChara::GetPos().y + std::sin(shotA[i]->angle) * 60.;
+				//x_fireA[0] = shotA[i]->x_pos;
+				//y_fireA[0] = shotA[i]->y_pos;
 				break;
 
 			case 2:
-				shotA[i]->f_exist = true;
-				shotA[i]->angle = DX_PI + loopCount * (-A_BASE_ANGLE / 4.0);	// ”½‘Î‘¤‚©‚ç–ñ22.5‹‚¸‚Â
-				shotA[i]->x_pos = IBossChara::GetPos().x + std::cos(shotA[i]->angle) * 60.;
-				shotA[i]->y_pos = IBossChara::GetPos().y + std::sin(shotA[i]->angle) * 60.;
-				x_fireA[1] = shotA[i]->x_pos;
-				y_fireA[1] = shotA[i]->y_pos;
-
-				loopCount++;
+				//shotA[i]->f_exist = true;
+				//shotA[i]->angle = DX_PI + loopCount * (-A_BASE_ANGLE / 4.0);	// ”½‘Î‘¤‚©‚ç–ñ22.5‹‚¸‚Â
+				//shotA[i]->x_pos = IBossChara::GetPos().x + std::cos(shotA[i]->angle) * 60.;
+				//shotA[i]->y_pos = IBossChara::GetPos().y + std::sin(shotA[i]->angle) * 60.;
+				//x_fireA[1] = shotA[i]->x_pos;
+				//y_fireA[1] = shotA[i]->y_pos;
 				break;	// ’e‚ð“¯Žž‚É‚Q‚Â”­ŽË‚µ‚½‚ç”²‚¯‚é
 			}
-		}		
+
+			if (shotCount == 1)
+			{
+				double radAng = loopCount * (-A_BASE_ANGLE / 4.);
+				Vector2D fire_pos(IBossChara::GetPos().x + std::cos(radAng) * 60.,
+					IBossChara::GetPos().y + std::sin(radAng) * 60.);
+				IEneShot::Fire_Ang(eShotType::short_laser, fire_pos, 0, A_SPEED, radAng, 1, 0);
+
+				PlaySoundMem(hs_shotA, DX_PLAYTYPE_BACK); // –Â‚ç‚·‰¹‚Í‚P‚Â‚¾‚¯
+			}
+			else if (shotCount == 2)
+			{
+				double radAng = DX_PI + loopCount * (-A_BASE_ANGLE / 4.);
+				Vector2D fire_pos(IBossChara::GetPos().x + std::cos(radAng) * 60.,
+					IBossChara::GetPos().y + std::sin(radAng) * 60.);
+				IEneShot::Fire_Ang(eShotType::short_laser, fire_pos, 0, A_SPEED, radAng, 1, 0);
+
+				loopCount++;
+			}
+		} // for end		
 	}
 	// --------------------------------------------------------------------------------------------------------
 	if (atkState == eAttackState::Atk2)

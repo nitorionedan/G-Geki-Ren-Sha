@@ -53,6 +53,7 @@ EneShot::EneShot()
 	LoadDivGraph("GRAPH/GAME/Eshot/eshot04.png", 10, 5, 2, 13, 12, gh_star);
 	gh_missile = LoadGraph(MyFile::Gr::ESHOT_MISSILE);
 	gh_laser = LoadGraph(MyFile::Gr::ESHOT_LASER);
+	gh_short = LoadGraph(MyFile::Gr::ESHOT_SHORT);
 
 	shot.reserve(100);
 }
@@ -125,17 +126,19 @@ void EneShot::Draw()
 	{
 		switch (i.shotType)
 		{
-		case eShotType::normal:	 DrawAnime(i.pos.x, i.pos.y, 2., -i.force.ToRad(), i.time, _countof(gh_normal), 2, gh_normal); break;
-		case eShotType::star:    DrawAnime(i.pos.x, i.pos.y, 2., i.rad, i.time, _countof(gh_star), 2, gh_star); break;
-		case eShotType::wave:    DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad() + RECT_ANGLE_R, i.time, _countof(gh_wave), 2, gh_wave); break;
-		case eShotType::big_O:   DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad() + RECT_ANGLE_R, i.time, _countof(gh_big_O), 2, gh_big_O); break;
-		case eShotType::laser:   DrawRotaGraph(i.pos.x, i.pos.y, 2, i.force.ToRad() + RECT_ANGLE_R, gh_laser, TRUE); break;
-		case eShotType::longer:	 DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad() + RECT_ANGLE_R, i.time, _countof(gh_long), 2, gh_long); break;
-		case eShotType::missile: DrawRotaGraph(i.pos.x, i.pos.y, 2, i.force.ToRad() + RECT_ANGLE_R, gh_missile, TRUE); break;
+		case eShotType::normal:	     DrawAnime(i.pos.x, i.pos.y, 2., -i.force.ToRad(), i.time, _countof(gh_normal), 2, gh_normal); break;
+		case eShotType::star:        DrawAnime(i.pos.x, i.pos.y, 2., i.rad, i.time, _countof(gh_star), 2, gh_star); break;
+		case eShotType::wave:        DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad() + RECT_ANGLE_R, i.time, _countof(gh_wave), 2, gh_wave); break;
+		case eShotType::big_O:       DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad() + RECT_ANGLE_R, i.time, _countof(gh_big_O), 2, gh_big_O); break;
+		case eShotType::laser:       DrawRotaGraph(i.pos.x, i.pos.y, 2, i.force.ToRad() + RECT_ANGLE_R, gh_laser, TRUE); break;
+		case eShotType::longer:	     DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad() + RECT_ANGLE_R, i.time, _countof(gh_long), 2, gh_long); break;
+		case eShotType::missile:     DrawRotaGraph(i.pos.x, i.pos.y, 2, i.force.ToRad() + RECT_ANGLE_R, gh_missile, TRUE); break;
+		case eShotType::short_laser: DrawRotaGraph(i.pos.x, i.pos.y, 2, i.force.ToRad() + RECT_ANGLE_R + DX_PI, gh_short, TRUE); break;
 		default: assert(!"abnormality val");
 		}
 	}
 
+	/* TEST */
 	if ( DebugMode::isTest )
 	{
 		for (auto i : shot)
@@ -265,14 +268,12 @@ void EneShot::HitCheck()
 		
 		if ((*itr).shotType == eShotType::big_O )
 		{
-			printfDx("big-O\n");
 			Effector::PlayAnime((*itr).pos.x, (*itr).pos.y, eExplosion_small);
 			continue;
 		}
 
 		if ((*itr).shotType == eShotType::missile)
 		{
-			printfDx("missile\n");
 			Effector::PlayAnime((*itr).pos.x, (*itr).pos.y, eExplosion_small);
 			IStage::PlayDist((*itr).pos.x, (*itr).pos.y);
 			IScore::AddScore(200);
@@ -335,9 +336,12 @@ void EneShot::SetRange(eShotType type, double & hitRange) const
 	case eShotType::missile:
 		hitRange = 7;
 		break;
+	case eShotType::short_laser:
+		hitRange = 4;
+		break;
 	}
 
-	assert(hitRange != NULL);
+	assert(hitRange != NULL && "NULL‚Å‚·‚½");
 }
 
 // Interface============================================================================

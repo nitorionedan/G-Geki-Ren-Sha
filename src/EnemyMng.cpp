@@ -30,7 +30,7 @@ EnemyMng::~EnemyMng()
 
 void EnemyMng::Load(eStage stage)
 {
-	assert(stage != eStage::stage2 && "[EnemyMng::Load]@Sorry, I haven't been implement this stage XD\n");
+	assert(stage != eStage::stage3 && "[EnemyMng::Load]@Sorry, I haven't been implement this stage XD\n");
 
 	if (!enemy.empty())
 		Finalize();
@@ -130,10 +130,7 @@ void EnemyMng::Update(const Player& player)
 		i->Update();
 
 	if (IBossChara::IsDead() && isBossZone)
-	{
 		isBossZone = false;
-		printfDx("boss is die.");
-	}
 }
 
 

@@ -1,4 +1,8 @@
 #pragma once
+/*
+@brief	file path
+@author ñÓïóÅI
+*/
 
 namespace MyFile
 {
@@ -19,12 +23,17 @@ namespace MyFile
 	/* sound files */
 	namespace Se
 	{
-		constexpr const char* STAGE1 = "";
+		constexpr const char* SMALL_EX = "SOUND/SE/explosion06.wav";
+		constexpr const char* NORML_EX = "SOUND/SE/explosion04.mp3";
+		constexpr const char* LARGE_EX = "SOUND/SE/explosion03.mp3";
+		constexpr const char* LONG_EX  = "SOUND/SE/explosion04.mp3";
+		constexpr const char* STAGE1   = "";
 	}
 
 	/* data files */
 	namespace Dat
 	{
 		constexpr const char* ENEMY_STG1 = "";
+		constexpr const char* CONTINUE   = "./data/continue.dat";
 	}
 }

@@ -1,5 +1,6 @@
 #include "DxLib.h"
 #include "ExplosionEffect.hpp"
+#include "FileDef.h"
 #include <cassert>
 
 constexpr int RandomMax = 60;
@@ -17,25 +18,25 @@ ExplosionEffect::ExplosionEffect(eExplosion_t kind_)
 		mExplosionS = new ExplosionS(eEpl_short);
 		for (int i = 0; i < EXEF_ALL_NUM; i++)
 			c_play[i] = new Counter(2);
-		sh_ex = LoadSoundMem("SOUND/SE/explosion06.wav");
+		sh_ex = LoadSoundMem(MyFile::Se::SMALL_EX);
 		break;
 	case eExplosion_normal:
 		mExplosionS = new ExplosionS(eEpl_normal);
 		for (int i = 0; i < EXEF_ALL_NUM; i++)
 			c_play[i] = new Counter(41);
-		sh_ex = LoadSoundMem("SOUND/SE/explosion04.mp3");
+		sh_ex = LoadSoundMem(MyFile::Se::NORML_EX);
 		break;
 	case eExplosion_big:
 		mExplosionS = new ExplosionS(eEpl_long);
 		for (int i = 0; i < EXEF_ALL_NUM; i++)
 			c_play[i] = new Counter(41);
-		sh_ex = LoadSoundMem("SOUND/SE/explosion03.mp3");
+		sh_ex = LoadSoundMem(MyFile::Se::LARGE_EX);
 		break;
 	case eExplosion_long:
 		mExplosionS = new ExplosionS(eEpl_normal);
 		for (int i = 0; i < EXEF_ALL_NUM; i++)
 			c_play[i] = new Counter(41);
-		sh_ex = LoadSoundMem("SOUND/SE/explosion04.mp3");
+		sh_ex = LoadSoundMem(MyFile::Se::LONG_EX);
 		break;
 	default: assert(!"abnormality");
 	}

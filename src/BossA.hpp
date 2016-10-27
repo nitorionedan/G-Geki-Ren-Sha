@@ -44,19 +44,18 @@ public:
 	void Dead_Update();
 	void End_Update();
 
-	// static ----------------
-	static int GetTime();
+	int GetTime();
 	void Damage(const int& point);
 
 	static const float	HIT_RANGE;
 
-	static bool		isExist;
+	bool		isExist;
 
 private:
 	// @brief		ボスの動きを変化させる
 	// @param[in]	state_	動きの種類
-	static void ChangeState(eBossA_state state_);
-	static bool isFine();		// 元気ですかー！？
+	void ChangeState(eBossA_state state_);
+	bool isFine();		// 元気ですかー！？
 	void HitCheck();
 
 	// @brief		画面外に出たか
@@ -95,11 +94,11 @@ private:
 	bool	isDead;							// 死んだか？
 
 	// static -----------------------------
-	static eBossA_state state;
-	static int		hp;			// 体力
-	static int		time;		// 生きている時間
-	static int		hs_break;						// シールド破損
-	static bool		isHit;
-	static bool		isWeak;
+	eBossA_state state;
+	int		hp;			// 体力
+	int		time;		// 生きている時間
+	int		hs_break;						// シールド破損
+	bool		isHit;
+	bool		isWeak;
 };
 // EOF

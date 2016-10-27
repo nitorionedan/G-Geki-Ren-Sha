@@ -130,7 +130,10 @@ void EnemyMng::Update(const Player& player)
 		i->Update();
 
 	if (IBossChara::IsDead() && isBossZone)
+	{
 		isBossZone = false;
+		printfDx("boss is die.");
+	}
 }
 
 

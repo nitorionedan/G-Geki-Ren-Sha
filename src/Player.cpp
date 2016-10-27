@@ -344,10 +344,10 @@ void Player::Rensha_Update()
 	switch (powlv)
 	{
 	case 0:	rensha = 0;	break;
-	case 1:	if (IStage::GetTime() % 17 == 0)	rensha--;	break;
-	case 2:	if (IStage::GetTime() % 12 == 0)	rensha--;	break;
-	case 3: if (IStage::GetTime() % 11 == 0)	rensha--;	break;
-	case 4: if (IStage::GetTime() % 10 == 0)	rensha--;	break;
+	case 1:	if (IStage::GetTime() % 17 == 0)	rensha--;	break; // 17
+	case 2:	if (IStage::GetTime() % 16 == 0)	rensha--;	break; // 12
+	case 3: if (IStage::GetTime() % 15 == 0)	rensha--;	break; // 11
+	case 4: if (IStage::GetTime() % 14 == 0)	rensha--;	break; // 10
 	default: assert(!"Player::Rensha_Update()");
 	}
 

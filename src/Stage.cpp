@@ -6,6 +6,7 @@
 #include "Sound.hpp"
 #include "IScore.hpp"
 #include "Graphics2D.hpp"
+#include "FileDef.h"
 
 /* field */
 #include "Field.hpp"
@@ -41,12 +42,12 @@ Stage::Stage()
 	, dist(new Distortion)
 	, c_fade(0)
 {
-	Screen = MakeScreen(640, 480, TRUE);
+	Screen   = MakeScreen(640, 480, TRUE);
 	gh_black = LoadGraph("GRAPH/GAME/BACKGROUND/blackbg.png");
 
 	// LoadStage(*.dat);		// TODO: Ç±Ç§Ç¢Ç§ïóÇ…ÉçÅ[ÉhÇµÇΩÇ¢ 
 
-	tCamera.pos = GetCameraPosition();
+	tCamera.pos  = GetCameraPosition();
 	tCamera.tang = GetCameraAngleVRotate();
 	tCamera.hang = GetCameraAngleHRotate();
 	tCamera.tang = GetCameraAngleTRotate();
@@ -69,7 +70,7 @@ void Stage::Initialize()
 
 	if ( s_isContinue )
 	{
-		int h_file = FileRead_open("./data/continue.dat");
+		int h_file = FileRead_open(MyFile::Dat::CONTINUE);
 		if (h_file != 0) // successful
 		{
 			while (1)
@@ -111,7 +112,7 @@ void Stage::StageSet(eStage estage)
 	switch (estage)
 	{
 	case eStage::opening:
-		mField = static_cast<Field*>(new OpenigStage);
+		mField = static_cast<Field*>(new Stage2);
 		Sound::Play(eSound::opening);
 		break;
 	case eStage::stage1 :
@@ -269,8 +270,10 @@ void Stage::UpdateField()
 
 void Stage::NextStage()
 {	
-	bool not_stage0 = (nowStage != eStage::stage0);
-	if (not_stage0)
+	bool not_stg0 = (nowStage != eStage::stage0);
+	bool not_stg2 = (nowStage != eStage::stage2);
+
+	if (not_stg2)
 	{
 		nowStage = static_cast<eStage>(static_cast<int>(nowStage) + 1);
 		IEnemyMng::Load(nowStage);

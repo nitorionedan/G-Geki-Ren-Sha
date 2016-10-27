@@ -33,14 +33,6 @@ const float BossA::SC_LIMIT_YB = 406.f;
 const float BossA::HIT_RANGE   = 60.f;
 const int BossA::MAX_HP        = 1500; // 3000 << too many
 
-eBossA_state BossA::state;
-int BossA::hp;
-int BossA::time;
-int BossA::hs_break;
-bool BossA::isExist;
-bool BossA::isHit;
-bool BossA::isWeak;
-
 
 BossA::BossA()
 	: SPEED(2.f)
@@ -52,6 +44,11 @@ BossA::BossA()
 	, angle(0.0f)
 	, isMove(false)
 	, isEnd(false)
+	, isDead(false)
+	, isExist(true)
+    , isHit(false)
+    , isWeak(false)
+
 {
 	hg_shield = LoadGraph("GRAPH/GAME/ENEMY/Shield.png");
 	hs_big = LoadSoundMem("SOUND/SE/eshot03.wav");
@@ -84,10 +81,6 @@ BossA::BossA()
 	hp = MAX_HP;
 	time   = 0;
 	pos.SetVec(400.f, -100.f);
-	isExist = true;
-	isHit  = false;
-	isDead   = false;
-	isWeak = false;
 
 	startPos = ConvScreenPosToWorldPos(VGet(pos.x, pos.y, 0.5f));	// スクリーン座標からワールド座標へ
 	mPos = startPos;												// モデルをスクリーン座標にあてがる
@@ -127,11 +120,11 @@ void BossA::Update()
 
 	switch (state)
 	{
-	case eBossA_Start:	Start_Update();		break;
-	case eBossA_Normal:	Normal_Update();	break;
-	case eBossA_Weak:	Weak_Update();		break;
-	case eBossA_Dead:	Dead_Update();		break;
-	case eBossA_End:	End_Update();		break;
+	case eBossA_Start:	Start_Update();	 break;
+	case eBossA_Normal:	Normal_Update(); break;
+	case eBossA_Weak:	Weak_Update();	 break;
+	case eBossA_Dead:	Dead_Update();	 break;
+	case eBossA_End:	End_Update();	 break;
 	default:	break;
 	}
 
@@ -158,7 +151,6 @@ void BossA::Update()
 
 	s_isHit = false;
 	*/
-
 
 	// TEST-------------------------------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
@@ -421,8 +413,8 @@ bool BossA::isOverLimit()
 void BossA::Damage(const int& point)
 {
 	// スタート中ならここで返す
-	if (state == eBossA_Start)	return;
-
+	if (state == eBossA_Start)
+		return;
 
 	const bool& IS_ALIVE = (hp > 0);
 	

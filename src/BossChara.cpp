@@ -36,10 +36,12 @@ void BossChara::Start(eBoss_num num)
 	switch (num)
 	{
 	case eBoss_A:
-		mBoss = new BossA;
+		mBoss = static_cast<BossTask*>(new BossA);
 		IBossShotMgr::ChangeShot(eEnemyShot::ShotA);
 		break;
 	case eBoss_B:
+		mBoss = static_cast<BossTask*>(new BossA);
+		IBossShotMgr::ChangeShot(eEnemyShot::ShotA);
 		break;
 	case eBoss_C:
 		break;
@@ -76,7 +78,7 @@ void IBossChara::Start()
 	switch (IStage::GetNowStage())
 	{
 	case eStage::opening: mBossChara->Start(eBoss_A); break;
-	case eStage::stage1:	break;
+	case eStage::stage1: mBossChara->Start(eBoss_A); break;
 	case eStage::stage2:	break;
 	case eStage::stage3:	break;
 	case eStage::stage4:	break;

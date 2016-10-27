@@ -117,7 +117,7 @@ void Sound::Load()
 				int x = CheckHandleASyncLoad(sound->handle);
 				if (x == -1)
 				{
-					MessageBox(NULL, "もう一度起動してください。根気よく・・・。", "サウンド読み込みエラー（ヒープ領域が足りないorz）", MB_OK);
+					MessageBox(NULL, "もう一度起動してください。", "サウンド読み込みエラー（ヒープ領域が足りないorz）", MB_OK);
 					exit(-1);
 				}
 			}
@@ -168,6 +168,34 @@ void Sound::Delete()
 void Sound::Play(eSound sound)
 {
 	PlaySoundMem(mSound[static_cast<int>(sound)]->handle, DX_PLAYTYPE_LOOP);
+
+	int volume = 0;
+
+	switch (sound)
+	{
+	case eSound::opening:    volume = 170; break;
+	case eSound::stage1:     volume = 170; break;
+	case eSound::stage2:     volume = 170; break;
+	case eSound::stage3:     volume = 170; break;
+	case eSound::stage4:     volume = 170; break;
+	case eSound::stage5:     volume = 170; break;
+	case eSound::stage6:     volume = 170; break;
+	case eSound::stage0:     volume = 170; break;
+	case eSound::bossA:      volume = 170; break;
+	case eSound::bossB:	     volume = 170; break;
+	case eSound::bossC:	     volume = 170; break;
+	case eSound::bossD:	     volume = 170; break;
+	case eSound::bossE:	     volume = 170; break;
+	case eSound::bossF:	     volume = 170; break;
+	case eSound::bossG:	     volume = 170; break;
+	case eSound::bossH:	     volume = 170; break;
+	case eSound::gameover:   volume = 170; break;
+	case eSound::name_entry: volume = 170; break;
+	case eSound::eSoundNum:	 volume = 170; break;
+	default: assert(!"error");
+	}
+
+	::ChangeVolumeSoundMem(volume, mSound[static_cast<int>(sound)]->handle);
 }
 
 
@@ -177,6 +205,7 @@ void Sound::Stop()
 	{
 		if (CheckSoundMem(sound->handle) == TRUE)
 		{
+			printfDx("Sound.cpp -> Stop\n");
 			StopSoundMem(sound->handle);
 			break;
 		}
@@ -199,9 +228,8 @@ void Sound::FadeOutStop()
 
 void Sound::SetVolume(eSound sound, int volume)
 {
-	//mSound[static_cast<int>(sound)]->volume = volume;
-	//ChangeVolumeSoundMem(volume, mSound[static_cast<int>(sound)]->handle);
-	printfDx("Sorry, please don't use this func\n");
+	mSound[static_cast<int>(sound)]->volume = volume;
+	ChangeVolumeSoundMem(volume, mSound[static_cast<int>(sound)]->handle);
 }
 
 
@@ -229,5 +257,5 @@ Sound::SoundFile::SoundFile(int handle, double Max_vol)
 void Sound::SoundFile::SetVolume(int volumePal)
 {
 	volume = volumePal;
-	ChangeVolumeSoundMem(volume, handle);
+	::ChangeVolumeSoundMem(volume, handle);
 }

@@ -103,3 +103,11 @@ void DrawCircleScreen(
 	float Absorption,		// 内側の円に引き込まれるドット数
 	int ScreenHandle		// 画面グラフィックハンドル
 	);
+
+// 画面を歪ませながら描画する関数（外部サイトからほぼ引用）
+void DrawEllipseScreen(
+	int CenterX,		// 円の中心座標X
+	int CenterY,		// 円の中心座標Y
+	float Radius,		// 外側の円のサイズ
+	int ScreenHandle	// 画面グラフィックハンドル
+	);

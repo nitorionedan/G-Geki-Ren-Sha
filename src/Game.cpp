@@ -38,6 +38,11 @@ static int gh_flyer;
 
 bool Game::isDead;
 
+namespace
+{
+	Vector2D pos(320, 240);
+}
+
 
 Game::Game(ISceneChanger* changer)
 	: BaseScene(changer)
@@ -143,16 +148,29 @@ void Game::Update()
 	
 	if (isDead)	mSceneChanger->ChangeScene(eScene::gameOver);
 
+	static int c_test = 0;
+	if (c_test != 0)
+		++c_test;
 	if (Keyboard::Instance()->isPush(KEY_INPUT_C))
 	{
-		Vector2D pos(320, 240);
+		c_test = 1;
 
-		for (int i = 0; i < 3; ++i)
-		{
-			Vector2D dir = Vector2D::GetVec((GetRand(20) - 10) / 10., (GetRand(20) - 10) / 10.);
-			Vector2D force = dir.Normalize() * 7;
-			IEneShot::Fire_Ang(eShotType::missile, pos, 0, 4, dir.ToRad(), 1.01, 2, eShotAI::homing);
-		}
+		//for (int i = 0; i < 3; ++i)
+		//{
+		//	Vector2D dir = Vector2D::GetVec((GetRand(20) - 10) / 10., (GetRand(20) - 10) / 10.);
+		//	Vector2D force = dir.Normalize() * 7;
+		//	IEneShot::Fire_Ang(eShotType::missile, pos, 0, 4, dir.ToRad(), 1.01, 2, eShotAI::homing);
+		//}
+		//IStage::PlayDist(GetRand(640), GetRand(480));
+	}
+
+	if (c_test == 5 || c_test == 10 || c_test == 15)
+	{
+		Vector2D dir = Vector2D::GetVec2(pos, Vector2D::ZERO);
+		Vector2D force = dir.Normalize() * 3;
+		IEneShot::Fire(eShotType::laser, pos, 0, force, 1, 0);
+		if (c_test == 15)
+			c_test = 0;
 	}
 
 // TEST ----------------------------------------------
@@ -252,14 +270,12 @@ void Game::GameOver()
 {
 	isDead = true;
 
+	/* create continue data */
 	std::ofstream ofs("./data/continue.dat");
-
 	int tmp = static_cast<int>(IStage::GetNowStage());
 	ofs << tmp;
 
 	ofs.close();
-
-	Sound::Stop();
 }
 
 

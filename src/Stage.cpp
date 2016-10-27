@@ -5,6 +5,7 @@
 #include "EnemyMng.hpp"
 #include "Sound.hpp"
 #include "IScore.hpp"
+#include "Graphics2D.hpp"
 
 /* field */
 #include "Field.hpp"
@@ -34,9 +35,10 @@ bool Stage::s_isContinue = false;
 
 
 Stage::Stage()
-	: c_quake( new Counter(30) )
-	, graphic( new Graphic )
-	, mField( static_cast<Field*>(new NullStage) )
+	: c_quake(new Counter(30))
+	, graphic(new Graphic)
+	, mField(static_cast<Field*>(new NullStage))
+	, dist(new Distortion)
 	, c_fade(0)
 {
 	Screen = MakeScreen(640, 480, TRUE);
@@ -131,6 +133,7 @@ void Stage::StageSet(eStage estage)
 		break;
 	default: assert(!"Stage::StageSet()");
 	}
+	printfDx("Play\n");
 
 	nowStage = estage;	// setting current stage
 
@@ -161,7 +164,7 @@ void Stage::Update()
 				switch (nowStage)
 				{
 				case eStage::opening:
-					Sound::Play(eSound::bossA);
+					Sound::Play(eSound::bossB);
 					break;
 				case eStage::stage1:
 					Sound::Play(eSound::bossB);
@@ -185,6 +188,7 @@ void Stage::Update()
 					Sound::Play(eSound::bossH);
 					break;
 				}
+				printfDx("PlayBoss\n");
 				c_bossBgm = 0;
 			}
 		}
@@ -194,6 +198,8 @@ void Stage::Update()
 		Update_Result();
 		break;
 	}
+
+	dist->Update();
 
 	// TEST-----------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
@@ -205,19 +211,13 @@ void Stage::Update()
 
 void Stage::Draw()
 {
-	int tmpSc = NULL;
+	SetDrawScreen(Screen);
+	ClearDrawScreen();
+
 	switch (state)
 	{
 	case Stage::eState::game:
-		tmpSc = GetDrawScreen();
-		SetDrawScreen(Screen);
-		ClearDrawScreen();
-
 		mField->Draw();
-
-		SetDrawScreen(DX_SCREEN_BACK);
-		DrawGraph(pos.x, pos.y, Screen, TRUE);
-		SetDrawScreen(tmpSc);
 
 		DrawStageCall();
 		break;
@@ -231,6 +231,9 @@ void Stage::Draw()
 		DrawResult();
 		break;
 	}
+
+	SetDrawScreen(DX_SCREEN_BACK);
+	dist->Draw(Screen);
 
 	// TEST -------------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
@@ -281,7 +284,8 @@ void Stage::NextStage()
 void Stage::Clear()
 {	
 	Sound::FadeOutStop();
-	
+	printfDx("FadeStop\n");
+
 	state = eState::result;
 	time = 0;
 	end_score = IScore::GetScore();
@@ -486,7 +490,12 @@ void Stage::BigQuake()
 }
 
 
-void Stage::SkipTo(int Time){
+void Stage::PlayDistortion(double x, double y) {
+	dist->PlayDistortion(x, y);
+}
+
+
+void Stage::SkipTo(int Time) {
 	time = Time;
 }
 
@@ -527,4 +536,71 @@ void IStage::Quake(eQuake quakeType)
 
 void IStage::SkipTo(int Time){
 	mStage->SkipTo(Time);
+}
+
+
+// ==========================================-
+Stage::Distortion::Distortion()
+{
+	screen = MakeScreen(640, 480, TRUE);
+}
+
+
+Stage::Distortion::~Distortion()
+{
+}
+
+
+void Stage::Distortion::Update()
+{
+	for (auto& i : m_dist)
+		++i.time;
+
+	for (auto& i : m_dist)
+		i.range += 6;
+
+	// erase
+	m_dist.erase(std::remove_if(
+		std::begin(m_dist), std::end(m_dist),
+		[](tDist& dist) {
+			return (dist.time >= 30);
+		}),
+		std::end(m_dist));
+}
+
+
+void Stage::Distortion::Draw(const int & GrHandle)
+{
+	for(auto i : m_dist)
+	{
+		SetDrawScreen(i.sc);
+		ClearDrawScreen();
+
+		DrawGraph(0, 0, GrHandle, TRUE);
+
+		SetDrawScreen(DX_SCREEN_BACK);
+		// 画面を歪ませて描画
+		DrawCircleScreen(
+			i.pos.x, i.pos.y, // 中心座標
+			i.range,    // 内側円のサイズ
+			0.f,          // 外側円のサイズ
+			0.f,	          // 内側に引き込まれるドット数
+			i.sc);
+		//DrawEllipseScreen(i.pos.x, i.pos.y, i.range, i.sc);
+	}
+
+	if (m_dist.empty())
+		DrawGraph(0, 0, GrHandle, TRUE);
+}
+
+
+void Stage::Distortion::PlayDistortion(double x, double y)
+{
+	tDist tmp;
+	tmp.pos.SetVec(x, y);
+	tmp.time = 0;
+	tmp.range = 0;
+	tmp.isPlay = true;
+	tmp.sc = MakeScreen(640, 480, TRUE);
+	m_dist.emplace_back(tmp);
 }

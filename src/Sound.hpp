@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 #include <memory>
 
@@ -67,8 +68,8 @@ public:
 private:
 	Sound() {}
 	~Sound() {}
+	[[deprecated("please don't use Sound::SetVolume()")]]
 	static void SetVolume(eSound sound, int volume);
-
 	static std::vector<SoundFile*> mSound;
 	static bool isLoaded;
 	static Graphic gr;

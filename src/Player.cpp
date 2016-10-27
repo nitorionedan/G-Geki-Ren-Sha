@@ -56,7 +56,7 @@ Player::Player()
 	isDead = false;
 	isStart = false;
 	isHit = false;
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 	superFlag = true;
 #else
 	superFlag = false;
@@ -68,10 +68,10 @@ Player::Player()
 
 Player::~Player()
 {
-	for (int i = 0; i < _countof(hg); i++)
-		DeleteGraph(hg[i]);
-	for (int i = 0; i < _countof(hg_arm); i++)
-		DeleteGraph(hg_arm[i]);
+	for (auto i : hg)
+		DeleteGraph(i);
+	for (auto i : hg_arm)
+		DeleteGraph(i);
 	DeleteSoundMem(hs_shiftUp);
 	DeleteSoundMem(hs_shiftDown);
 	DeleteSoundMem(hs_dead);
@@ -139,8 +139,6 @@ void Player::Draw()
 	if (DebugMode::isTest == false)	return;
 
 	DrawCircle(pos.x, pos.y + 9, HIT_RANGE, GetColor(0, 255, 0), false);
-	//DrawFormatString(320, 240, GetColor(0, 255, 0), "pos.x:%lf, pos.y=%lf", pos.x, pos.y);
-//	DrawFormatString(100, 100, GetColor(0, 255, 0), "Dで死にます");
 }
 
 
@@ -155,12 +153,11 @@ void Player::Update_Start()
 	if (c_start->isEach(70, 149))
 	{
 		pos.y -= 2.0;						// rise up
-//		pos.y = std::max(pos.y, Y_START);	// go to start pos
-
 		if (pos.y < Y_START)
 			state = ePlayerState::Game;
-
-	}else{
+	}
+	else
+	{
 		InputMng();
 		Rensha_Update();
 		Move();
@@ -171,6 +168,7 @@ void Player::Update_Start()
 		if (superFlag == false)
 			isMuteki = false;
 		state = ePlayerState::Game;	// スタート地点ならスタートする
+		c_start->Reset();
 	}
 }
 
@@ -208,21 +206,12 @@ void Player::Update_Dead()
 	if(c_dead->isLast())
 	{
 		life--;
-		if (life == 0) {
-			/// 死亡
-			Game::GameOver();
-		}
-
-		// スタート状態にする
-		state = ePlayerState::Start;
-
-		// スタート地点に戻す
-		pos.SetVec(320.0, 520.0);
-
+		if (life <= 0)
+			Game::GameOver();			/// 死亡
+		state = ePlayerState::Start;	// スタート状態にする
+		pos.SetVec(320.0, 520.0);		// スタート地点に戻す
 		keydir = eInputDir::Neutral;
-
-		// 再充填
-		bombNum = 3;
+		bombNum = 3;					// 再充填
 	}
 }
 
@@ -292,21 +281,6 @@ void Player::Draw_Dead()
 	}
 
 	SetDrawBright(255, 255, 255);	// 元の色合い
-}
-
-
-void Player::SetStart()
-{
-	if (isStart)	return;
-
-	const bool& isStartPosition = (pos.y == Y_START);
-
-	c_start->Update();
-	pos.y -= 2.0;								// 上に上昇
-	pos.y = std::max(pos.y, Y_START);			// スタート地点まで
-
-	if (isStartPosition)
-		isStart = true;	// スタート地点ならスタートする
 }
 
 
@@ -401,7 +375,6 @@ void Player::Death()
 	vec.SetVec(std::cos(1.5 * GetRand(100)), 1.5 * std::cos(GetRand(100)));
 	Effector::PlaySpread(pos.x, pos.y, GetRand(100), dead_ef);
 	IStage::Quake(eQuake::smal);
-	PlaySoundMem(hs_dead, DX_PLAYTYPE_BACK);
 }
 
 
@@ -450,15 +423,19 @@ bool Player::HitCheckCircle(const double& ColX, const double& ColY)
 
 	const bool& IS_HIT = Vector2D::CirclePointCollision(pos.x, pos.y + 9.0, ColX, ColY, HIT_RANGE);
 
+	if (IS_HIT)
+		PlaySoundMem(hs_dead, DX_PLAYTYPE_BACK);
+
 	// アームを剥がす
 	if (IS_HIT && isArm)
 	{
 		isArm = false;
 		IBomb::Fire();
+		return true;
 	}
 
 	const bool& CanDeath = ( IS_HIT && state == ePlayerState::Game && isMuteki == false );
-	if ( CanDeath & !superFlag )
+	if ( CanDeath && !superFlag )
 		Death();
 
 	return IS_HIT;
@@ -472,15 +449,22 @@ bool Player::HitCheckCircle(const double & Range1, const double & Range2, const 
 
 	const bool& IS_HIT = Vector2D::CirclesCollision(Range1, Range2, X1, Y1, X2, Y2);
 
+	if (IS_HIT && IBomb::IsBombing())
+		return true;
+
+	if (IS_HIT && IBomb::IsBombing() == false && isMuteki == false)
+		PlaySoundMem(hs_dead, DX_PLAYTYPE_BACK);
+
 	// アームを剥がす
 	if (IS_HIT && isArm)
 	{
 		isArm = false;
 		IBomb::Fire();
+		return true;
 	}
 
 	const bool& CanDeath = (IS_HIT && state == ePlayerState::Game && isMuteki == false);
-	if (CanDeath & !superFlag)
+	if (CanDeath && !superFlag)
 		Death();
 
 	return IS_HIT;

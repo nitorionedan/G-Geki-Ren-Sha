@@ -48,7 +48,6 @@ public:
 	void Draw_Start();
 	void Draw_Game();
 	void Draw_Dead();
-	void SetStart();
 	void InputMng();	// 連射データ管理
 	const Vector2D& GetPos() const {
 		return pos;

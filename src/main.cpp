@@ -57,9 +57,9 @@ void message_box()
 		TEXT("スクリーン設定"),
 		MB_YESNOCANCEL | MB_ICONQUESTION);
 	
-	if (flag == IDNO)
+	if (flag == IDYES)
 	{
-		ScSizeFrag = true;
+		ScSizeFrag = false;
 //		SetUseBackBufferTransColorFlag(true); // 全部透明化フラグ
 	}
 	if (flag == IDCANCEL)	QuitGame();

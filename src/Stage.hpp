@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Counter.hpp"
-#include "Graphics2D.hpp"
 #include "Vector2D.hpp"
 #include "Graphic.hpp"
 #include <DxLib.h>
 #include <memory>
 #include <string>
+#include <vector>
 
 class Field;
 
@@ -31,7 +31,7 @@ enum class eQuake
 };
 
 
-class Stage	: public Graphics2D
+class Stage
 {
 	enum class eState
 	{
@@ -45,6 +45,34 @@ class Stage	: public Graphics2D
 		float vang;
 		float hang;
 		float tang;
+	};
+
+	class Distortion
+	{
+		struct tDist
+		{
+			Vector2D pos;
+			double range;
+			int time, sc;
+			bool isPlay;
+			bool operator==(const tDist& other) {
+				return (pos == other.pos) &&
+					(range == other.range) &&
+					(time == other.time) &&
+					(isPlay == other.isPlay);
+			}
+		};
+
+	public:
+		Distortion();
+		~Distortion();
+		void Update();
+		void Draw(const int& GrHandle);
+		void PlayDistortion(double x, double y);
+	
+	private:
+		std::vector<tDist> m_dist;
+		int screen;
 	};
 
 public:
@@ -61,6 +89,7 @@ public:
 	void AllClear ();				// 全クリ用
 	void PlayQuake();
 	void PlayQuake(eQuake aukeType);
+	void PlayDistortion(double x, double y);
 	void SkipTo(int Time);
 	const eStage GetNowStage() const {
 		return nowStage;
@@ -83,6 +112,7 @@ private:
 
 	std::unique_ptr<Graphic> graphic;
 	std::unique_ptr<Counter> c_quake;	// ステージ全体を揺らす
+	std::unique_ptr<Distortion> dist;	// 画面に歪みを与える
 	Field* mField;
 	Vector2D pos;
 	t_Camera tCamera;
@@ -128,6 +158,9 @@ public:
 	static void SkipTo(int Time);
 	static const eStage GetNowStage() {
 		return mStage->GetNowStage();
+	}
+	static void PlayDist(double x, double y) {
+		mStage->PlayDistortion(x, y);
 	}
 	static const int GetTime() {
 		return mStage->GetTime();

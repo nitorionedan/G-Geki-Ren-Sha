@@ -12,6 +12,8 @@
 #include "Effector.hpp"
 #include "ExplosionEffect.hpp"
 #include "IScore.hpp"
+#include "Stage.hpp"
+#include "FileDef.h"
 #include <DxLib.h>
 #include <cassert>
 #include <algorithm>
@@ -49,7 +51,8 @@ EneShot::EneShot()
 	gh_long[4] = LoadGraph("GRAPH/GAME/Eshot/enaga4.png");
 	LoadDivGraph("GRAPH/GAME/Eshot/bigshot.png", 4, 4, 1, 60, 60, gh_big_O);
 	LoadDivGraph("GRAPH/GAME/Eshot/eshot04.png", 10, 5, 2, 13, 12, gh_star);
-	gh_missile = LoadGraph("GRAPH/GAME/Eshot/missile.png");
+	gh_missile = LoadGraph(MyFile::Gr::ESHOT_MISSILE);
+	gh_laser = LoadGraph(MyFile::Gr::ESHOT_LASER);
 
 	shot.reserve(100);
 }
@@ -68,6 +71,7 @@ EneShot::~EneShot()
 	for (auto i : gh_star)
 		DeleteGraph(i);
 	DeleteGraph(gh_missile);
+	DeleteGraph(gh_laser);
 }
 
 
@@ -121,19 +125,12 @@ void EneShot::Draw()
 	{
 		switch (i.shotType)
 		{
-		case eShotType::normal:
-			DrawAnime(i.pos.x, i.pos.y, 2., -i.force.ToRad(), i.time,
-				_countof(gh_normal), 2, gh_normal);
-			break;
-		case eShotType::star:
-			DrawAnime(i.pos.x, i.pos.y, 2., i.rad, i.time,
-				_countof(gh_star), 2, gh_star);
-			break;
-		case eShotType::wave:  DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad() + RECT_ANGLE_R, i.time, _countof(gh_wave), 2, gh_wave); break;
-		case eShotType::big_O: DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad() + RECT_ANGLE_R, i.time, _countof(gh_big_O), 2, gh_big_O); break;
-		case eShotType::laser:	// TODO: 
-			break;
-		case eShotType::longer:	DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad() + RECT_ANGLE_R, i.time, _countof(gh_long), 2, gh_long); break;
+		case eShotType::normal:	 DrawAnime(i.pos.x, i.pos.y, 2., -i.force.ToRad(), i.time, _countof(gh_normal), 2, gh_normal); break;
+		case eShotType::star:    DrawAnime(i.pos.x, i.pos.y, 2., i.rad, i.time, _countof(gh_star), 2, gh_star); break;
+		case eShotType::wave:    DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad() + RECT_ANGLE_R, i.time, _countof(gh_wave), 2, gh_wave); break;
+		case eShotType::big_O:   DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad() + RECT_ANGLE_R, i.time, _countof(gh_big_O), 2, gh_big_O); break;
+		case eShotType::laser:   DrawRotaGraph(i.pos.x, i.pos.y, 2, i.force.ToRad() + RECT_ANGLE_R, gh_laser, TRUE); break;
+		case eShotType::longer:	 DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad() + RECT_ANGLE_R, i.time, _countof(gh_long), 2, gh_long); break;
 		case eShotType::missile: DrawRotaGraph(i.pos.x, i.pos.y, 2, i.force.ToRad() + RECT_ANGLE_R, gh_missile, TRUE); break;
 		default: assert(!"abnormality val");
 		}
@@ -233,6 +230,9 @@ bool EneShot::HitCheck(const double & Range, const double & X, const double & Y)
 		if ((*itr).hasHP == false)
 			continue;
 
+		if ((*itr).shotType == eShotType::laser)
+			continue;
+
 		isHit = Vector2D::CirclesCollision((*itr).hitRange, Range, (*itr).pos.x, (*itr).pos.y, X, Y);
 
 		if (isHit == false)
@@ -243,6 +243,7 @@ bool EneShot::HitCheck(const double & Range, const double & X, const double & Y)
 		if ((*itr).life <= 0)
 		{
 			Effector::PlayAnime((*itr).pos.x, (*itr).pos.y, eExplosion_small);
+			IStage::PlayDist((*itr).pos.x, (*itr).pos.y);
 			IScore::AddScore(200);
 			delete (*itr).mAI;
 			shot.erase(itr);
@@ -264,17 +265,23 @@ void EneShot::HitCheck()
 		
 		if ((*itr).shotType == eShotType::big_O )
 		{
+			printfDx("big-O\n");
 			Effector::PlayAnime((*itr).pos.x, (*itr).pos.y, eExplosion_small);
-			break;
+			continue;
 		}
 
 		if ((*itr).shotType == eShotType::missile)
 		{
+			printfDx("missile\n");
 			Effector::PlayAnime((*itr).pos.x, (*itr).pos.y, eExplosion_small);
+			IStage::PlayDist((*itr).pos.x, (*itr).pos.y);
 			IScore::AddScore(200);
 		}
 
 		IHitEffect::PlayAnime( (*itr).pos );
+
+		if ((*itr).shotType == eShotType::laser)
+			continue;
 		delete (*itr).mAI;
 		shot.erase(itr);
 		break;
@@ -289,6 +296,7 @@ void EneShot::HitCheck()
 			if ((*itr).shotType == eShotType::missile)
 			{
 				Effector::PlayAnime((*itr).pos.x, (*itr).pos.y, eExplosion_small);
+				IStage::PlayDist((*itr).pos.x, (*itr).pos.y);
 				IScore::AddScore(200);
 			}
 
@@ -302,6 +310,8 @@ void EneShot::HitCheck()
 
 void EneShot::SetRange(eShotType type, double & hitRange) const
 {
+	hitRange = NULL;
+
 	/* range of hit */
 	switch (type)
 	{
@@ -318,6 +328,7 @@ void EneShot::SetRange(eShotType type, double & hitRange) const
 		hitRange = 50;
 		break;
 	case eShotType::laser:
+		hitRange = 5;
 		break;
 	case eShotType::longer:
 		break;
@@ -325,6 +336,8 @@ void EneShot::SetRange(eShotType type, double & hitRange) const
 		hitRange = 7;
 		break;
 	}
+
+	assert(hitRange != NULL);
 }
 
 // Interface============================================================================

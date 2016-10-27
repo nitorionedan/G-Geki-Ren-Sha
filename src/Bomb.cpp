@@ -26,7 +26,8 @@ void Bomb::Update()
 	// ”g–ä‚Ì“®‚«
 	MoveEffect();
 
-	if (!isBomb) return;
+	if (isBomb == false)
+		return;
 
 	if (time % 10 == 0)
 	{
@@ -106,6 +107,10 @@ bool Bomb::IsHit(const int & ColCircle, const double & ColX, const double & ColY
 	}
 
 	return isHit;
+}
+
+bool Bomb::IsBombing() const {
+	return isBomb;
 }
 
 

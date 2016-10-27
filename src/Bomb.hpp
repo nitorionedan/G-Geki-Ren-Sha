@@ -27,6 +27,7 @@ public:
 	void SetParam(Vector2D& pos, int& shiftLevel, int& bombNum);
 	void Fire();
 	bool IsHit(const int& ColCircle, const double& ColX, const double& ColY);
+	bool IsBombing() const;
 
 private:
 	void DrawEffect();
@@ -91,6 +92,9 @@ public:
 	}
 	static bool IsHit(const int& ColCircle, const double& ColX, const double& ColY) {
 		return mBomb->IsHit(ColCircle, ColX, ColY);
+	}
+	static bool IsBombing() {
+		return mBomb->IsBombing();
 	}
 
 private:

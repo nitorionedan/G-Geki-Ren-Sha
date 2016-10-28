@@ -145,6 +145,10 @@ void BossA::Draw()
 	if (isExist == false)
 		return;
 
+	/* effect */
+	if (c_dead >= 180 && c_dead <= 200)
+		DrawBox(0, 0, 640, 480, GetColor(255, 255, 255), TRUE);
+
 	if(isHit)
 		SetLightDifColor(CyanF);	// —Î
 	
@@ -157,7 +161,10 @@ void BossA::Draw()
 	const bool&  PreliminaryActionFlag = (c_atk1->GetNowcount() == 50);
 	if(PreliminaryActionFlag)
 		SetLightDifColor(YellowF);	// F•ÏX
-	
+
+	if (c_dead >= 180 && c_dead <= 200)
+		SetLightDifColor(GetColorF(0, 0, 0, 255)); // black
+
 	if (isWeak)
 	{
 		MV1SetRotationXYZ(hmWeaking, rota);	// ‰ñ“]’lİ’è
@@ -331,18 +338,19 @@ void BossA::Dead_Update()
 	if(Is_deing)	// small explosion
 		Effector::PlayAnime(pos.x + GetRand(80) - 40, pos.y + GetRand(80) - 40, eExplosion_small);
 
-	pos.y += 1.;	// falling slowly
+	pos.y += 0.5;	// falling slowly
 
 	if (c_dead == 180.)	// final explosion
 	{
-		isExist = false;
-
 		for (int i = 0; i < 5; ++i)
 			Effector::PlayAnime(pos.x, pos.y, eExplosion_big);
 		
 		PlaySoundMem(hs_exp, DX_PLAYTYPE_BACK);
 		IStage::Clear();
 	}
+
+	if (c_dead == 240.)
+		isExist = false;
 }
 
 

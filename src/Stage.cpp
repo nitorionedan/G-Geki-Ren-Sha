@@ -79,7 +79,7 @@ void Stage::Initialize()
 			}
 		}
 		else // failed
-			nowStage = eStage::opening;
+			nowStage = eStage::stage1;
 		FileRead_close(h_file);
 		s_isContinue = false;
 	}
@@ -87,6 +87,7 @@ void Stage::Initialize()
 	time = 0;
 	rank = 0;
 	c_bossBgm = 0;
+	c_result = 0;
 	start_score = 0;
 	end_score = 0;
 	pos = Vector2D::ZERO;
@@ -160,7 +161,7 @@ void Stage::Update()
 				switch (nowStage)
 				{
 				case eStage::opening:
-					Sound::Play(eSound::bossB);
+					Sound::Play(eSound::bossA);
 					break;
 				case eStage::stage1:
 					Sound::Play(eSound::bossB);
@@ -198,6 +199,7 @@ void Stage::Update()
 
 	// TEST-----------------------------------------------------------------
 	if (DebugMode::isTest == false)	return;
+	DrawFormatString(400, 30, GetColor(0, 255, 0), "TIME:%d", time);
 
 	/// TODO: Žž‚ª‚­‚é‚Ü‚Å••ˆó
 //	if (effect->getIsAnime() && !f_quake)	f_quake = true;
@@ -269,7 +271,7 @@ void Stage::UpdateField()
 void Stage::NextStage()
 {	
 	bool not_stg0 = (nowStage != eStage::stage0);
-	bool not_stg2 = (nowStage != eStage::stage2);
+	bool not_stg2 = (nowStage != eStage::stage1);
 
 	if (not_stg2)
 	{
@@ -318,6 +320,7 @@ void Stage::PlayQuake(eQuake aukeType)
 void Stage::Update_Result()
 {
 	++time;
+	++c_result;
 
 	/* Blackout */
 	if (c_fade > 0)
@@ -366,7 +369,6 @@ void Stage::DrawStageCall()
 		graphic->DrawMyString2(X_MSG, Y_MSG, "STAGE 0", SPACE_MSG, true, EXRATE_MSG);
 		break;
 	}
-
 }
 
 
@@ -403,7 +405,24 @@ void Stage::DrawResult()
 		break;
 	}
 
-	graphic->DrawMyString2(100, 240, stageName.c_str(), 16, false, 2.);
+	/* The Life Bonus */
+	int lifeBonus = IPlayer::GetLife() * 64864; // ’Ž‚Í–³Ž‹iŒƒŠ¦j
+	graphic->DrawMyString2(100, 200, "LIFE BONUS", 16, true, 2.);
+	graphic->DrawScore(480, 200, lifeBonus, 16, 2.);
+	if (c_result == 1)
+		IScore::AddScore(lifeBonus);
+
+	graphic->DrawMyString2(100, 240, stageName.c_str(), 16, true, 2.);
+
+	/* The Pacifist Bonus */
+	if (IEnemyMng::CheckPacifist())
+	{
+		int pci_score = 10140 * (static_cast<int>(nowStage) + 1);
+		graphic->DrawMyString2(100, 280, "PACIFIST BONUS", 16, true, 2.);
+		graphic->DrawScore(480, 280, pci_score, 16, 2.);
+		if (c_result == 1)
+			IScore::AddScore(pci_score);
+	}
 
 	if (time >= 300)
 		graphic->DrawScore(480, 240, sum_score, 16, 2.);

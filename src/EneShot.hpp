@@ -92,7 +92,8 @@ private:
 		gh_big_O[4],
 		gh_star[10],
 		gh_missile,
-		gh_laser;
+		gh_laser,
+		gh_fire;
 };
 
 

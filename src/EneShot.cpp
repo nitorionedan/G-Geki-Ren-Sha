@@ -54,6 +54,7 @@ EneShot::EneShot()
 	gh_missile = LoadGraph(MyFile::Gr::ESHOT_MISSILE);
 	gh_laser = LoadGraph(MyFile::Gr::ESHOT_LASER);
 	gh_short = LoadGraph(MyFile::Gr::ESHOT_SHORT);
+	gh_fire = LoadGraph(MyFile::Gr::FIRE);
 
 	shot.reserve(100);
 }
@@ -73,6 +74,7 @@ EneShot::~EneShot()
 		DeleteGraph(i);
 	DeleteGraph(gh_missile);
 	DeleteGraph(gh_laser);
+	DeleteGraph(gh_fire);
 }
 
 
@@ -130,7 +132,11 @@ void EneShot::Draw()
 		case eShotType::star:        DrawAnime(i.pos.x, i.pos.y, 2., i.rad, i.time, _countof(gh_star), 2, gh_star); break;
 		case eShotType::wave:        DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad() + RECT_ANGLE_R, i.time, _countof(gh_wave), 2, gh_wave); break;
 		case eShotType::big_O:       DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad() + RECT_ANGLE_R, i.time, _countof(gh_big_O), 2, gh_big_O); break;
-		case eShotType::laser:       DrawRotaGraph(i.pos.x, i.pos.y, 2, i.force.ToRad() + RECT_ANGLE_R, gh_laser, TRUE); break;
+		case eShotType::laser:
+			DrawRotaGraph(i.pos.x, i.pos.y, 2, i.force.ToRad() + RECT_ANGLE_R, gh_laser, TRUE);
+			if (i.time == 1)
+				DrawRotaGraph(i.pos.x, i.pos.y, 2., 0., gh_fire, TRUE);		
+			break;
 		case eShotType::longer:	     DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad() + RECT_ANGLE_R, i.time, _countof(gh_long), 2, gh_long); break;
 		case eShotType::missile:     DrawRotaGraph(i.pos.x, i.pos.y, 2, i.force.ToRad() + RECT_ANGLE_R, gh_missile, TRUE); break;
 		case eShotType::short_laser: DrawRotaGraph(i.pos.x, i.pos.y, 2, i.force.ToRad() + RECT_ANGLE_R + DX_PI, gh_short, TRUE); break;

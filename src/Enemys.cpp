@@ -71,7 +71,7 @@ void Enemys::Draw()
 	/* Debug */
 	if (DebugMode::isTest)
 	{
-		DrawCircle(m_enemy->data.pos.x, m_enemy->data.pos.y, m_enemy->data.hitRange, GetColor(0, 0, 255));
+		DrawCircle(m_enemy->data.pos.x, m_enemy->data.pos.y, m_enemy->data.hitRange, GetColor(0, 0, 255), FALSE);
 	}
 }
 

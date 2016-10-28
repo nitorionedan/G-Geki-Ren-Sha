@@ -160,6 +160,9 @@ public:
 	static const int GetShiftLevel() {
 		return mPlayer->GetShiftLevel();
 	}
+	static int GetLife() {
+		return mPlayer->GetBombNum();
+	}
 	static bool HitCheckCircle(Vector2D& pos) {
 		return mPlayer->HitCheckCircle(pos.x, pos.y);
 	}

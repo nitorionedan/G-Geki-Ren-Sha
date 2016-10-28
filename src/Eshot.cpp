@@ -70,15 +70,6 @@ void Eshot::Update(const Player& player)
 
 void Eshot::Draw()
 {
-	// ”­ËŒõ
-	if (c_fire1->Remainder(A_INTERVAL) == 0 &&
-		s_isFire1 &&
-		!IBossChara::IsDead())
-	{
-		DrawRotaGraph(x_fireA[0], y_fireA[0], 2.0, 0.0, hg_fireA, true);
-		DrawRotaGraph(x_fireA[1], y_fireA[1], 2.0, 0.0, hg_fireA, true);
-	}
-
 	for (auto &shot : shotA)
 	{
 		if (shot->f_exist == false)	continue;			// ‘¶İ‚µ‚Ä‚¢‚È‚¢‚È‚çŸ‚Ö

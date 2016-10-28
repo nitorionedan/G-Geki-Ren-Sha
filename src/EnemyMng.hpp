@@ -22,10 +22,16 @@ public:
 	void Finalize();
 	void CountDownEneNum();
 	void BossStart(eStage stage);
+	void OffPacific() {
+		f_pacifist = false;
+	}
 	bool IsHit(const double& ColX, const double& ColY, const int& DAMAGE);
 	bool IsHit(const int& ColCircle, const double& ColX, const double& ColY, const int& Damage);
 	const bool IsBossZone() const { // Is here boss zone?
 		return isBossZone;
+	}
+	bool CheckPacific() const {
+		return f_pacifist;
 	}
 	int GetEneNum() const {
 		return enemyCount;
@@ -38,7 +44,8 @@ private:
 	std::vector<Enemys*> enemy;									// ŽG‹›“G
 	std::shared_ptr<BossShotMgr> bossShot;
 	int enemyCount;							// ¶‚«Žc‚Á‚Ä‚¢‚é“G‚Ì”
-	bool isBossZone;						// “G‚Ì”
+	bool isBossZone;
+	bool f_pacifist;
 };
 
 
@@ -52,10 +59,16 @@ public:
 	}
 	static void Load(eStage);
 	static void CountDownEneNum();
+	static 	void OffPacific() {
+		mEnemyMng->OffPacific();
+	}
 	static bool IsHit(const double& ColX, const double& ColY, const int& DAMAGE);
 	static bool IsHit(const int& ColCircle, const double& ColX, const double& ColY, const int& Damage);
 	static const bool IsBossZone() {
 		return mEnemyMng->IsBossZone();
+	}
+	static bool CheckPacifist() {
+		return mEnemyMng->CheckPacific();
 	}
 	static int GetEneNum() {
 		return mEnemyMng->GetEneNum();

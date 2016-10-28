@@ -19,6 +19,7 @@ EnemyMng::EnemyMng()
 
 	enemyCount = 0;
 	isBossZone = false;
+	f_pacifist = true;
 }
 
 

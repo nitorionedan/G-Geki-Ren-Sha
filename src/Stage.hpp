@@ -126,7 +126,7 @@ private:
 	int time;							// ステージの経過時間
 	int rank;							// ランク
 	int c_bossBgm;
-	int c_fade;
+	int c_fade, c_result;
 	bool f_quake;						// シフトアップしたときの画面振動フラグ
 	bool isStanby;
 	bool f_AllClear;

@@ -1,9 +1,12 @@
 #include <DxLib.h>
 #include <cassert>
+
 #include "Config.hpp"
 #include "Game.hpp"
 #include "GameOver.hpp"
 #include "Menu.hpp"
+#include "Ranking.hpp"
+
 #include "SceneMng.hpp"
 #include "Another.hpp"
 #include "Keyboard.hpp"
@@ -16,8 +19,7 @@ SceneMng::SceneMng() :	mNextScene(eScene::none){
 }
 
 
-SceneMng::~SceneMng()
-{
+SceneMng::~SceneMng() {
 	delete mScene;
 }
 
@@ -35,18 +37,11 @@ void SceneMng::Update()
 		case eScene::menu:										// 次の画面がメニューなら
 			mScene = static_cast<BaseScene*> (new Menu(this));	// メニュー画面のインスタンスを生成する
 			break;												// 以下略
-		case eScene::game:
-			mScene = static_cast<BaseScene*> (new Game(this));
-			break;
-		case eScene::config:
-			mScene = static_cast<BaseScene*> (new Config(this));
-			break;
-		case eScene::another:
-			mScene = static_cast<BaseScene*> (new Another(this));
-			break;
-		case eScene::gameOver:
-			mScene = static_cast<BaseScene*> (new GameOver(this));
-			break;
+		case eScene::game:     mScene = static_cast<BaseScene*>(new Game(this)); break;
+		case eScene::config:   mScene = static_cast<BaseScene*>(new Config(this)); break;
+		case eScene::another:  mScene = static_cast<BaseScene*>(new Another(this)); break;
+		case eScene::gameOver: mScene = static_cast<BaseScene*>(new GameOver(this)); break;
+		case eScene::ranking:  mScene = static_cast<BaseScene*>(new Ranking(this)); break;
 		default:	assert(!"SceneMng::Update()");
 		}
 		mNextScene = eScene::none;								// 次のシーン情報をクリア

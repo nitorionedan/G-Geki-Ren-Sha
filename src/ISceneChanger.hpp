@@ -8,6 +8,7 @@ enum class eScene
 	gameOver, // ƒKƒƒIƒxƒ‰
 	config,	  // İ’è‰æ–Ê
 	another,  // ”é–§
+	ranking,
 
 	none,	  // –³‚µ
 };

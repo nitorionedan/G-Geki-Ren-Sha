@@ -14,7 +14,6 @@
 #include "OpeningStage.hpp"
 #include "Stage1.hpp"
 #include "Stage2.hpp"
-
 #include <algorithm>
 #include <cmath>
 #include <cassert>
@@ -43,9 +42,7 @@ Stage::Stage()
 	, c_fade(0)
 {
 	Screen   = MakeScreen(640, 480, TRUE);
-	gh_black = LoadGraph("GRAPH/GAME/BACKGROUND/blackbg.png");
-
-	// LoadStage(*.dat);		// TODO: ‚±‚¤‚¢‚¤•—‚Éƒ[ƒh‚µ‚½‚¢ 
+	gh_black = LoadGraph(MyFile::Gr::PLANE_BLACK);
 
 	tCamera.pos  = GetCameraPosition();
 	tCamera.tang = GetCameraAngleVRotate();
@@ -95,6 +92,7 @@ void Stage::Initialize()
 	pos = Vector2D::ZERO;
 	f_quake = false;
 	isStanby = true;
+	f_AllClear = false;
 	StageSet(nowStage);
 }
 
@@ -298,8 +296,11 @@ void Stage::Clear()
 void Stage::AllClear()
 {
 	// TODO: implement
+#if defined(_DEBUG) || defined(DEBUG)
 	printfDx("All Clear\n");
-	nowStage = eStage::opening;
+#endif
+	//nowStage = eStage::opening;
+	f_AllClear = true;
 }
 
 
@@ -379,6 +380,7 @@ void Stage::DrawResult()
 		stageName = "OPENING SCORE";
 		break;
 	case eStage::stage1:
+		graphic->DrawMyString2(100, 210, "s CONGRATULATIONS! s", 16, false, 2.);
 		stageName = "STAGE 1 SCORE";
 		break;
 	case eStage::stage2:

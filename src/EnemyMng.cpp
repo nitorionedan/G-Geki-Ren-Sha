@@ -3,7 +3,7 @@
 #include "NullEnemyShot.hpp"
 #include "Stage.hpp"
 #include "Sound.hpp"
-
+#include "FileDef.h"
 #include <DxLib.h>
 #include <cassert>
 #include <fstream>
@@ -39,14 +39,14 @@ void EnemyMng::Load(eStage stage)
 	std::string fname;
 	switch (stage)
 	{
-	case eStage::opening: fname = "data/EnemyTableOP.csv"; break;
-	case eStage::stage1: fname = "data/EnemyTable1.csv"; break;
-	case eStage::stage2: fname = "data/EnemyTable2.csv"; break;
-	case eStage::stage3: fname = "data/EnemyTable3.csv"; break;
-	case eStage::stage4: fname = "data/EnemyTable4.csv"; break;
-	case eStage::stage5: fname = "data/EnemyTable5.csv"; break;
-	case eStage::stage6: fname = "data/EnemyTable6.csv"; break;
-	case eStage::stage0: fname = "data/EnemyTable0.csv"; break;
+	case eStage::opening: fname = MyFile::Dat::ENEMY_OPENING; break;
+	case eStage::stage1:  fname = MyFile::Dat::ENEMY_STG1; break;
+	case eStage::stage2:  fname = "data/EnemyTable2.csv"; break;
+	case eStage::stage3:  fname = "data/EnemyTable3.csv"; break;
+	case eStage::stage4:  fname = "data/EnemyTable4.csv"; break;
+	case eStage::stage5:  fname = "data/EnemyTable5.csv"; break;
+	case eStage::stage6:  fname = "data/EnemyTable6.csv"; break;
+	case eStage::stage0:  fname = "data/EnemyTable0.csv"; break;
 	default:	assert(!"EnemyMng::Load() : over of range");
 	}
 
@@ -252,13 +252,11 @@ void IEnemyMng::CountDownEneNum()
 }
 
 
-bool IEnemyMng::IsHit(const double & ColX, const double & ColY, const int & DAMAGE)
-{
+bool IEnemyMng::IsHit(const double & ColX, const double & ColY, const int & DAMAGE) {
 	return mEnemyMng->IsHit(ColX, ColY, DAMAGE);
 }
 
 
-bool IEnemyMng::IsHit(const int & ColCircle, const double & ColX, const double & ColY, const int & Damage)
-{
+bool IEnemyMng::IsHit(const int & ColCircle, const double & ColX, const double & ColY, const int & Damage) {
 	return mEnemyMng->IsHit(ColCircle, ColX, ColY, Damage);
 }

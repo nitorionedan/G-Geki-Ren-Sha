@@ -205,7 +205,6 @@ void Sound::Stop()
 	{
 		if (CheckSoundMem(sound->handle) == TRUE)
 		{
-			printfDx("Sound.cpp -> Stop\n");
 			StopSoundMem(sound->handle);
 			break;
 		}

@@ -100,6 +100,9 @@ public:
 	const int GetRank() const {
 		return rank;
 	}
+	bool CheckAllClear() const {
+		return f_AllClear;
+	}
 	static bool s_isContinue;
 
 private:
@@ -126,6 +129,7 @@ private:
 	int c_fade;
 	bool f_quake;						// シフトアップしたときの画面振動フラグ
 	bool isStanby;
+	bool f_AllClear;
 	int start_score;
 	int end_score;
 	int sum_score;
@@ -167,6 +171,9 @@ public:
 	}
 	static const int GetRank() {
 		return mStage->GetRank();
+	}
+	static bool CheckAllClear() {
+		return mStage->CheckAllClear();
 	}
 
 private:

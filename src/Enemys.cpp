@@ -1,23 +1,21 @@
 #include "Enemys.hpp"
 #include "ZakoEnemy.hpp"
 #include "Keyboard.hpp"
+#include "DebugMode.hpp"
 #include <cassert>
 
 
 Enemys::Enemys(const tEnemyData & param)
 	: m_enemy(nullptr)
 {	
+	assert(param.stop_time < param.out_time);
+
 	switch (param.type)
 	{
-	case 0: 
-		m_enemy = static_cast<ZakoEnemy*>(new ZakoEnemy_Ze(param));
-		break;
-	case 2:
-		m_enemy = static_cast<ZakoEnemy*>(new ZakoEnemy_Den(param));
-		break;
-	case 4:
-		m_enemy = static_cast<ZakoEnemy*>(new ZakoEnemy_Career(param));
-		break;
+	case 0: m_enemy = static_cast<ZakoEnemy*>(new ZakoEnemy_Ze(param)); break;
+	case 1: m_enemy = static_cast<ZakoEnemy*>(new ZakoEnemy_Flower(param)); break;
+	case 2:	m_enemy = static_cast<ZakoEnemy*>(new ZakoEnemy_Den(param)); break;
+	case 4:	m_enemy = static_cast<ZakoEnemy*>(new ZakoEnemy_Career(param)); break;
 	default: assert( !"out of rage" );
 	}
 }
@@ -69,6 +67,12 @@ void Enemys::Draw()
 	/* Reset normal render */
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	SetDrawBright(255, 255, 255);
+
+	/* Debug */
+	if (DebugMode::isTest)
+	{
+		DrawCircle(m_enemy->data.pos.x, m_enemy->data.pos.y, m_enemy->data.hitRange, GetColor(0, 0, 255));
+	}
 }
 
 void Enemys::UngryCheck()
@@ -84,9 +88,15 @@ void Enemys::HitCheckToPlayer()
 }
 
 bool Enemys::IsHit(const double& Range, const double& ColX, const double& ColY, const double& DAMAGE) const {
-	return m_enemy->HitCheck(Range, ColX, ColY, DAMAGE);
+	bool isHit = m_enemy->HitCheck(Range, ColX, ColY, DAMAGE);
+	if (isHit)
+		m_enemy->data.isHit = true;
+	return isHit;
 }
 
 bool Enemys::IsHit(const double X, const double Y, const double Damage) {
-	return m_enemy->HitCheck(X, Y, Damage);
+	bool isHit = m_enemy->HitCheck(X, Y, Damage);
+	if (isHit)
+		m_enemy->data.isHit = true;
+	return isHit;
 }

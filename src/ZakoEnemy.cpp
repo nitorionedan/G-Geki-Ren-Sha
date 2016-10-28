@@ -14,6 +14,9 @@
 #include <DxLib.h>
 #include <cassert>
 #include <cmath>
+#include <algorithm>
+#undef max
+#undef min
 
 namespace
 {
@@ -222,14 +225,6 @@ void ZakoEnemy_Ze::Fire()
 	}
 }
 
-bool ZakoEnemy_Ze::HitCheck(const double & Range, const Vector2D pos, const double & damage)
-{
-	const bool& IsHit = Vector2D::CirclesCollision(this->data.hitRange, Range, this->data.pos, pos);
-	if (IsHit)
-		CalcDamage(damage);
-	return IsHit;
-}
-
 bool ZakoEnemy_Ze::HitCheck(const double & Range, const double X, const double Y, const double Damage)
 {
 	if (!data.isExist)	return false;
@@ -318,14 +313,6 @@ void ZakoEnemy_Career::StartCheck()
 		data.isExist = true;
 }
 
-bool ZakoEnemy_Career::HitCheck(const double & Range, const Vector2D pos, const double & damage)
-{
-	const bool& IsHit = Vector2D::CirclesCollision(this->data.hitRange, Range, this->data.pos, pos);
-	if (IsHit)
-		CalcDamage(damage);
-	return IsHit;
-}
-
 bool ZakoEnemy_Career::HitCheck(const double & Range, const double X, const double Y, const double Damage)
 {
 	if (!data.isExist)	return false;
@@ -347,7 +334,6 @@ bool ZakoEnemy_Career::HitCheck(const double X, const double Y, const double Dam
 void ZakoEnemy_Career::CalcDamage(int damage)
 {
 	data.param.hp -= damage;
-	data.isHit= true;
 	IScore::AddScore(1);
 
 	// Œ³‹C‚È‚ç‚±‚±‚Å•Ô‚·
@@ -437,12 +423,15 @@ void ZakoEnemy_Career::Move()
 
 // ==========================================================Raide
 ZakoEnemy_Den::ZakoEnemy_Den(const tEnemyData & data)
+	: Move_max(400)
 {
 	LoadDivGraph(Gr::ENEMY_DE00, _countof(gh), 4, 1, 31, 16, gh);
+	sh_shot = LoadSoundMem(Se::SHOT_LASER);
+
 	this->data.param = data;
 	this->data.rad = 0;
 	this->data.pos.SetVec(data.x_pos, data.y_pos);
-	this->data.vspeed.SetVec(2., 0.1);
+	this->data.vspeed.SetVec(0, 9);
 	this->data.vangle = 0;
 	this->data.hitRange = 20;
 	this->data.isExist = false;
@@ -452,30 +441,45 @@ ZakoEnemy_Den::ZakoEnemy_Den(const tEnemyData & data)
 	this->data.time = 0;
 	this->data.loopTime = 0;
 
+	distance = Move_max - this->data.pos.y;
+	brake = this->data.vspeed.y / data.stop_time;
 	maxHP = data.hp;
+	returnTime = this->data.param.out_time + 50;
+	isReturn = false;
+	isFire = false;
 }
 
 ZakoEnemy_Den::~ZakoEnemy_Den()
 {
 	for (auto i : gh)
 		DeleteGraph(i);
+	DeleteSoundMem(sh_shot);
 }
 
 void ZakoEnemy_Den::Update()
 {
-	data.vspeed.SetVec(0, 2);
-	data.pos += data.vspeed;
+	isFire = false;
 
-	if (data.pos.y > 490)
+	switch (data.param.m_pattern)
 	{
-		data.isExist = false;
-		IEnemyMng::CountDownEneNum();
+	case 0: Move0(); break;
+	case 1: Move1(); break;
+	default: assert(!"no define");
+	}
+
+	switch (data.param.s_pattern)
+	{
+	case 0: Fire0(); break;
+	default: assert(!"no define");
 	}
 }
 
 void ZakoEnemy_Den::Draw()
 {
 	DrawAnime(data.pos.x, data.pos.y, 2, data.rad, data.time, _countof(gh), 2, gh);
+
+	if (isFire)
+	{}
 }
 
 void ZakoEnemy_Den::StartCheck()
@@ -485,24 +489,22 @@ void ZakoEnemy_Den::StartCheck()
 		data.isExist = true;
 }
 
-bool ZakoEnemy_Den::HitCheck(const double & Range, const Vector2D pos, const double & damage)
-{
-	const bool& IsHit = Vector2D::CirclesCollision(this->data.hitRange, Range, this->data.pos, pos);
-	if (IsHit)
-		CalcDamage(damage);
-	return IsHit;
-}
-
 bool ZakoEnemy_Den::HitCheck(const double & Range, const double X, const double Y, const double Damage)
 {
 	if (!data.isExist)	return false;
-	bool isHit = Vector2D::CirclesCollision(data.hitRange, 6, data.pos.x, data.pos.y + 9., X, Y);
+	bool isHit = Vector2D::CirclesCollision(data.hitRange, Range, data.pos.x, data.pos.y + 9., X, Y);
+	if (isHit)
+		CalcDamage(Damage);
 	return isHit;
 }
 
 bool ZakoEnemy_Den::HitCheck(const double X, const double Y, const double Damage)
 {
-	return false;
+	if (!data.isExist)	return false;
+	bool isHit = Vector2D::CirclesCollision(data.hitRange, 6, data.pos.x, data.pos.y + 9., X, Y);
+	if (isHit)
+		CalcDamage(Damage);
+	return isHit;
 }
 
 void ZakoEnemy_Den::CalcDamage(int damage)
@@ -516,39 +518,169 @@ void ZakoEnemy_Den::CalcDamage(int damage)
 	}
 }
 
-void ZakoEnemy_Den::Move()
-{
+void ZakoEnemy_Den::Move0()
+{	
+	if (data.time < data.param.out_time)
+	{
+		data.vspeed.y -= brake;  // Braking
+		data.pos += data.vspeed; // Add force
+
+		if (data.vspeed.y < 0)
+			data.vspeed.y = 0;
+	}
+	else
+	{
+		if (data.time == data.param.out_time)
+		{
+			data.vspeed.SetVec(2, 3);
+			isReturn = true;
+		}
+
+		if (isReturn && data.time >= returnTime)
+		{
+			data.pos += data.vspeed;
+			data.vspeed.x *= 1.004;
+			data.vspeed.y *= 0.979;
+		}
+	}
 }
 
-void ZakoEnemy_Den::Fire()
+void ZakoEnemy_Den::Move1()
 {
+	if (data.time < data.param.out_time)
+	{
+		data.vspeed.y -= brake;  // Braking
+		data.pos += data.vspeed; // Add force
+
+		if (data.vspeed.y < 0)
+			data.vspeed.y = 0;
+	}
+	else
+	{
+		if (data.time == data.param.out_time)
+		{
+			data.vspeed.SetVec(-2, 3);
+			isReturn = true;
+		}
+
+		if (isReturn && data.time >= returnTime)
+		{
+			data.pos += data.vspeed;
+			data.vspeed.x *= 1.004;
+			data.vspeed.y *= 0.979;
+		}
+	}
+}
+
+void ZakoEnemy_Den::Fire0()
+{
+	if (data.time == data.param.out_time + 10 || data.time == data.param.out_time + 20)
+	{
+		Vector2D dir(0, 1);
+		Vector2D pos;
+		pos = this->data.pos;
+		dir = dir * data.param.s_speed;
+		
+		data.pos.x = this->data.pos.x + 20;
+		IEneShot::Fire(eShotType::laser, data.pos, 0, dir, 1, 0);
+		data.pos.x = this->data.pos.x - 20;
+		IEneShot::Fire(eShotType::laser, data.pos, 0, dir, 1, 0);
+		PlaySoundMem(sh_shot, DX_PLAYTYPE_BACK);
+	}
 }
 
 
 // ==========================================================Flower
 ZakoEnemy_Flower::ZakoEnemy_Flower(const tEnemyData & data)
+	: Max_speed_x(4)
+	, Max_speed_y(4)
 {
+	gh_core    = LoadGraph(Gr::ENEMY_FLWR_CORE);
+	gh_petal   = LoadGraph(Gr::ENEMY_FLWR_PETAL);
+	gh_missile = LoadGraph(Gr::ESHOT_MISSILE);
+
+	this->data.param = data;
+	this->data.rad = 0;
+	this->data.pos.SetVec(data.x_pos, data.y_pos);
+	this->data.vspeed = Vector2D::ZERO;
+	this->data.vangle = 0;
+	this->data.hitRange = 20;
+	this->data.isExist = false;
+	this->data.isUngry = false;
+	this->data.isHit = false;
+	this->data.isMove = true;
+	this->data.time = 0;
+	this->data.loopTime = 0;
+
+	switch (data.m_pattern)
+	{
+	case 0: this->data.vspeed.SetVec(0, 4);
+	case 1: this->data.vspeed.SetVec(0, 4);
+	case 2: this->data.vspeed.SetVec(0, 4);
+	case 3: this->data.vspeed.SetVec(0, 4);
+	default: break;
+	}
+
+	brake = this->data.vspeed.y / (this->data.param.stop_time - GetRand(50));
+	radAng = AngToRad(GetRand(360));
+	radAng_petal = AngToRad(120);
+	addAng = 0;
+	hasMissile = true;
+	isReturn = false;
 }
 
 ZakoEnemy_Flower::~ZakoEnemy_Flower()
 {
+	DeleteGraph(gh_core);
+	DeleteGraph(gh_petal);
+	DeleteGraph(gh_missile);
 }
 
 void ZakoEnemy_Flower::Update()
 {
+	switch (data.param.m_pattern)
+	{
+	case 0: Move0(); break;
+	case 1: Move1(); break;
+	case 2: Move2(); break;
+	case 3: Move3(); break;
+	default: assert(!"no defined");
+	}
+
+	switch(data.param.s_pattern)
+	{
+	case 0: Fire0(); break;
+	default: assert(!"no defined");
+	}
 }
 
 void ZakoEnemy_Flower::Draw()
 {
+	/* petals */
+	for (int i = 1; i < 4; ++i)
+		DrawRotaGraph2F(
+			data.pos.x + std::cos(radAng + radAng_petal * i) * 16,
+			data.pos.y + std::sin(radAng + radAng_petal * i) * 16,
+			19.f, 39.f,
+			2, radAng + radAng_petal * i, gh_petal, TRUE);
+
+	/* missiles */
+	if (hasMissile)
+	{
+		for (int i = 0; i < 3; ++i)
+			DrawRotaGraph(data.pos.x + std::cos(radAng + 1.75 + (i * AngToRad(120))) * 40,
+				data.pos.y + std::sin(radAng + 1.75 + (i * AngToRad(120))) * 40,
+				2, radAng + 1.75 + AngToRad(90) + (i * AngToRad(120)), gh_missile, TRUE);
+	}
+
+	/* core */
+	DrawRotaGraph(data.pos.x, data.pos.y, 2, radAng, gh_core,    TRUE);
 }
 
 void ZakoEnemy_Flower::StartCheck()
 {
-}
-
-bool ZakoEnemy_Flower::HitCheck(const double & Range, const Vector2D pos, const double & damage)
-{
-	return false;
+	if (IStage::GetTime() == data.param.in_time)
+		data.isExist = true;		
 }
 
 bool ZakoEnemy_Flower::HitCheck(const double & Range, const double X, const double Y, const double Damage)
@@ -565,13 +697,195 @@ void ZakoEnemy_Flower::CalcDamage(int damage)
 {
 }
 
-void ZakoEnemy_Flower::Move()
+void ZakoEnemy_Flower::Move0()
 {
+	if (data.time <= data.param.stop_time && data.vspeed.y > 0.)
+	{
+		data.vspeed.y -= brake;
+		data.vspeed.y = std::max(0., data.vspeed.y);
+
+		data.pos += data.vspeed;
+	}
+	
+	if (data.time > data.param.stop_time && isReturn == false)
+	{
+		if (data.time == data.param.stop_time + 1)
+		{
+			data.vspeed.SetZero();
+			addAng = 0;
+		}
+
+		addAng += 0.005;
+		radAng += addAng;
+		if (addAng >= 0.5)
+			isReturn = true;
+	}
+
+	if (isReturn)
+	{
+		addAng -= 0.008;
+		addAng = std::max(0., addAng);
+		radAng += addAng;
+
+		if (data.time >= data.param.out_time)
+		{
+			if (data.vspeed.x < Max_speed_x)
+				data.vspeed.x += 0.03;
+
+			if (data.vspeed.x < Max_speed_y)
+				data.vspeed.y -= 0.01;
+
+			data.pos += data.vspeed;
+		}
+	}
 }
 
-void ZakoEnemy_Flower::Fire()
+void ZakoEnemy_Flower::Move1()
 {
+	if (data.time <= data.param.stop_time && data.vspeed.y > 0.)
+	{
+		data.vspeed.y -= brake;
+		data.vspeed.y = std::max(0., data.vspeed.y);
+
+		data.pos += data.vspeed;
+	}
+
+	if (data.time > data.param.stop_time && isReturn == false)
+	{
+		if (data.time == data.param.stop_time + 1)
+		{
+			data.vspeed.SetZero();
+			addAng = 0;
+		}
+
+		addAng += 0.005;
+		radAng += addAng;
+		if (addAng >= 0.5)
+			isReturn = true;
+	}
+
+	if (isReturn)
+	{
+		addAng -= 0.008;
+		addAng = std::max(0., addAng);
+		radAng += addAng;
+
+		if (data.time >= data.param.out_time)
+		{
+			if (data.vspeed.x < Max_speed_x)
+				data.vspeed.x -= 0.03;
+
+			if (data.vspeed.x < Max_speed_y)
+				data.vspeed.y -= 0.01;
+
+			data.pos += data.vspeed;
+		}
+	}
 }
+
+void ZakoEnemy_Flower::Move2()
+{
+	/* braking */
+	if (data.time <= data.param.stop_time && data.vspeed.y > 0.)
+	{
+		data.vspeed.y -= brake;
+		data.vspeed.y = std::max(0., data.vspeed.y);
+
+		data.pos += data.vspeed;
+	}
+
+	/* return move */
+	if (data.time > data.param.stop_time && isReturn == false)
+	{
+		if (data.time == data.param.stop_time + 1)
+		{
+			data.vspeed.SetZero();
+			addAng = 0;
+		}
+
+		addAng += 0.005;
+		radAng += addAng;
+		if (addAng >= 0.5)
+			isReturn = true;
+	}
+
+	if (isReturn)
+	{
+		addAng -= 0.008;
+		addAng = std::max(0., addAng);
+		radAng += addAng;
+
+		if (data.time >= data.param.out_time)
+		{
+			if (data.vspeed.x < Max_speed_x)
+				data.vspeed.x += 0.03;
+
+			if (data.vspeed.x < Max_speed_y)
+				data.vspeed.y += 0.01;
+
+			data.pos += data.vspeed;
+		}
+	}
+}
+
+void ZakoEnemy_Flower::Move3()
+{
+	if (data.time <= data.param.stop_time && data.vspeed.y > 0.)
+	{
+		data.vspeed.y -= brake;
+		data.vspeed.y = std::max(0., data.vspeed.y);
+
+		data.pos += data.vspeed;
+	}
+
+	if (data.time > data.param.stop_time && isReturn == false)
+	{
+		if (data.time == data.param.stop_time + 1)
+		{
+			data.vspeed.SetZero();
+			addAng = 0;
+		}
+
+		addAng += 0.005;
+		radAng += addAng;
+		if (addAng >= 0.5)
+			isReturn = true;
+	}
+
+	if (isReturn)
+	{
+		addAng -= 0.008;
+		addAng = std::max(0., addAng);
+		radAng += addAng;
+
+		if (data.time >= data.param.out_time)
+		{
+			if (data.vspeed.x < Max_speed_x)
+				data.vspeed.x -= 0.03;
+
+			if (data.vspeed.x < Max_speed_y)
+				data.vspeed.y += 0.01;
+
+			data.pos += data.vspeed;
+		}
+	}
+}
+
+void ZakoEnemy_Flower::Fire0()
+{
+	if (isReturn && hasMissile)
+	{
+		for (int i = 0; i < 3; ++i)
+		{
+			Vector2D dir = Vector2D::GetVec((GetRand(20) - 10) / 10., (GetRand(20) - 10) / 10.);
+			Vector2D force = dir.Normalize() * 7;
+			IEneShot::Fire_Ang(eShotType::missile, data.pos, 0, 4, dir.ToRad(), 1.01, 2, eShotAI::homing);
+		}
+		hasMissile = false;
+	}
+}
+
+
 
 
 // ==========================================================Flower

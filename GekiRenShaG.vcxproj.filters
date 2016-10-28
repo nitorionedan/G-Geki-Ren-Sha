@@ -57,9 +57,6 @@
     <ClCompile Include="src\Another.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\BackGround.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\BaseScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -252,12 +249,12 @@
     <ClCompile Include="src\Sound.cpp">
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
+    <ClCompile Include="src\Ranking.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Another.hpp">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\BackGround.hpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\BaseScene.hpp">
@@ -486,6 +483,9 @@
       <Filter>ヘッダー ファイル\Enemy\AI</Filter>
     </ClInclude>
     <ClInclude Include="src\FileDef.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ranking.hpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

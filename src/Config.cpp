@@ -3,7 +3,9 @@
 #include "Config.hpp"
 
 
-Config::Config(ISceneChanger* changer) : BaseScene(changer) {
+Config::Config(ISceneChanger* changer)
+	: BaseScene(changer)
+{
 }
 
 
@@ -19,14 +21,12 @@ void Config::Finalize()
 }
 
 
-//çXêV
 void Config::Update()
 {
 
 }
 
 
-//ï`âÊ
 void Config::Draw()
 {
 

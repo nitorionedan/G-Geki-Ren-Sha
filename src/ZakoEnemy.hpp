@@ -25,7 +25,6 @@ public:
 	virtual void CalcDamage(int damage) = 0;
 	virtual int GetElapsedTime() const = 0;
 	virtual bool IsHit() const = 0;
-	virtual bool HitCheck(const double& Range, const Vector2D pos, const double& damage) = 0;
 	virtual bool HitCheck(const double& Range, const double X, const double Y, const double Damage) = 0;
 	virtual bool HitCheck(const double X, const double Y, const double Damage) = 0;
 	virtual bool IsWeak() const = 0;
@@ -57,7 +56,6 @@ public:
 	virtual int GetElapsedTime() const override {
 		return data.time;
 	}
-	virtual bool HitCheck(const double& Range, const Vector2D pos, const double& damage) override;
 	virtual bool HitCheck(const double& Range, const double X, const double Y, const double Damage) override;
 	virtual bool HitCheck(const double X, const double Y, const double Damage) override;
 	virtual bool IsHit() const override {
@@ -99,7 +97,6 @@ public:
 	virtual int GetElapsedTime() const override {
 		return data.time;
 	}
-	virtual bool HitCheck(const double& Range, const Vector2D pos, const double& damage) override;
 	virtual bool HitCheck(const double& Range, const double X, const double Y, const double Damage) override;
 	virtual bool HitCheck(const double X, const double Y, const double Damage) override;
 	virtual bool IsHit() const {
@@ -140,7 +137,6 @@ public:
 	virtual int GetElapsedTime() const override {
 		return data.time;
 	}
-	virtual bool HitCheck(const double& Range, const Vector2D pos, const double& damage) override;
 	virtual bool HitCheck(const double& Range, const double X, const double Y, const double Damage) override;
 	virtual bool HitCheck(const double X, const double Y, const double Damage) override;
 	virtual bool IsHit() const {
@@ -154,13 +150,21 @@ public:
 	}
 
 private:
-	ZakoEnemy_Den(){}
+	const double Move_max;
+
+	ZakoEnemy_Den() : Move_max(0) {}
 	virtual void CalcDamage(int damage) override;
 
-	void Move();
-	void Fire();
+	void Move0();
+	void Move1();
+	void Fire0();
 
+	double distance, brake;
 	int gh[4];
+	int sh_shot;
+	int returnTime;
+	bool isReturn;
+	bool isFire;
 };
 
 
@@ -180,7 +184,6 @@ public:
 	virtual int GetElapsedTime() const override {
 		return data.time;
 	}
-	virtual bool HitCheck(const double& Range, const Vector2D pos, const double& damage) override;
 	virtual bool HitCheck(const double& Range, const double X, const double Y, const double Damage) override;
 	virtual bool HitCheck(const double X, const double Y, const double Damage) override;
 	virtual bool IsHit() const {
@@ -194,14 +197,24 @@ public:
 	}
 
 private:
-	ZakoEnemy_Flower() {}
+	const double Max_speed_x;
+	const double Max_speed_y;
+
+	ZakoEnemy_Flower() : Max_speed_x(0), Max_speed_y(0) {}
 	virtual void CalcDamage(int damage) override;
 
-	void Move();
-	void Fire();
+	void Move0();
+	void Move1();
+	void Move2();
+	void Move3();
+	void Fire0();
 
+	double radAng, radAng_petal;
+	double brake, addAng;
 	int gh_core,
 		gh_petal,
 		gh_missile,
 		gh_all; // Ç¢ÇÈÇ©ÅH
+	bool hasMissile;
+	bool isReturn;
 };

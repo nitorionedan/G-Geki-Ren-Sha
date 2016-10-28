@@ -173,6 +173,9 @@ void Game::Update()
 			c_test = 0;
 	}
 
+	if (IStage::CheckAllClear())
+		mSceneChanger->ChangeScene(eScene::gameOver);
+
 // TEST ----------------------------------------------
 	if (DebugMode::isTest == false)	return;
 

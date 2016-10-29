@@ -173,6 +173,8 @@ void EneShot::Fire(eShotType type, Vector2D & pos, double rotate, Vector2D & for
 
 	if (tmp.life > 0)
 		tmp.hasHP = true;
+	else
+		tmp.hasHP = false;
 
 	tmp.mAI = nullptr;
 	switch (aiType)
@@ -216,6 +218,8 @@ void EneShot::Fire_Ang(eShotType type, Vector2D & pos, double rotate, double for
 
 	if (tmp.life > 0)
 		tmp.hasHP = true;
+	else
+		tmp.hasHP = false;
 
 	tmp.mAI = nullptr;
 	switch (aiType)

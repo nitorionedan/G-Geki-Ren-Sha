@@ -54,7 +54,7 @@ class BossB : public BossTask
 	private:
 		Body(){}
 		void Initialize();
-		int sh_missile;
+		int sh_missile, sh_laser;
 	};
 
 public:

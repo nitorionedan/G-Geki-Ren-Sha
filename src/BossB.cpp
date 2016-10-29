@@ -120,7 +120,7 @@ void BossB::Update()
 	case BossB::eState::weak: Fire_Weak();    break;
 	}
 
-	/* weak */
+	/* weak pattern 1 */
 	if (body_leftWing->isExist == false && 
 		body_rightWing->isExist == false &&
 		body_tail00->isExist == false &&
@@ -130,6 +130,20 @@ void BossB::Update()
 	{
 		state = eState::weak;
 	}
+
+	/* weak pattern 2 */
+	if (body_tail00->isExist == false &&
+		body_tail01->isExist == false &&
+		state != eState::weak &&
+		body_head->hp > 0)
+	{
+		if (body_leftWing->hp > 0)
+			body_leftWing->Damage(10000);
+		if (body_rightWing->hp > 0)
+			body_rightWing->Damage(10000);
+		state = eState::weak;
+	}
+
 
 	/* wing death */
 	if (body_leftWing->isExist == false)
@@ -162,16 +176,6 @@ void BossB::Update()
 		body_gun02->    Damage(10000);
 		body_gun03->    Damage(10000);
 	}
-
-	clsDx();
-	if (body_leftWing->isExist == false)
-		printfDx("l_Wing exist\n");
-	if (body_rightWing->isExist == false)
-		printfDx("r_Wing exist\n");
-	if (body_tail00->isExist == false )
-		printfDx("tail00 exist\n");
-	if (body_tail01->isExist == false)
-		printfDx("tail01 exist\n");
 }
 
 
@@ -566,6 +570,7 @@ void BossB::Fire_Weak()
 BossB::Body::Body(ePart part)
 {
 	sh_missile = LoadSoundMem(MyFile::Se::SHOT_MISSILE);
+	sh_laser = LoadSoundMem(MyFile::Se::SHOT_LASER);
 
 	this->part = part;
 	c_dead = 0;
@@ -608,6 +613,7 @@ BossB::Body::Body(ePart part)
 BossB::Body::~Body()
 {
 	DeleteSoundMem(sh_missile);
+	DeleteSoundMem(sh_laser);
 }
 
 
@@ -647,8 +653,12 @@ void BossB::Body::Update()
 		}
 	}
 
-	if (HitCheckToPlayer())
-		Damage(1);
+	/* col to player */
+	if (hp > 0)
+	{
+		if (HitCheckToPlayer())
+			Damage(1);
+	}
 }
 
 
@@ -755,7 +765,7 @@ void BossB::Body::Fire()
 		Fire_Tail00();
 		break;
 	case BossB::ePart::tail01:
-		Fire_Tail00();
+		Fire_Tail01();
 		break;
 	case BossB::ePart::gun:
 		Fire_Gun();
@@ -773,6 +783,17 @@ void BossB::Body::Fire_Head()
 
 		IEneShot::Fire(eShotType::normal, pos, 0, force, 1, 0);
 	}
+
+	if (elapsedTime % 300 == 0)
+	{
+		PlaySoundMem(sh_missile, DX_PLAYTYPE_BACK);
+		for (int i = 0; i < 3; ++i)
+		{
+			Vector2D dir = Vector2D::GetVec((GetRand(20) - 10) / 10., (GetRand(20) - 10) / 10.);
+			Vector2D force = dir.Normalize() * 7;
+			IEneShot::Fire_Ang(eShotType::missile, pos, 0, 4, dir.ToRad(), 1.01, 2, eShotAI::homing);
+		}
+	}
 }
 
 void BossB::Body::Fire_Gun()
@@ -785,6 +806,7 @@ void BossB::Body::Fire_Gun()
 		Vector2D dir = Vector2D::GetVec2(pos, tarPos);
 		Vector2D force = dir.Normalize() * 6;
 		IEneShot::Fire(eShotType::short_laser, pos, 0, force, 1, 0);
+		PlaySoundMem(sh_laser, DX_PLAYTYPE_BACK);
 	}
 }
 
@@ -797,6 +819,16 @@ void BossB::Body::Fire_Tail00()
 		Vector2D force = dir.Normalize() * 4;
 		IEneShot::Fire(eShotType::missile, pos, 0, force, 1.01, 2, eShotAI::homing);
 		PlaySoundMem(sh_missile, DX_PLAYTYPE_BACK);
+
+		if (elapsedTime % 300 == 0)
+		{
+			for (int i = 0; i < 10; ++i)
+			{
+				double addAng = GetRand(10);
+				double ang = (360 / 10) * i * DX_PI / 180;
+				IEneShot::Fire_Ang(eShotType::star, pos, 0.1, 4, ang + addAng, 1, 0);
+			}
+		}
 	}
 }
 

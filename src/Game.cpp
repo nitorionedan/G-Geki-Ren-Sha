@@ -156,7 +156,7 @@ void Game::Update()
 
 	if (Keyboard::Instance()->isPush(KEY_INPUT_C))
 	{
-		Effector::PlaySpecialEplosion(320, 240);
+
 	}
 
 	if (Keyboard::Instance()->isDown(KEY_INPUT_Q) && Keyboard::Instance()->isDown(KEY_INPUT_W))
@@ -164,9 +164,6 @@ void Game::Update()
 
 	if(Keyboard::Instance()->isPush(KEY_INPUT_F2))
 		IBossChara::Start();
-
-	if (Keyboard::Instance()->isPush(Input::KeyCode.C))
-		effector->PlayAnime(320, 240, eExplosion_small);
 }
 
 

@@ -52,17 +52,17 @@ int Keyboard::GetUp(int keyCode)
 }
 
 
-bool Keyboard::isDown(int keyCode){
+bool Keyboard::isDown(int keyCode) {
 	return (mKeyDownCount[keyCode] >= 1) ? true : false;
 }
 
 
-bool Keyboard::isPush(int keyCode){
+bool Keyboard::isPush(int keyCode) {
 	return (mKeyDownCount[keyCode] == 1) ? true : false;
 }
 
 
-bool Keyboard::IsAvailableCode(int keyCode){
+bool Keyboard::IsAvailableCode(int keyCode) {
 	return ( !(0 <= keyCode && keyCode < KEY_NUM) ) ? false : true;
 }
 

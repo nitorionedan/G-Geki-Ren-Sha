@@ -41,7 +41,7 @@ namespace
 
 	int  FrameStartTime;		// 60fps固定専用
 	int  FPS;
-	bool ScSizeFrag = true;		// 画面モード変更用
+	bool ScSizeFrag = false;		// 画面モード変更用
 	bool quit = false;			// 強制終了フラグ
 }
 

@@ -43,12 +43,13 @@ namespace MyFile
 	/* sound files */
 	namespace Se
 	{
-		constexpr const char* SMALL_EX   = "SOUND/SE/explosion06.wav";
-		constexpr const char* NORML_EX   = "SOUND/SE/explosion04.mp3";
-		constexpr const char* LARGE_EX   = "SOUND/SE/explosion03.mp3";
-		constexpr const char* LONG_EX    = "SOUND/SE/explosion04.mp3";
-		constexpr const char* STAGE1     = "";
-		constexpr const char* SHOT_LASER = "SOUND/SE/eshot00.wav";
+		constexpr const char* SMALL_EX     = "SOUND/SE/explosion06.wav";
+		constexpr const char* NORML_EX     = "SOUND/SE/explosion04.mp3";
+		constexpr const char* LARGE_EX     = "SOUND/SE/explosion03.mp3";
+		constexpr const char* LONG_EX      = "SOUND/SE/explosion04.mp3";
+		constexpr const char* STAGE1       = "";
+		constexpr const char* SHOT_LASER   = "SOUND/SE/eshot00.wav";
+		constexpr const char* SHOT_MISSILE = "SOUND/SE/missile00.mp3";
 	}
 
 	/* data files */

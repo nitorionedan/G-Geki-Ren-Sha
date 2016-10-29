@@ -78,7 +78,7 @@ void IBossChara::Start()
 {
 	switch (IStage::GetNowStage())
 	{
-	case eStage::opening: mBossChara->Start(eBoss_B); break;
+	case eStage::opening: mBossChara->Start(eBoss_A); break;
 	case eStage::stage1: mBossChara->Start(eBoss_B); break;
 	case eStage::stage2:	break;
 	case eStage::stage3:	break;

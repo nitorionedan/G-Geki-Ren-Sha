@@ -38,6 +38,9 @@ namespace MyFile
 		constexpr const char* PLANE_BLACK      = "GRAPH/GAME/BACKGROUND/blackbg.png";
 		
 		constexpr const char* EFCT_SPECIAL     = "GRAPH/GAME/EFFECT/clear_explo.png";
+
+		constexpr const char* TIPS00 = "GRAPH/GAME/tips00.png";
+		constexpr const char* TIPS01 = "GRAPH/GAME/tips01.png";
 	}
 
 	/* sound files */

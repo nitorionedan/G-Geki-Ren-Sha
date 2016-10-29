@@ -127,6 +127,7 @@ private:
 	int rank;							// ランク
 	int c_bossBgm;
 	int c_fade, c_result;
+	int gh_tips00, gh_tips01;
 	bool f_quake;						// シフトアップしたときの画面振動フラグ
 	bool isStanby;
 	bool f_AllClear;

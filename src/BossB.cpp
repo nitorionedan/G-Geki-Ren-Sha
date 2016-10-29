@@ -60,7 +60,7 @@ BossB::BossB()
 	img->Load(MyFile::Gr::BOSS_FLYER_L_WING, "Lwing");
 	sh_dead = LoadSoundMem(MyFile::Se::LARGE_EX);
 
-	body_head->pos.SetVec(320, -100);
+	body_head->pos.SetVec(320, -200);
 	body_leftWing->pos = body_head->pos;
 	body_rightWing->pos = body_head->pos;
 	body_tail00->pos = Vector2D::GetVec(body_head->pos.x + 3, body_head->pos.y);
@@ -125,9 +125,26 @@ void BossB::Update()
 		body_rightWing->isExist == false &&
 		body_tail00->isExist == false &&
 		body_tail01->isExist == false &&
-		state != eState::weak && state != eState::dead)
+		state != eState::weak &&
+		body_head->hp > 0)
 	{
 		state = eState::weak;
+	}
+
+	/* wing death */
+	if (body_leftWing->isExist == false)
+	{
+		if (body_gun02->isExist)
+			body_gun02->Damage(10000);
+		if (body_gun03->isExist)
+			body_gun03->Damage(10000);
+	}
+	if (body_rightWing->isExist == false)
+	{
+		if (body_gun00->isExist)
+			body_gun00->Damage(10000);
+		if (body_gun01->isExist)
+			body_gun01->Damage(10000);
 	}
 
 	/* dead */
@@ -145,6 +162,16 @@ void BossB::Update()
 		body_gun02->    Damage(10000);
 		body_gun03->    Damage(10000);
 	}
+
+	clsDx();
+	if (body_leftWing->isExist == false)
+		printfDx("l_Wing exist\n");
+	if (body_rightWing->isExist == false)
+		printfDx("r_Wing exist\n");
+	if (body_tail00->isExist == false )
+		printfDx("tail00 exist\n");
+	if (body_tail01->isExist == false)
+		printfDx("tail01 exist\n");
 }
 
 
@@ -465,6 +492,17 @@ void BossB::Update_Weak()
 	body_gun02->pos = Vector2D::GetVec(body_head->pos.x + GUN02_X, body_head->pos.y + GUN02_Y);
 	body_gun03->pos = Vector2D::GetVec(body_head->pos.x + GUN03_X, body_head->pos.y + GUN03_Y);
 
+	/* parts update */
+	body_head->Update();
+	body_leftWing->Update();
+	body_rightWing->Update();
+	body_tail00->Update();
+	body_tail01->Update();
+	body_gun00->Update();
+	body_gun01->Update();
+	body_gun02->Update();
+	body_gun03->Update();
+
 	/* Fire */
 	body_head->Fire();
 }
@@ -496,6 +534,17 @@ void BossB::Update_Dead()
 			Effector::PlayAnime(body_head->pos.x, body_head->pos.y, eExplosion_big);
 		PlaySoundMem(sh_dead, DX_PLAYTYPE_BACK);
 	}
+
+	/* parts update */
+	body_head->Update();
+	body_leftWing->Update();
+	body_rightWing->Update();
+	body_tail00->Update();
+	body_tail01->Update();
+	body_gun00->Update();
+	body_gun01->Update();
+	body_gun02->Update();
+	body_gun03->Update();
 }
 
 
@@ -521,6 +570,7 @@ BossB::Body::Body(ePart part)
 	this->part = part;
 	c_dead = 0;
 	elapsedTime = 0;
+	radAng = 0;
 	isExist = true;
 	isDamage = false;
 
@@ -532,23 +582,23 @@ BossB::Body::Body(ePart part)
 		break;
 	case BossB::ePart::leftWing:
 		hitRange = 35;
-		hp = 2000;
+		hp = 2000; // 2000
 		break;
 	case BossB::ePart::rightWing:
 		hitRange = 35;
-		hp = 2000;
+		hp = 2000; // 2000
 		break;
 	case BossB::ePart::tail00:
 		hitRange = 24;
-		hp = 1000;
+		hp = 1000; // 1000
 		break;
 	case BossB::ePart::tail01:
 		hitRange = 24;
-		hp = 1000;
+		hp = 1000; // 1000
 		break;
 	case BossB::ePart::gun:
 		hitRange = 14;
-		hp = 300;
+		hp = 300; // 300
 		break;
 	default: assert(!"no defined");
 	}
@@ -568,6 +618,9 @@ void BossB::Body::Update()
 	if (isExist == false)
 		return;
 
+	if (part == ePart::gun)
+		radAng = std::atan2(IPlayer::GetPos().y - pos.y, IPlayer::GetPos().x - pos.x) - 90 * DX_PI / 180;
+
 	if (hp <= 0)
 	{
 		++c_dead;
@@ -575,17 +628,27 @@ void BossB::Body::Update()
 		{
 			isExist = false;
 			if (part == ePart::leftWing || part == ePart::rightWing)
-				Effector::PlayAnime(pos.x, pos.y, eExplosion_big);
+			{
+				Effector::PlayAnime(pos.x, pos.y, eExplosion_normal);
+				IScore::AddScore(2000);
+			}
 			else
 			{
 				Effector::PlayAnime(pos.x, pos.y, eExplosion_small);
 				Effector::PlayAnime(pos.x, pos.y, eExplosion_small);
+				IScore::AddScore(500);
 			}
 		}
 
 		if (c_dead == DEAD_ALL_TIME && part == ePart::head)
+		{
 			isExist = false;
+			IScore::AddScore(3000);
+		}
 	}
+
+	if (HitCheckToPlayer())
+		Damage(1);
 }
 
 
@@ -626,7 +689,7 @@ void BossB::Body::Draw(const BossB& boss)
 		boss.img->DrawRota(pos.x, pos.y, 2, 0, "tail01");
 		break;
 	case BossB::ePart::gun:
-		boss.img->DrawRota(pos.x, pos.y, 2, 0, "gun");
+		boss.img->DrawRota(pos.x, pos.y, 2, radAng, "gun");
 		break;
 	}
 
@@ -643,6 +706,17 @@ void BossB::Body::Damage(int point)
 
 	if (hp <= 0)
 		Effector::PlayAnime(pos.x, pos.y, eExplosion_small);
+}
+
+bool BossB::Body::HitCheckToPlayer() {
+	bool isHit;
+	if (part == ePart::leftWing)
+		isHit = IPlayer::HitCheckCircl(hitRange - ADJUST_RANGE_POS, pos);
+	else if (part == ePart::rightWing)
+		isHit = IPlayer::HitCheckCircl(hitRange + ADJUST_RANGE_POS, pos);
+	else
+		isHit = IPlayer::HitCheckCircl(hitRange, pos);
+	return isHit;
 }
 
 bool BossB::Body::HitCheck(const double & ColX, const double & ColY, const int & DamagePoint)
@@ -691,11 +765,11 @@ void BossB::Body::Fire()
 
 void BossB::Body::Fire_Head()
 {
-	if (elapsedTime % 4 == 0)
+	if (elapsedTime % 8 == 0)
 	{
 		Vector2D tarPos = Vector2D::GetVec(GetRand(640), GetRand(480));
 		Vector2D dir = Vector2D::GetVec2(pos, tarPos);
-		Vector2D force = dir.Normalize() * GetRand(10);
+		Vector2D force = dir.Normalize() * (GetRand(4) + 5);
 
 		IEneShot::Fire(eShotType::normal, pos, 0, force, 1, 0);
 	}

@@ -56,11 +56,12 @@ Player::Player()
 	isDead = false;
 	isStart = false;
 	isHit = false;
-#if defined(_DEBUG) || defined(DEBUG)
-	superFlag = true;
-#else
+//#if defined(_DEBUG) || defined(DEBUG)
+//	superFlag = true;
+//#else
+//	superFlag = false;
+//#endif
 	superFlag = false;
-#endif
 	isArm = false;
 	state = ePlayerState::Start;
 }
@@ -344,10 +345,10 @@ void Player::Rensha_Update()
 	switch (powlv)
 	{
 	case 0:	rensha = 0;	break;
-	case 1:	if (IStage::GetTime() % 17 == 0)	rensha--;	break; // 17
-	case 2:	if (IStage::GetTime() % 16 == 0)	rensha--;	break; // 12
-	case 3: if (IStage::GetTime() % 15 == 0)	rensha--;	break; // 11
-	case 4: if (IStage::GetTime() % 14 == 0)	rensha--;	break; // 10
+	case 1:	if (IStage::GetTime() % 20 == 0)	rensha--;	break; // 17
+	case 2:	if (IStage::GetTime() % 18 == 0)	rensha--;	break; // 12
+	case 3: if (IStage::GetTime() % 18 == 0)	rensha--;	break; // 11
+	case 4: if (IStage::GetTime() % 17 == 0)	rensha--;	break; // 10
 	default: assert(!"Player::Rensha_Update()");
 	}
 

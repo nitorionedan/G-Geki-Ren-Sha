@@ -43,6 +43,8 @@ Stage::Stage()
 {
 	Screen   = MakeScreen(640, 480, TRUE);
 	gh_black = LoadGraph(MyFile::Gr::PLANE_BLACK);
+	gh_tips00 = LoadGraph(MyFile::Gr::TIPS00);
+	gh_tips01 = LoadGraph(MyFile::Gr::TIPS01);
 
 	tCamera.pos  = GetCameraPosition();
 	tCamera.tang = GetCameraAngleVRotate();
@@ -55,6 +57,8 @@ Stage::Stage()
 
 Stage::~Stage()
 {
+	DeleteGraph(gh_tips00);
+	DeleteGraph(gh_tips01);
 	DeleteGraph(gh_black);
 	Finalize();
 }
@@ -219,6 +223,15 @@ void Stage::Draw()
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 - c_fade);
 		DrawGraph(0, 0, gh_black, FALSE);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+		if (nowStage == eStage::opening)
+		{
+			/* Tips */
+			if (time >= 1 && time <= 240)
+				DrawRotaGraph(320, 240, 2, 0, gh_tips00, TRUE);
+			if (time >= 241 && time <= 480)
+				DrawRotaGraph(320, 240, 2, 0, gh_tips01, TRUE);
+		}
 
 		DrawStageCall();
 		break;

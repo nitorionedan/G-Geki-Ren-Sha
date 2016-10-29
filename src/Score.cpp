@@ -124,7 +124,6 @@ void Score::LoadScore()
 	{
 		// 新しく作ってデータを保存
 		SaveScore();
-		printfDx("\n新しく[score_data.dat]を作成しました。\n[Y] キー：おｋ\n");
 	}
 	// 開ければ
 	else

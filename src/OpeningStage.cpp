@@ -3,6 +3,7 @@
 #include "Counter.hpp"
 #include "EnemyMng.hpp"
 #include "Keyboard.hpp"
+#include "FileDef.h"
 #include <DxLib.h>
 #include <cassert>
 #include <algorithm>
@@ -50,7 +51,6 @@ OpenigStage::OpenigStage()
 OpenigStage::~OpenigStage()
 {
 	DeleteGraph(testGh);
-
 	for (auto Gr_Handle : hg)
 		DeleteGraph(Gr_Handle);
 }

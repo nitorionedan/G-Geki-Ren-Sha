@@ -33,6 +33,7 @@ class BossB : public BossTask
 		void Update();
 		void Draw(const BossB& boss);
 		void Damage(int point);
+		bool HitCheckToPlayer();
 		bool HitCheck(const double& ColX, const double& ColY, const int& DamagePoint);
 		void Fire();
 		void Fire_Head();
@@ -44,6 +45,7 @@ class BossB : public BossTask
 		Vector2D pos;
 		double hitRange;
 		double hp, max_hp;
+		double radAng;
 		bool isDamage;
 		bool isExist;
 		int c_dead;

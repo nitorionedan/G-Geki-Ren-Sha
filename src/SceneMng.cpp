@@ -17,7 +17,7 @@
 
 
 SceneMng::SceneMng() :	mNextScene(eScene::none){
-	mScene = static_cast<BaseScene*> (new Game(this));	// 最初のシーン
+	mScene = static_cast<BaseScene*> (new Menu(this));	// 最初のシーン
 }
 
 

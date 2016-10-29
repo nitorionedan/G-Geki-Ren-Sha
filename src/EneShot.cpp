@@ -139,7 +139,11 @@ void EneShot::Draw()
 			break;
 		case eShotType::longer:	     DrawAnime(i.pos.x, i.pos.y, 2., i.force.ToRad() + RECT_ANGLE_R, i.time, _countof(gh_long), 2, gh_long); break;
 		case eShotType::missile:     DrawRotaGraph(i.pos.x, i.pos.y, 2, i.force.ToRad() + RECT_ANGLE_R, gh_missile, TRUE); break;
-		case eShotType::short_laser: DrawRotaGraph(i.pos.x, i.pos.y, 2, i.force.ToRad() + RECT_ANGLE_R + DX_PI, gh_short, TRUE); break;
+		case eShotType::short_laser:
+			DrawRotaGraph(i.pos.x, i.pos.y, 2, i.force.ToRad() + RECT_ANGLE_R + DX_PI, gh_short, TRUE);
+			if (i.time == 1)
+				DrawRotaGraph(i.pos.x, i.pos.y, 2., 0., gh_fire, TRUE);
+			break;
 		default: assert(!"abnormality val");
 		}
 	}
@@ -170,6 +174,7 @@ void EneShot::Fire(eShotType type, Vector2D & pos, double rotate, Vector2D & for
 	if (tmp.life > 0)
 		tmp.hasHP = true;
 
+	tmp.mAI = nullptr;
 	switch (aiType)
 	{
 	case eShotAI::straight:
@@ -184,7 +189,12 @@ void EneShot::Fire(eShotType type, Vector2D & pos, double rotate, Vector2D & for
 	case eShotAI::wave:
 		tmp.mAI = static_cast<EneShotAI*>(new EneShotAI_Wave);
 		break;
+	case eShotAI::homing:
+		tmp.mAI = static_cast<EneShotAI*>(new EneShotAI_Homing);
+		break;
 	}
+	assert(tmp.mAI != nullptr);
+
 	shot.emplace_back(tmp);
 }
 
@@ -207,6 +217,7 @@ void EneShot::Fire_Ang(eShotType type, Vector2D & pos, double rotate, double for
 	if (tmp.life > 0)
 		tmp.hasHP = true;
 
+	tmp.mAI = nullptr;
 	switch (aiType)
 	{
 	case eShotAI::straight:
@@ -225,6 +236,8 @@ void EneShot::Fire_Ang(eShotType type, Vector2D & pos, double rotate, double for
 		tmp.mAI = static_cast<EneShotAI*>(new EneShotAI_Homing);
 		break;
 	}
+	assert(tmp.mAI != nullptr);
+
 	shot.emplace_back(tmp);
 }
 

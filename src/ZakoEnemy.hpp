@@ -118,6 +118,8 @@ private:
 	void Move();
 
 	int gh[8], gh_fire;
+	float c_move;
+	bool hasMissile;
 };
 
 

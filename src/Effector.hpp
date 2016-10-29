@@ -2,6 +2,7 @@
 
 class PieceEffect;
 class Effect;
+class SpecialExplosionEffect;
 
 enum eExplosion_t;
 enum eSpread_t;
@@ -25,10 +26,12 @@ public:
 	void Draw_Explosion();
 	void Draw_Shock();
 	void Draw_Smoke();
+	void Draw_SpecialExplo();
 	static void PlayAnime(const double& PlayX, const double& PlayY, eExplosion_t type);
 	static void PlaySpread(const double & PosX, const double & PosY, const double & ANGLE, eSpread_t type);
 	static void PlayShock(double x, double y);
 	static void PlaySmoke(double x, double y, eSmokeColor colorType);
+	static void PlaySpecialEplosion(double x, double y);
 
 private:
 	int img_shock;
@@ -36,4 +39,5 @@ private:
 	static Effect** effect;
 	static Shock s_shock[];
 	static SmokeEffect* smoke;
+	static SpecialExplosionEffect* special;
 };

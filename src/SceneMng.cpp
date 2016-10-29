@@ -1,11 +1,13 @@
 #include <DxLib.h>
 #include <cassert>
 
+/* scenes */
 #include "Config.hpp"
 #include "Game.hpp"
 #include "GameOver.hpp"
 #include "Menu.hpp"
 #include "Ranking.hpp"
+#include "GameClear.hpp"
 
 #include "SceneMng.hpp"
 #include "Another.hpp"
@@ -42,6 +44,7 @@ void SceneMng::Update()
 		case eScene::another:  mScene = static_cast<BaseScene*>(new Another(this)); break;
 		case eScene::gameOver: mScene = static_cast<BaseScene*>(new GameOver(this)); break;
 		case eScene::ranking:  mScene = static_cast<BaseScene*>(new Ranking(this)); break;
+		case eScene::gameClear:  mScene = static_cast<BaseScene*>(new GameClear(this)); break;
 		default:	assert(!"SceneMng::Update()");
 		}
 		mNextScene = eScene::none;								// 次のシーン情報をクリア

@@ -259,7 +259,7 @@ void ZakoEnemy_Ze::CalcDamage(int damage)
 }
 
 
-// ==========================================================Career
+// ==========================================================Career==========================================================
 ZakoEnemy_Career::ZakoEnemy_Career(const tEnemyData & data)
 {
 	LoadDivGraph(Gr::ENEMY_CAREER, _countof(gh), 4, 2, 124, 78, gh);
@@ -276,7 +276,10 @@ ZakoEnemy_Career::ZakoEnemy_Career(const tEnemyData & data)
 	this->data.isMove = true;
 	this->data.time = 0;
 	this->data.loopTime = 0;
+
 	maxHP = data.hp;
+	c_move = 0;
+	hasMissile = true;
 }
 
 ZakoEnemy_Career::~ZakoEnemy_Career()
@@ -394,14 +397,22 @@ void ZakoEnemy_Career::Fire()
 		if (data.loopTime == 20 + (i * 10))
 			IEneShot::Fire_Ang(eShotType::wave, data.pos, 0, data.param.s_speed + 2, data.vangle, 1, 0);
 	}
+
+	if (data.pos.y >= 240 && hasMissile)
+	{
+		hasMissile = false;
+		Vector2D dir(-2, 2);
+		IEneShot::Fire(eShotType::missile, data.pos, 0, dir, 1.01, 2, eShotAI::homing);
+		dir.SetVec(2, 2);
+		IEneShot::Fire(eShotType::missile, data.pos, 0, dir, 1.01, 2, eShotAI::homing);
+	}
 }
 
 void ZakoEnemy_Career::Move()
 {
-	static float c_move = 0.f;
 	c_move += 0.01f;
 
-	data.vspeed.SetVec(0.7, 0.2);
+	data.vspeed.SetVec(0.7, 0.4);
 
 	if (data.pos.y < 240) // ‚®‚Ë‚®‚Ë
 	{
@@ -423,7 +434,7 @@ void ZakoEnemy_Career::Move()
 }
 
 
-// ==========================================================Raide
+// ==========================================================Raide==========================================================
 ZakoEnemy_Den::ZakoEnemy_Den(const tEnemyData & data)
 	: Move_max(400)
 {
@@ -435,7 +446,7 @@ ZakoEnemy_Den::ZakoEnemy_Den(const tEnemyData & data)
 	this->data.pos.SetVec(data.x_pos, data.y_pos);
 	this->data.vspeed.SetVec(0, 9);
 	this->data.vangle = 0;
-	this->data.hitRange = 20;
+	this->data.hitRange = 15;
 	this->data.isExist = false;
 	this->data.isUngry = false;
 	this->data.isHit = false;
@@ -590,7 +601,7 @@ void ZakoEnemy_Den::Fire0()
 {
 	if (data.time == data.param.out_time + 10 || data.time == data.param.out_time + 20)
 	{
-		if (std::abs(IPlayer::GetPos().x - data.pos.x) > 100.)
+		if (std::abs(IPlayer::GetPos().x - data.pos.x) > 200.)
 			return;
 		Vector2D dir(0, 1);
 		Vector2D pos;

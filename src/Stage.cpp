@@ -277,10 +277,10 @@ void Stage::NextStage()
 	{
 		nowStage = static_cast<eStage>(static_cast<int>(nowStage) + 1);
 		IEnemyMng::Load(nowStage);
+		Initialize();
 	}
 	else
 		AllClear();
-	Initialize();
 }
 
 
@@ -297,11 +297,7 @@ void Stage::Clear()
 
 void Stage::AllClear()
 {
-	// TODO: implement
-#if defined(_DEBUG) || defined(DEBUG)
-	printfDx("All Clear\n");
-#endif
-	//nowStage = eStage::opening;
+	///nowStage = eStage::opening;
 	f_AllClear = true;
 }
 
@@ -407,8 +403,8 @@ void Stage::DrawResult()
 
 	/* The Life Bonus */
 	int lifeBonus = IPlayer::GetLife() * 64864; // ’Ž‚Í–³Ž‹iŒƒŠ¦j
-	graphic->DrawMyString2(100, 200, "LIFE BONUS", 16, true, 2.);
-	graphic->DrawScore(480, 200, lifeBonus, 16, 2.);
+	graphic->DrawMyString2(100, 180, "LIFE BONUS", 16, true, 2.);
+	graphic->DrawScore(480, 180, lifeBonus, 16, 2.);
 	if (c_result == 1)
 		IScore::AddScore(lifeBonus);
 

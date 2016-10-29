@@ -9,6 +9,7 @@
 #include "BossChara.hpp"
 #include "NullBoss.hpp"
 #include "BossA.hpp"
+#include "BossB.hpp"
 #include "Stage.hpp"
 #include "BossShotMgr.hpp"
 #include <cassert>
@@ -40,8 +41,8 @@ void BossChara::Start(eBoss_num num)
 		IBossShotMgr::ChangeShot(eEnemyShot::ShotA);
 		break;
 	case eBoss_B:
-		mBoss = static_cast<BossTask*>(new BossA);
-		IBossShotMgr::ChangeShot(eEnemyShot::ShotA);
+		mBoss = static_cast<BossTask*>(new BossB);
+		IBossShotMgr::ChangeShot(eEnemyShot::None);
 		break;
 	case eBoss_C:
 		break;
@@ -77,8 +78,8 @@ void IBossChara::Start()
 {
 	switch (IStage::GetNowStage())
 	{
-	case eStage::opening: mBossChara->Start(eBoss_A); break;
-	case eStage::stage1: mBossChara->Start(eBoss_A); break;
+	case eStage::opening: mBossChara->Start(eBoss_B); break;
+	case eStage::stage1: mBossChara->Start(eBoss_B); break;
 	case eStage::stage2:	break;
 	case eStage::stage3:	break;
 	case eStage::stage4:	break;

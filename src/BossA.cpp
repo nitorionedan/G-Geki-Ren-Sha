@@ -145,10 +145,6 @@ void BossA::Draw()
 	if (isExist == false)
 		return;
 
-	/* effect */
-	if (c_dead >= 180 && c_dead <= 200)
-		DrawBox(0, 0, 640, 480, GetColor(255, 255, 255), TRUE);
-
 	if(isHit)
 		SetLightDifColor(CyanF);	// —Î
 	
@@ -208,7 +204,6 @@ bool BossA::HitCheck(const double & ColX, const double & ColY, const int& Damage
 {
 	if (state == eBossA_Dead)
 		return false;
-
 	const bool& IS_HIT = (Vector2D::CirclePointCollision(pos.x, pos.y, ColX, ColY, HIT_RANGE));
 	
 	if (IS_HIT)
@@ -334,6 +329,10 @@ void BossA::Dead_Update()
 {
 	c_dead++;
 
+	/* effect */
+	if (c_dead == 180)
+		Effector::PlaySpecialEplosion(pos.x, pos.y);
+
 	const bool& Is_deing = (time % 20 == 0 && pos.y < 480);
 	if(Is_deing)	// small explosion
 		Effector::PlayAnime(pos.x + GetRand(80) - 40, pos.y + GetRand(80) - 40, eExplosion_small);
@@ -344,8 +343,7 @@ void BossA::Dead_Update()
 	{
 		for (int i = 0; i < 5; ++i)
 			Effector::PlayAnime(pos.x, pos.y, eExplosion_big);
-		
-		PlaySoundMem(hs_exp, DX_PLAYTYPE_BACK);
+			PlaySoundMem(hs_exp, DX_PLAYTYPE_BACK);
 		IStage::Clear();
 	}
 

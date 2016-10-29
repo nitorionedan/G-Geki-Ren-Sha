@@ -6,15 +6,17 @@
 #include "ExplosionS.hpp"
 #include "Piece.hpp"
 #include "ChargeEffect.hpp"
+#include "SpecialExplosionEffect.hpp"
 #include "FileDef.h"
 #include <DxLib.h>
 
 constexpr int EX_NUM = 4;
 
-PieceEffect*	Effector::pieceef;
-Effect**		Effector::effect;
-Effector::Shock Effector::s_shock[10];
-SmokeEffect* Effector::smoke;
+PieceEffect*	        Effector::pieceef;
+Effect**		        Effector::effect;
+Effector::Shock         Effector::s_shock[10];
+SmokeEffect*            Effector::smoke;
+SpecialExplosionEffect* Effector::special;
 
 
 Effector::Effector()
@@ -29,6 +31,7 @@ Effector::Effector()
 	effect[2] = new Effect(new ExplosionEffect(eExplosion_big));
 	effect[3] = new Effect(new ExplosionEffect(eExplosion_long));
 	smoke = new SmokeEffect;
+	special = new SpecialExplosionEffect;
 
 	for (auto& i : s_shock)
 	{
@@ -50,13 +53,13 @@ Effector::~Effector()
 		delete effect[i];
 	delete[] effect;
 	delete smoke;
+	delete special;
 }
 
 
 void Effector::Update()
 {
-	pieceef->Update();
-	
+	pieceef->Update();	
 	for (int i = 0; i < EX_NUM; i++)
 		effect[i]->Update();
 	
@@ -71,8 +74,8 @@ void Effector::Update()
 			i.exrate = 1.;
 		}
 	}
-
 	smoke->Update();
+	special->Update();
 }
 
 
@@ -109,6 +112,11 @@ void Effector::Draw_Shock()
 void Effector::Draw_Smoke()
 {
 	smoke->Draw();
+}
+
+
+void Effector::Draw_SpecialExplo() {
+	special->Draw();
 }
 
 
@@ -150,4 +158,9 @@ void Effector::PlayShock(double x, double y)
 
 void Effector::PlaySmoke(double x, double y, eSmokeColor colorType) {
 	smoke->PlayAnime(x, y, colorType);
+}
+
+
+void Effector::PlaySpecialEplosion(double x, double y) {
+	special->Play(x, y);
 }

@@ -17,12 +17,20 @@ BossShotMgr::~BossShotMgr(){
 }
 
 
-void BossShotMgr::Update(const Player& player){
+void BossShotMgr::Update(const Player& player)
+{
+	if (mEnemyShot == nullptr)
+		return;
+
 	mEnemyShot->Update(player);
 }
 
 
-void BossShotMgr::Draw(){
+void BossShotMgr::Draw() 
+{
+	if (mEnemyShot == nullptr)
+		return;
+
 	mEnemyShot->Draw();
 }
 
@@ -30,6 +38,7 @@ void BossShotMgr::Draw(){
 void BossShotMgr::ChangeShot(eEnemyShot type)
 {
 	delete mEnemyShot;
+	mEnemyShot = nullptr;
 
 	switch (type)
 	{

@@ -148,36 +148,16 @@ void Game::Update()
 	
 	if (isDead)	mSceneChanger->ChangeScene(eScene::gameOver);
 
-	static int c_test = 0;
-	if (c_test != 0)
-		++c_test;
-	if (Keyboard::Instance()->isPush(KEY_INPUT_C))
-	{
-		c_test = 1;
-
-		//for (int i = 0; i < 3; ++i)
-		//{
-		//	Vector2D dir = Vector2D::GetVec((GetRand(20) - 10) / 10., (GetRand(20) - 10) / 10.);
-		//	Vector2D force = dir.Normalize() * 7;
-		//	IEneShot::Fire_Ang(eShotType::missile, pos, 0, 4, dir.ToRad(), 1.01, 2, eShotAI::homing);
-		//}
-		//IStage::PlayDist(GetRand(640), GetRand(480));
-	}
-
-	if (c_test == 5 || c_test == 10 || c_test == 15)
-	{
-		Vector2D dir = Vector2D::GetVec2(pos, Vector2D::ZERO);
-		Vector2D force = dir.Normalize() * 3;
-		IEneShot::Fire(eShotType::laser, pos, 0, force, 1, 0);
-		if (c_test == 15)
-			c_test = 0;
-	}
-
 	if (IStage::CheckAllClear())
-		mSceneChanger->ChangeScene(eScene::gameOver);
+		mSceneChanger->ChangeScene(eScene::gameClear);
 
 // TEST ----------------------------------------------
 	if (DebugMode::isTest == false)	return;
+
+	if (Keyboard::Instance()->isPush(KEY_INPUT_C))
+	{
+		Effector::PlaySpecialEplosion(320, 240);
+	}
 
 	if (Keyboard::Instance()->isDown(KEY_INPUT_Q) && Keyboard::Instance()->isDown(KEY_INPUT_W))
 		mSceneChanger->ChangeScene(eScene::gameOver);
@@ -211,6 +191,7 @@ void Game::Draw()
 	enemyMng->Draw();
 	effector->Draw_Smoke();
 	effector->Draw_Explosion();
+	effector->Draw_SpecialExplo();
 	itemMng->Draw();
 
 	// Character

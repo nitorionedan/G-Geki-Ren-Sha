@@ -48,6 +48,7 @@
     <ClCompile Include="src\ExplosionEffect.cpp" />
     <ClCompile Include="src\ExplosionS.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\GameClear.cpp" />
     <ClCompile Include="src\GameOver.cpp" />
     <ClCompile Include="src\Graphic.cpp" />
     <ClCompile Include="src\Graphics2D.cpp" />
@@ -72,6 +73,7 @@
     <ClCompile Include="src\Shot.cpp" />
     <ClCompile Include="src\SmokeEffect.cpp" />
     <ClCompile Include="src\Sound.cpp" />
+    <ClCompile Include="src\SpecialExplosionEffect.cpp" />
     <ClCompile Include="src\Stage.cpp" />
     <ClCompile Include="src\Stage1.cpp" />
     <ClCompile Include="src\Stage2.cpp" />
@@ -122,6 +124,7 @@
     <ClInclude Include="src\Field.hpp" />
     <ClInclude Include="src\FileDef.h" />
     <ClInclude Include="src\Game.hpp" />
+    <ClInclude Include="src\GameClear.hpp" />
     <ClInclude Include="src\GameOver.hpp" />
     <ClInclude Include="src\Graphic.hpp" />
     <ClInclude Include="src\Graphics2D.hpp" />
@@ -151,6 +154,7 @@
     <ClInclude Include="src\Singleton.hpp" />
     <ClInclude Include="src\SmokeEffect.hpp" />
     <ClInclude Include="src\Sound.hpp" />
+    <ClInclude Include="src\SpecialExplosionEffect.hpp" />
     <ClInclude Include="src\Stage.hpp" />
     <ClInclude Include="src\Stage1.hpp" />
     <ClInclude Include="src\Stage2.hpp" />

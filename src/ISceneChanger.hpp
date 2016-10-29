@@ -9,6 +9,7 @@ enum class eScene
 	config,	  // İ’è‰æ–Ê
 	another,  // ”é–§
 	ranking,
+	gameClear,
 
 	none,	  // –³‚µ
 };

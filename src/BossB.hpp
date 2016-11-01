@@ -70,10 +70,7 @@ public:
 	void Update_Stay();
 	void Update_Weak();
 	void Update_Dead();
-	void Fire_Normal();
-	void Fire_Stay();
-	void Fire_Weak();
-
+	
 private:
 	std::unique_ptr<Body> body_head;
 	std::unique_ptr<Body> body_leftWing;

@@ -151,6 +151,12 @@ void Game::Update()
 	if (IStage::CheckAllClear())
 		mSceneChanger->ChangeScene(eScene::gameClear);
 
+	if (Keyboard::Instance()->isPush(KEY_INPUT_C))
+	{
+		/// TODO: Add life to player
+	}
+
+
 // TEST ----------------------------------------------
 	if (DebugMode::isTest == false)	return;
 

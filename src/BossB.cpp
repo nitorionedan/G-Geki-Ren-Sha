@@ -112,12 +112,27 @@ void BossB::Update()
 	case BossB::eState::dead: Update_Dead();    break;
 	}
 
-	/* fire */
-	switch (state)
+	/* parts update */
+	if (state != eState::start)
 	{
-	case BossB::eState::normal:Fire_Normal(); break;
-	case BossB::eState::stay: Fire_Stay();    break;
-	case BossB::eState::weak: Fire_Weak();    break;
+		body_head->Update();
+		body_leftWing->Update();
+		body_rightWing->Update();
+		body_tail00->Update();
+		body_tail01->Update();
+		body_gun00->Update();
+		body_gun01->Update();
+		body_gun02->Update();
+		body_gun03->Update();
+		/* parts update */
+		body_tail00->Fire();
+		body_tail01->Fire();
+		body_gun00->Fire();
+		body_gun01->Fire();
+		body_gun02->Fire();
+		body_gun03->Fire();
+		if (state == eState::weak)
+			body_head->Fire();
 	}
 
 	/* weak pattern 1 */
@@ -383,15 +398,15 @@ void BossB::Update_Start()
 	}
 
 	/* parts update */
-	body_head->Update();
-	body_leftWing->Update();
-	body_rightWing->Update();
-	body_tail00->Update();
-	body_tail01->Update();
-	body_gun00->Update();
-	body_gun01->Update();
-	body_gun02->Update();
-	body_gun03->Update();
+	//body_head->Update();
+	//body_leftWing->Update();
+	//body_rightWing->Update();
+	//body_tail00->Update();
+	//body_tail01->Update();
+	//body_gun00->Update();
+	//body_gun01->Update();
+	//body_gun02->Update();
+	//body_gun03->Update();
 }
 
 
@@ -422,23 +437,23 @@ void BossB::Update_Normal()
 	body_gun02->pos = Vector2D::GetVec(body_head->pos.x + GUN02_X, body_head->pos.y + GUN02_Y);
 	body_gun03->pos = Vector2D::GetVec(body_head->pos.x + GUN03_X, body_head->pos.y + GUN03_Y);
 
-	/* parts update */
-	body_head->Update();
-	body_leftWing->Update();
-	body_rightWing->Update();
-	body_tail00->Update();
-	body_tail01->Update();
-	body_gun00->Update();
-	body_gun01->Update();
-	body_gun02->Update();
-	body_gun03->Update();
-	/* parts update */
-	body_tail00->Fire();
-	body_tail01->Fire();
-	body_gun00->Fire();
-	body_gun01->Fire();
-	body_gun02->Fire();
-	body_gun03->Fire();
+	///* parts update */
+	//body_head->Update();
+	//body_leftWing->Update();
+	//body_rightWing->Update();
+	//body_tail00->Update();
+	//body_tail01->Update();
+	//body_gun00->Update();
+	//body_gun01->Update();
+	//body_gun02->Update();
+	//body_gun03->Update();
+	///* parts update */
+	//body_tail00->Fire();
+	//body_tail01->Fire();
+	//body_gun00->Fire();
+	//body_gun01->Fire();
+	//body_gun02->Fire();
+	//body_gun03->Fire();
 }
 
 
@@ -452,23 +467,23 @@ void BossB::Update_Stay()
 		state = eState::normal;
 	}
 
-	/* parts update */
-	body_head->Update();
-	body_leftWing->Update();
-	body_rightWing->Update();
-	body_tail00->Update();
-	body_tail01->Update();
-	body_gun00->Update();
-	body_gun01->Update();
-	body_gun02->Update();
-	body_gun03->Update();
-	/* fire */
-	body_tail00->Fire();
-	body_tail01->Fire();
-	body_gun00->Fire();
-	body_gun01->Fire();
-	body_gun02->Fire();
-	body_gun03->Fire();
+	///* parts update */
+	//body_head->Update();
+	//body_leftWing->Update();
+	//body_rightWing->Update();
+	//body_tail00->Update();
+	//body_tail01->Update();
+	//body_gun00->Update();
+	//body_gun01->Update();
+	//body_gun02->Update();
+	//body_gun03->Update();
+	///* fire */
+	//body_tail00->Fire();
+	//body_tail01->Fire();
+	//body_gun00->Fire();
+	//body_gun01->Fire();
+	//body_gun02->Fire();
+	//body_gun03->Fire();
 }
 
 
@@ -496,19 +511,19 @@ void BossB::Update_Weak()
 	body_gun02->pos = Vector2D::GetVec(body_head->pos.x + GUN02_X, body_head->pos.y + GUN02_Y);
 	body_gun03->pos = Vector2D::GetVec(body_head->pos.x + GUN03_X, body_head->pos.y + GUN03_Y);
 
-	/* parts update */
-	body_head->Update();
-	body_leftWing->Update();
-	body_rightWing->Update();
-	body_tail00->Update();
-	body_tail01->Update();
-	body_gun00->Update();
-	body_gun01->Update();
-	body_gun02->Update();
-	body_gun03->Update();
+	///* parts update */
+	//body_head->Update();
+	//body_leftWing->Update();
+	//body_rightWing->Update();
+	//body_tail00->Update();
+	//body_tail01->Update();
+	//body_gun00->Update();
+	//body_gun01->Update();
+	//body_gun02->Update();
+	//body_gun03->Update();
 
-	/* Fire */
-	body_head->Fire();
+	///* Fire */
+	//body_head->Fire();
 }
 
 
@@ -539,59 +554,43 @@ void BossB::Update_Dead()
 		PlaySoundMem(sh_dead, DX_PLAYTYPE_BACK);
 	}
 
-	/* parts update */
-	body_head->Update();
-	body_leftWing->Update();
-	body_rightWing->Update();
-	body_tail00->Update();
-	body_tail01->Update();
-	body_gun00->Update();
-	body_gun01->Update();
-	body_gun02->Update();
-	body_gun03->Update();
-}
-
-
-void BossB::Fire_Normal()
-{
-}
-
-
-void BossB::Fire_Stay()
-{
-}
-
-
-void BossB::Fire_Weak()
-{
+	///* parts update */
+	//body_head->Update();
+	//body_leftWing->Update();
+	//body_rightWing->Update();
+	//body_tail00->Update();
+	//body_tail01->Update();
+	//body_gun00->Update();
+	//body_gun01->Update();
+	//body_gun02->Update();
+	//body_gun03->Update();
 }
 
 
 BossB::Body::Body(ePart part)
 {
-	sh_missile = LoadSoundMem(MyFile::Se::SHOT_MISSILE);
-	sh_laser = LoadSoundMem(MyFile::Se::SHOT_LASER);
-
-	this->part = part;
-	c_dead = 0;
+	sh_missile  = LoadSoundMem(MyFile::Se::SHOT_MISSILE);
+	sh_laser    = LoadSoundMem(MyFile::Se::SHOT_LASER);
+	this->part  = part;
+	c_dead      = 0;
 	elapsedTime = 0;
-	radAng = 0;
-	isExist = true;
-	isDamage = false;
+	radAng      = 0;
+	isExist     = true;
+	isDamage    = false;
 
 	switch (part)
 	{
 	case BossB::ePart::head:
 		hitRange = 28;
-		hp = 3000; // 3000
+		hp = 2500; // 3000
 		break;
 	case BossB::ePart::leftWing:
 		hitRange = 35;
-		hp = 2000; // 2000
+		hp = 1500; // 2000
 		break;
 	case BossB::ePart::rightWing:
 		hitRange = 35;
-		hp = 2000; // 2000
+		hp = 1500; // 2000
 		break;
 	case BossB::ePart::tail00:
 		hitRange = 24;
@@ -603,7 +602,7 @@ BossB::Body::Body(ePart part)
 		break;
 	case BossB::ePart::gun:
 		hitRange = 14;
-		hp = 300; // 300
+		hp = 250; // 300
 		break;
 	default: assert(!"no defined");
 	}
@@ -718,7 +717,11 @@ void BossB::Body::Damage(int point)
 		Effector::PlayAnime(pos.x, pos.y, eExplosion_small);
 }
 
-bool BossB::Body::HitCheckToPlayer() {
+bool BossB::Body::HitCheckToPlayer()
+{
+	if (isExist == false)
+		return false;
+
 	bool isHit;
 	if (part == ePart::leftWing)
 		isHit = IPlayer::HitCheckCircl(hitRange - ADJUST_RANGE_POS, pos);
@@ -731,8 +734,12 @@ bool BossB::Body::HitCheckToPlayer() {
 
 bool BossB::Body::HitCheck(const double & ColX, const double & ColY, const int & DamagePoint)
 {
+	if (isExist == false)
+		return false;
+
 	if (hp <= 0)
 		return false;
+	
 	bool IS_HIT = false;
 	
 	if (part == ePart::leftWing)

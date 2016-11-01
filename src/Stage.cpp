@@ -83,7 +83,7 @@ void Stage::Initialize()
 			}
 		}
 		else // failed
-			nowStage = eStage::opening;
+			nowStage = eStage::stage1;
 		FileRead_close(h_file);
 		s_isContinue = false;
 	}

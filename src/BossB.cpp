@@ -21,7 +21,7 @@ namespace
 	constexpr int DEAD_ALL_TIME = 530;
 
 	constexpr double START_SPEED = 0.7;
-	constexpr double ADJUST_RANGE_POS = 90;
+	constexpr double ADJUST_RANGE_POS = 120;
 	constexpr double TAIL00_POS_Y = 104;
 	constexpr double TAIL01_POS_Y = 187;
 
@@ -35,58 +35,64 @@ namespace
 	constexpr double GUN02_Y = GUN00_Y;
 	constexpr double GUN03_X = -GUN01_X;
 	constexpr double GUN03_Y = GUN01_Y;
+
+	constexpr int HEAD_HP  = 2000;
+	constexpr int WING_HP  = 1300;
+	constexpr int TAIL_HP = 1000;
+	constexpr int GUN_HP   = 200;
 }
 
 
 BossB::BossB()
-	: body_head(new Body(ePart::head))
-	, body_leftWing(new Body(ePart::leftWing))
+	: body_head     (new Body(ePart::head))
+	, body_leftWing (new Body(ePart::leftWing))
 	, body_rightWing(new Body(ePart::rightWing))
-	, body_tail00(new Body(ePart::tail00))
-	, body_tail01(new Body(ePart::tail01))
-	, body_gun00(new Body(ePart::gun))
-	, body_gun01(new Body(ePart::gun))
-	, body_gun02(new Body(ePart::gun))
-	, body_gun03(new Body(ePart::gun))
-	, img(new Image)
+	, body_tail00   (new Body(ePart::tail00))
+	, body_tail01   (new Body(ePart::tail01))
+	, body_gun00    (new Body(ePart::gun))
+	, body_gun01    (new Body(ePart::gun))
+	, body_gun02    (new Body(ePart::gun))
+	, body_gun03    (new Body(ePart::gun))
+	, img           (new Image)
 {
-	img->Load(MyFile::Gr::BOSS_FLYER_BACK, "back");
-	img->Load(MyFile::Gr::BOSS_FLYER_HEAD, "head");
+	img->Load(MyFile::Gr::BOSS_FLYER_BACK,      "back");
+	img->Load(MyFile::Gr::BOSS_FLYER_HEAD,      "head");
 	img->Load(MyFile::Gr::BOSS_FLYER_WING_BACK, "wing_back");
 	img->Load(MyFile::Gr::BOSS_FLYER_WING_HEAD, "wing_head");
-	img->Load(MyFile::Gr::BOSS_FLYER_TAIL00, "tail00");
-	img->Load(MyFile::Gr::BOSS_FLYER_TAIL01, "tail01");
-	img->Load(MyFile::Gr::BOSS_FLYER_GUN, "gun");
-	img->Load(MyFile::Gr::BOSS_FLYER_L_WING, "Lwing");
+	img->Load(MyFile::Gr::BOSS_FLYER_TAIL00,    "tail00");
+	img->Load(MyFile::Gr::BOSS_FLYER_TAIL01,    "tail01");
+	img->Load(MyFile::Gr::BOSS_FLYER_GUN,       "gun");
+	img->Load(MyFile::Gr::BOSS_FLYER_L_WING,    "Lwing");
 	sh_dead = LoadSoundMem(MyFile::Se::LARGE_EX);
 
+	/* first bodiess position */
 	body_head->pos.SetVec(320, -200);
-	body_leftWing->pos = body_head->pos;
+	body_leftWing->pos  = body_head->pos;
 	body_rightWing->pos = body_head->pos;
-	body_tail00->pos = Vector2D::GetVec(body_head->pos.x + 3, body_head->pos.y);
-	body_tail01->pos = Vector2D::GetVec(body_head->pos.x + 3, body_head->pos.y);
-	pos_backWing = Vector2D::GetVec(body_head->pos.x, body_head->pos.y - 50);
+	body_tail00->pos    = Vector2D::GetVec(body_head->pos.x + 3, body_head->pos.y);
+	body_tail01->pos    = Vector2D::GetVec(body_head->pos.x + 3, body_head->pos.y);
+	pos_backWing        = Vector2D::GetVec(body_head->pos.x, body_head->pos.y - 50);
 
-	/* guns */
+	/* first guns position */
 	body_gun00->pos = Vector2D::GetVec(body_head->pos.x + 10, body_head->pos.y);
 	body_gun01->pos = Vector2D::GetVec(body_head->pos.x + 30, body_head->pos.y);
 	body_gun02->pos = Vector2D::GetVec(body_head->pos.x - 10, body_head->pos.y);
 	body_gun03->pos = Vector2D::GetVec(body_head->pos.x - 30, body_head->pos.y);
 
+	/* init params */
 	hp = MAX_HP;
 	elapsedTime = 0;
-	c_start = 0;
-	c_normal = 0;
-	c_stay = 0;
-	c_weak = 0;
-	c_dead = 0;
-	c_move_y = 0;
-	alpha_gun = 0;
-	readyWing = false;
-	isExist = true;
-	isDead = false;
-
-	state = eState::start;
+	c_start     = 0;
+	c_normal    = 0;
+	c_stay      = 0;
+	c_weak      = 0;
+	c_dead      = 0;
+	c_move_y    = 0;
+	alpha_gun   = 0;
+	readyWing   = false;
+	isExist     = true;
+	isDead      = false;
+	state       = eState::start;
 }
 
 
@@ -98,11 +104,12 @@ BossB::~BossB()
 
 void BossB::Update()
 {
-	++elapsedTime;
-
 	if (isExist == false)
 		return;
 
+	++elapsedTime;
+
+	/* Updates */
 	switch (state)
 	{
 	case BossB::eState::start: Update_Start();  break;
@@ -124,14 +131,14 @@ void BossB::Update()
 		body_gun01->Update();
 		body_gun02->Update();
 		body_gun03->Update();
-		/* parts update */
+		/* parts fire */
 		body_tail00->Fire();
 		body_tail01->Fire();
 		body_gun00->Fire();
 		body_gun01->Fire();
 		body_gun02->Fire();
 		body_gun03->Fire();
-		if (state == eState::weak)
+		if (state == eState::weak) // If head only
 			body_head->Fire();
 	}
 
@@ -152,6 +159,7 @@ void BossB::Update()
 		state != eState::weak &&
 		body_head->hp > 0)
 	{
+		/* cut off both wings. */
 		if (body_leftWing->hp > 0)
 			body_leftWing->Damage(10000);
 		if (body_rightWing->hp > 0)
@@ -160,9 +168,10 @@ void BossB::Update()
 	}
 
 
-	/* wing death */
+	/* dead of wings */
 	if (body_leftWing->isExist == false)
 	{
+		/* To blow up all of the gun. */
 		if (body_gun02->isExist)
 			body_gun02->Damage(10000);
 		if (body_gun03->isExist)
@@ -170,6 +179,7 @@ void BossB::Update()
 	}
 	if (body_rightWing->isExist == false)
 	{
+		/* To blow up all of the gun. */
 		if (body_gun00->isExist)
 			body_gun00->Damage(10000);
 		if (body_gun01->isExist)
@@ -216,7 +226,7 @@ void BossB::Draw()
 		}
 		else
 		{
-			img->DrawRota(pos_backWing.x, pos_backWing.y, 2, 0, "wing_back");
+			img->DrawRota(pos_backWing.x,   pos_backWing.y,   2, 0, "wing_back");
 			img->DrawRota(body_head->pos.x, body_head->pos.y, 2, 0, "back", TRUE);
 		}
 		break;
@@ -310,7 +320,7 @@ bool BossB::HitCheck(const double & ColX, const double & ColY, const int & Damag
 	if (body_gun03->HitCheck(ColX, ColY, DamagePoint))
 		return true;
 
-	return false;
+	return false; // no hit
 }
 
 
@@ -396,17 +406,6 @@ void BossB::Update_Start()
 			c_start = 0;
 		}
 	}
-
-	/* parts update */
-	//body_head->Update();
-	//body_leftWing->Update();
-	//body_rightWing->Update();
-	//body_tail00->Update();
-	//body_tail01->Update();
-	//body_gun00->Update();
-	//body_gun01->Update();
-	//body_gun02->Update();
-	//body_gun03->Update();
 }
 
 
@@ -422,38 +421,21 @@ void BossB::Update_Normal()
 
 	/* Move */
 	body_head->pos.x = 320 + std::sin(c_move) * 140;
-	body_head->pos.y = 90 + std::sin(c_move_y) * 30;
+	body_head->pos.y = 90 + (std::sin(c_move_y) * 30);
 	c_move += 0.02;
 	c_move_y += 0.04;
 
-	body_leftWing->pos = body_head->pos;
-	body_rightWing->pos = body_head->pos;
-	body_tail00->pos = Vector2D::GetVec(body_head->pos.x + 3, body_head->pos.y + TAIL00_POS_Y);
-	body_tail01->pos = Vector2D::GetVec(body_head->pos.x + 3, body_head->pos.y + TAIL01_POS_Y);
-	body_gun00->pos = Vector2D::GetVec(body_head->pos.x + 3, body_head->pos.y);
-	pos_backWing = Vector2D::GetVec(body_head->pos.x, body_head->pos.y - 50);
-	body_gun00->pos = Vector2D::GetVec(body_head->pos.x + GUN00_X, body_head->pos.y + GUN00_Y);
-	body_gun01->pos = Vector2D::GetVec(body_head->pos.x + GUN01_X, body_head->pos.y + GUN01_Y);
-	body_gun02->pos = Vector2D::GetVec(body_head->pos.x + GUN02_X, body_head->pos.y + GUN02_Y);
-	body_gun03->pos = Vector2D::GetVec(body_head->pos.x + GUN03_X, body_head->pos.y + GUN03_Y);
-
-	///* parts update */
-	//body_head->Update();
-	//body_leftWing->Update();
-	//body_rightWing->Update();
-	//body_tail00->Update();
-	//body_tail01->Update();
-	//body_gun00->Update();
-	//body_gun01->Update();
-	//body_gun02->Update();
-	//body_gun03->Update();
-	///* parts update */
-	//body_tail00->Fire();
-	//body_tail01->Fire();
-	//body_gun00->Fire();
-	//body_gun01->Fire();
-	//body_gun02->Fire();
-	//body_gun03->Fire();
+	/* parts move */
+	body_leftWing->pos  = Vector2D::GetVec(body_head->pos.x, body_head->pos.y + (std::sin(c_move) * 15));
+	body_rightWing->pos = Vector2D::GetVec(body_head->pos.x, body_head->pos.y + (std::sin(c_move) * 15));
+	body_tail00->pos    = Vector2D::GetVec(body_head->pos.x + 3,       body_head->pos.y + TAIL00_POS_Y + (std::sin(c_move + 0.3) * 15));
+	body_tail01->pos    = Vector2D::GetVec(body_head->pos.x + 3,       body_head->pos.y + TAIL01_POS_Y + (std::sin(c_move + 0.6) * 15));
+	body_gun00->pos     = Vector2D::GetVec(body_head->pos.x + 3,       body_head->pos.y);
+	pos_backWing        = Vector2D::GetVec(body_head->pos.x,           body_head->pos.y - 50);
+	body_gun00->pos     = Vector2D::GetVec(body_head->pos.x + GUN00_X, body_head->pos.y + GUN00_Y + (std::sin(c_move) * 15));
+	body_gun01->pos     = Vector2D::GetVec(body_head->pos.x + GUN01_X, body_head->pos.y + GUN01_Y + (std::sin(c_move) * 15));
+	body_gun02->pos     = Vector2D::GetVec(body_head->pos.x + GUN02_X, body_head->pos.y + GUN02_Y + (std::sin(c_move) * 15));
+	body_gun03->pos     = Vector2D::GetVec(body_head->pos.x + GUN03_X, body_head->pos.y + GUN03_Y + (std::sin(c_move) * 15));
 }
 
 
@@ -466,24 +448,6 @@ void BossB::Update_Stay()
 		c_stay = 0;
 		state = eState::normal;
 	}
-
-	///* parts update */
-	//body_head->Update();
-	//body_leftWing->Update();
-	//body_rightWing->Update();
-	//body_tail00->Update();
-	//body_tail01->Update();
-	//body_gun00->Update();
-	//body_gun01->Update();
-	//body_gun02->Update();
-	//body_gun03->Update();
-	///* fire */
-	//body_tail00->Fire();
-	//body_tail01->Fire();
-	//body_gun00->Fire();
-	//body_gun01->Fire();
-	//body_gun02->Fire();
-	//body_gun03->Fire();
 }
 
 
@@ -499,31 +463,6 @@ void BossB::Update_Weak()
 	body_head->pos.y = 90 + std::sin(c_move_y) * 30;
 	c_move += 0.02;
 	c_move_y += 0.04;
-
-	body_leftWing->pos = body_head->pos;
-	body_rightWing->pos = body_head->pos;
-	body_tail00->pos = Vector2D::GetVec(body_head->pos.x + 3, body_head->pos.y + TAIL00_POS_Y);
-	body_tail01->pos = Vector2D::GetVec(body_head->pos.x + 3, body_head->pos.y + TAIL01_POS_Y);
-	body_gun00->pos = Vector2D::GetVec(body_head->pos.x + 3, body_head->pos.y);
-	pos_backWing = Vector2D::GetVec(body_head->pos.x, body_head->pos.y - 50);
-	body_gun00->pos = Vector2D::GetVec(body_head->pos.x + GUN00_X, body_head->pos.y + GUN00_Y);
-	body_gun01->pos = Vector2D::GetVec(body_head->pos.x + GUN01_X, body_head->pos.y + GUN01_Y);
-	body_gun02->pos = Vector2D::GetVec(body_head->pos.x + GUN02_X, body_head->pos.y + GUN02_Y);
-	body_gun03->pos = Vector2D::GetVec(body_head->pos.x + GUN03_X, body_head->pos.y + GUN03_Y);
-
-	///* parts update */
-	//body_head->Update();
-	//body_leftWing->Update();
-	//body_rightWing->Update();
-	//body_tail00->Update();
-	//body_tail01->Update();
-	//body_gun00->Update();
-	//body_gun01->Update();
-	//body_gun02->Update();
-	//body_gun03->Update();
-
-	///* Fire */
-	//body_head->Fire();
 }
 
 
@@ -553,17 +492,6 @@ void BossB::Update_Dead()
 			Effector::PlayAnime(body_head->pos.x, body_head->pos.y, eExplosion_big);
 		PlaySoundMem(sh_dead, DX_PLAYTYPE_BACK);
 	}
-
-	///* parts update */
-	//body_head->Update();
-	//body_leftWing->Update();
-	//body_rightWing->Update();
-	//body_tail00->Update();
-	//body_tail01->Update();
-	//body_gun00->Update();
-	//body_gun01->Update();
-	//body_gun02->Update();
-	//body_gun03->Update();
 }
 
 
@@ -578,31 +506,32 @@ BossB::Body::Body(ePart part)
 	isExist     = true;
 	isDamage    = false;
 
+	/* Set range of hit and vitality to this param. */
 	switch (part)
 	{
 	case BossB::ePart::head:
 		hitRange = 28;
-		hp = 2500; // 3000
+		hp = HEAD_HP;
 		break;
 	case BossB::ePart::leftWing:
 		hitRange = 35;
-		hp = 1500; // 2000
+		hp = WING_HP;
 		break;
 	case BossB::ePart::rightWing:
 		hitRange = 35;
-		hp = 1500; // 2000
+		hp = WING_HP;
 		break;
 	case BossB::ePart::tail00:
 		hitRange = 24;
-		hp = 1000; // 1000
+		hp = TAIL_HP;
 		break;
 	case BossB::ePart::tail01:
 		hitRange = 24;
-		hp = 1000; // 1000
+		hp = TAIL_HP;
 		break;
 	case BossB::ePart::gun:
 		hitRange = 14;
-		hp = 250; // 300
+		hp = GUN_HP;
 		break;
 	default: assert(!"no defined");
 	}
@@ -618,10 +547,10 @@ BossB::Body::~Body()
 
 void BossB::Body::Update()
 {
-	++elapsedTime;
-
 	if (isExist == false)
 		return;
+
+	++elapsedTime;
 
 	if (part == ePart::gun)
 		radAng = std::atan2(IPlayer::GetPos().y - pos.y, IPlayer::GetPos().x - pos.x) - 90 * DX_PI / 180;
@@ -710,6 +639,9 @@ void BossB::Body::Draw(const BossB& boss)
 
 void BossB::Body::Damage(int point)
 {
+	if (isExist == false) // you can remove this!
+		return;
+
 	hp -= point;
 	isDamage = true;
 

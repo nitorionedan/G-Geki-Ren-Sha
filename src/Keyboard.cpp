@@ -7,8 +7,10 @@ KeyCode_t Input::KeyCode;
 
 Keyboard::Keyboard()
 {
-	for (auto& i : mKeyDownCount)	i = 0;
-	for (auto& i : mKeyUpCount)		i = 0;
+	for (auto& i : mKeyDownCount)
+		i = 0;
+	for (auto& i : mKeyUpCount)
+		i = 0;
 }
 
 

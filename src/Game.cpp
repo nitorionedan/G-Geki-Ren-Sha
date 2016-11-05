@@ -28,13 +28,14 @@
 #include "Keyboard.hpp"
 #include "Sound.hpp"
 #include "EneShot.hpp"
+#include "FileDef.h"
 #include <fstream>
 #include <DxLib.h>
 #include <cassert>
 
 static VECTOR const DefLightPos = VGet(100.f, 100.f, 200.f);
 static int 	Screen;
-static int gh_flyer;
+static int gh_test;
 
 bool Game::isDead;
 
@@ -46,19 +47,19 @@ namespace
 
 Game::Game(ISceneChanger* changer)
 	: BaseScene(changer)
-	, bomb(new Bomb)
-	, graphic(new Graphic)
-	, board(new StatusBoard)
-	, player(new Player)
-	, pshot(new Pshot)
-	, effector(new Effector)
-	, score(new Score)
-	, boss(new BossChara(new NullBoss))
-	, enemyMng(new EnemyMng)
-	, stage(new Stage)
-	, itemMng(new ItemMng)
+	, bomb(     new Bomb)
+	, graphic(  new Graphic)
+	, board(    new StatusBoard)
+	, player(   new Player)
+	, pshot(    new Pshot)
+	, effector( new Effector)
+	, score(    new Score)
+	, boss(     new BossChara(new NullBoss))
+	, enemyMng( new EnemyMng)
+	, stage(    new Stage)
+	, itemMng(  new ItemMng)
 	, hitEffect(new HitEffect)
-	, eneShot(new EneShot)
+	, eneShot(  new EneShot)
 {
 	/* interface-class */
 	IScore::set(score);
@@ -73,7 +74,7 @@ Game::Game(ISceneChanger* changer)
 	IEneShot::set(eneShot);
 
 	Screen = MakeScreen(640, 480, TRUE);
-	gh_flyer = LoadGraph("GRAPH/GAME/ENEMY/flyer_test.png");
+	gh_test = LoadGraph(MyFile::Gr::EFCT_THUNDER);
 
 	Initialize();
 }
@@ -81,6 +82,7 @@ Game::Game(ISceneChanger* changer)
 
 Game::~Game()
 {
+	/* free interface */
 	IScore::reset();
 	IEnemyMng::reset();
 	IStage::reset();
@@ -92,7 +94,7 @@ Game::~Game()
 	IPshot::reset();
 	IEneShot::reset();
 
-	DeleteGraph(gh_flyer);
+	DeleteGraph(gh_test);
 }
 
 
@@ -101,6 +103,7 @@ void Game::Initialize()
 	IEnemyMng::Load(IStage::GetNowStage());
 	IStage::Load();
 
+	time = 0;
 	f_pause = false;
 	isDead = false;
 }
@@ -108,6 +111,8 @@ void Game::Initialize()
 
 void Game::Update()
 {	 
+	++time;
+
 	/* pause */
 	if (Keyboard::Instance()->isPush(KEY_INPUT_Q))
 		Pause();
@@ -146,21 +151,16 @@ void Game::Update()
 	board->Update(*player);
 	itemMng->Update(player);
 	
-	if (isDead)	mSceneChanger->ChangeScene(eScene::gameOver);
+	if (isDead)
+		mSceneChanger->ChangeScene(eScene::gameOver);
 
 	if (IStage::CheckAllClear())
 		mSceneChanger->ChangeScene(eScene::gameClear);
 
-	if (Keyboard::Instance()->isPush(KEY_INPUT_C))
-	{
-		/// TODO: Add life to player
-	}
-
-
 // TEST ----------------------------------------------
 	if (DebugMode::isTest == false)	return;
 
-	if (Keyboard::Instance()->isPush(KEY_INPUT_C))
+	if (Keyboard::Instance()->isPush(Input::KeyCode.C))
 	{
 
 	}
@@ -175,9 +175,6 @@ void Game::Update()
 
 void Game::Draw()
 {
-	static int time = 0;
-	time++;
-
 	/*static float c_tmp = 0.f;
 	c_tmp += 0.01f;
 	float tmp = std::sin(c_tmp) * 300;*/
@@ -219,36 +216,21 @@ void Game::Draw()
 
 	score->Draw();
 
-	//static float count = 0;
-	//count += 0.01f;
-	//DrawRotaGraph(320 + std::cos(count) * 30, 170 + std::sin(count) * 30, 2, 0, gh_flyer, true);
-
-	//DrawRasterScroll(320, 240, 600, 100, time, Screen, TRUE); // << super noise
-
-	//int CircleX = 320;
-	//int CircleAngle = 0;
-	//// 画面を歪ませて描画
-	//DrawCircleScreen(
-	//	320, 240,	// 中心座標
-	//	//80.0f + sin(CircleAngle * DX_PI_F / 180.0f) * 15.0f,	// 内側の円のサイズ
-	//	tmp,
-	//	//200.0f + sin(CircleAngle * 2 * DX_PI_F / 180.0f) * 50.0f,	// 外側の円のサイズ
-	//	0.f,
-	//	0.f,	// 内側に引き込まれるドット数
-	//	Screen);
+	if (CheckHitKey(KEY_INPUT_C) != 0 && time % 8 >= 2)
+	{
+		double rnd = GetRand(360) * DX_PI / 180.;
+		int irnd = GetRand(2);
+		DrawRotaGraph(320, 240, 2, 0, gh_test, TRUE, irnd);
+	}
 
 	// TEST-----------------------------------------------------------
-	if (DebugMode::isTest == false)	return;
-
-	/*VECTOR tpos = VGet(320.f, 240.f, 0.f);
-	tpos = ConvScreenPosToWorldPos(tpos);
-	SetLightDirection(tpos);
-	DrawSphere3D(tpos, 10.f, 4, GetColor(255, 0, 0), GetColor(255, 255, 255), TRUE);
-	SetLightDirection(DefLightPos);*/
+	if (DebugMode::isTest)
+	{
+	}
 }
 
 
-void Game::Pause(){
+void Game::Pause() {
 	f_pause = !f_pause;
 }
 

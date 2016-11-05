@@ -887,6 +887,7 @@ void ZakoEnemy_Flower::Move2()
 
 void ZakoEnemy_Flower::Move3()
 {
+	/* Start */
 	if (data.time <= data.param.stop_time && data.vspeed.y > 0.)
 	{
 		data.vspeed.y -= brake;
@@ -896,6 +897,7 @@ void ZakoEnemy_Flower::Move3()
 		radAng += addAng;
 	}
 
+	/* Rotate */
 	if (data.time > data.param.stop_time && isReturn == false)
 	{
 		if (data.time == data.param.stop_time + 1)
@@ -910,6 +912,7 @@ void ZakoEnemy_Flower::Move3()
 			isReturn = true;
 	}
 
+	/* Return */
 	if (isReturn)
 	{
 		addAng -= 0.004;

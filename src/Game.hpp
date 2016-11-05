@@ -70,6 +70,6 @@ private:
 	std::shared_ptr<ItemMng> itemMng;
 	std::shared_ptr<HitEffect> hitEffect;
 	std::shared_ptr<EneShot> eneShot;
-	
+	int time;
 	bool f_pause;
 };

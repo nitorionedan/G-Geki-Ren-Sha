@@ -93,9 +93,11 @@ void Stage2::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// Moon
+	SetDrawMode(DX_DRAWMODE_NEAREST);
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, c_moon);
 	img->DrawRota(moon_pos.x, moon_pos.y, 2., 0., "moon", true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	SetDrawMode(DX_DRAWMODE_BILINEAR);
 
 	// Back
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, c_alpha_back);

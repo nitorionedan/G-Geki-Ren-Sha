@@ -88,22 +88,23 @@ void Stage::Initialize()
 		s_isContinue = false;
 	}
 
-	time = 0;
-	rank = 0;
-	c_bossBgm = 0;
-	c_result = 0;
+	time        = 0;
+	rank        = 0;
+	c_bossBgm   = 0;
+	c_result    = 0;
 	start_score = 0;
-	end_score = 0;
-	pos = Vector2D::ZERO;
-	f_quake = false;
-	isStanby = true;
-	f_AllClear = false;
+	end_score   = 0;
+	pos         = Vector2D::ZERO;
+	f_quake     = false;
+	isStanby    = true;
+	f_AllClear  = false;
 	StageSet(nowStage);
 }
 
 
 void Stage::Finalize()
 {
+	delete mField;
 }
 
 

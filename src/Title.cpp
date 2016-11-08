@@ -34,7 +34,7 @@ void Title::Update()
 	y = std::max(y, Y_MIN);							// ちょうどいい位置で止める
 	if (y == Y_MIN)
 	{
-		PlaySoundMem(hs_intro, DX_PLAYTYPE_BACK);
+		//PlaySoundMem(hs_intro, DX_PLAYTYPE_BACK);
 		isStop = true;								// 目的の位置で停止
 	}
 	if ( ! isStop )	y -= speed;						// タイトルが止まっていなければ上がる

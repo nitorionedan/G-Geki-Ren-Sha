@@ -57,6 +57,7 @@ Stage::Stage()
 
 Stage::~Stage()
 {
+	delete mField;
 	DeleteGraph(gh_tips00);
 	DeleteGraph(gh_tips01);
 	DeleteGraph(gh_black);
@@ -104,7 +105,6 @@ void Stage::Initialize()
 
 void Stage::Finalize()
 {
-	delete mField;
 }
 
 

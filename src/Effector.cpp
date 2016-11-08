@@ -7,6 +7,8 @@
 #include "Piece.hpp"
 #include "ChargeEffect.hpp"
 #include "SpecialExplosionEffect.hpp"
+#include "TestEffect.hpp"
+#include "CycloneEffect.hpp"
 #include "FileDef.h"
 #include <DxLib.h>
 
@@ -17,21 +19,24 @@ Effect**		        Effector::effect;
 Effector::Shock         Effector::s_shock[10];
 SmokeEffect*            Effector::smoke;
 SpecialExplosionEffect* Effector::special;
+TestEffect*             Effector::test;
+CycloneEffect*          Effector::cyclone;
 
 
 Effector::Effector()
 {
 	img_shock = LoadGraph(MyFile::Gr::SHOCK);
 
-	pieceef = new PieceEffect;
-
-	effect = new Effect*[EX_NUM];
+	pieceef   = new PieceEffect;
+	effect    = new Effect*[EX_NUM];
 	effect[0] = new Effect(new ExplosionEffect(eExplosion_small));
 	effect[1] = new Effect(new ExplosionEffect(eExplosion_normal));
 	effect[2] = new Effect(new ExplosionEffect(eExplosion_big));
 	effect[3] = new Effect(new ExplosionEffect(eExplosion_long));
-	smoke = new SmokeEffect;
-	special = new SpecialExplosionEffect;
+	smoke     = new SmokeEffect;
+	special   = new SpecialExplosionEffect;
+	test      = new TestEffect;
+	cyclone   = new CycloneEffect;
 
 	for (auto& i : s_shock)
 	{
@@ -54,6 +59,8 @@ Effector::~Effector()
 	delete[] effect;
 	delete smoke;
 	delete special;
+	delete test;
+	delete cyclone;
 }
 
 
@@ -76,6 +83,8 @@ void Effector::Update()
 	}
 	smoke->Update();
 	special->Update();
+	test->Update();
+	cyclone->Update();
 }
 
 
@@ -117,6 +126,15 @@ void Effector::Draw_Smoke()
 
 void Effector::Draw_SpecialExplo() {
 	special->Draw();
+}
+
+void Effector::Draw_Test() {
+	test->Draw();
+}
+
+
+void Effector::Draw_Cyclone() {
+	cyclone->Draw();
 }
 
 
@@ -163,4 +181,13 @@ void Effector::PlaySmoke(double x, double y, eSmokeColor colorType) {
 
 void Effector::PlaySpecialEplosion(double x, double y) {
 	special->Play(x, y);
+}
+
+void Effector::PlayTestAnime(double x, double y) {
+	test->PlayAnime();
+}
+
+
+void Effector::PlayCyclone(double x, double y) {
+	cyclone->PlayAnime(x, y);
 }

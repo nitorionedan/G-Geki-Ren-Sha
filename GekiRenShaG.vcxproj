@@ -33,6 +33,7 @@
     <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\Counter.cpp" />
     <ClCompile Include="src\Counter2.cpp" />
+    <ClCompile Include="src\CycloneEffect.cpp" />
     <ClCompile Include="src\DebugMode.cpp" />
     <ClCompile Include="src\Effect.cpp" />
     <ClCompile Include="src\Effector.cpp" />
@@ -80,6 +81,7 @@
     <ClCompile Include="src\StageDate.cpp" />
     <ClCompile Include="src\StatusBoard.cpp" />
     <ClCompile Include="src\Test.cpp" />
+    <ClCompile Include="src\TestEffect.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Timer.cpp" />
     <ClCompile Include="src\Title.cpp" />
@@ -104,6 +106,7 @@
     <ClInclude Include="src\Config.hpp" />
     <ClInclude Include="src\Counter.hpp" />
     <ClInclude Include="src\Counter2.hpp" />
+    <ClInclude Include="src\CycloneEffect.hpp" />
     <ClInclude Include="src\DebugMode.hpp" />
     <ClInclude Include="src\Effect.hpp" />
     <ClInclude Include="src\Effector.hpp" />
@@ -162,6 +165,7 @@
     <ClInclude Include="src\StatusBoard.hpp" />
     <ClInclude Include="src\Task.hpp" />
     <ClInclude Include="src\Test.hpp" />
+    <ClInclude Include="src\TestEffect.hpp" />
     <ClInclude Include="src\Texture.hpp" />
     <ClInclude Include="src\Timer.hpp" />
     <ClInclude Include="src\Title.hpp" />

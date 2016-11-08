@@ -128,27 +128,18 @@ void Game::Update()
 		return;
 	}
 
+	/* Updates */
 	score->Update();
 	stage->Update();
-
-	// Chara
 	boss->Update();
 	enemyMng->Update(*player);
 	player->Update();
-
-	// Effect
 	effector->Update();
 	hitEffect->Update();
-	
-	// Shot
-	pshot->Update();
+	pshot->Update();        // players shot
 	eneShot->Update();
-
-	// Bomber
 	bomb->Update();
-
-	// その他の情報
-	board->Update(*player);
+	board->Update(*player); // status board
 	itemMng->Update(player);
 	
 	if (isDead)
@@ -158,18 +149,19 @@ void Game::Update()
 		mSceneChanger->ChangeScene(eScene::gameClear);
 
 // TEST ----------------------------------------------
-	if (DebugMode::isTest == false)	return;
-
-	if (Keyboard::Instance()->isPush(Input::KeyCode.C))
+	if (DebugMode::isTest)
 	{
 
+		if (Keyboard::Instance()->isPush(Input::KeyCode.Z)) {
+			effector->PlayCyclone(320, 240);
+		}
+
+		if (Keyboard::Instance()->isDown(KEY_INPUT_Q) && Keyboard::Instance()->isDown(KEY_INPUT_W))
+			mSceneChanger->ChangeScene(eScene::gameOver);
+
+		if (Keyboard::Instance()->isPush(KEY_INPUT_F2))
+			IBossChara::Start();
 	}
-
-	if (Keyboard::Instance()->isDown(KEY_INPUT_Q) && Keyboard::Instance()->isDown(KEY_INPUT_W))
-		mSceneChanger->ChangeScene(eScene::gameOver);
-
-	if(Keyboard::Instance()->isPush(KEY_INPUT_F2))
-		IBossChara::Start();
 }
 
 
@@ -179,53 +171,36 @@ void Game::Draw()
 	c_tmp += 0.01f;
 	float tmp = std::sin(c_tmp) * 300;*/
 
-	// Back Ground
 	stage->Draw();
-
 	effector->Draw_Shock();
-
 	boss->Draw();
-
-	// Effect
 	effector->Draw();
 	enemyMng->Draw();
 	effector->Draw_Smoke();
-	effector->Draw_Explosion();
-	effector->Draw_SpecialExplo();
+	effector->Draw_Explosion();    // explosions
+	effector->Draw_SpecialExplo(); // boss only explosion
 	itemMng->Draw();
-
-	// Character
 	player->Draw();
-
-	// Bomb
 	bomb->Draw();
-
-	// bullet
 	eneShot->Draw();
-
 	hitEffect->Draw();
-
-	// Shot
-	pshot->Draw();
-
-	// ステータスボード
-	board->Draw(*player);
-
-	// 一番上に描画するその他の情報
-	Draw_Status();
-
+	effector->Draw_Cyclone();
+	//effector->Draw_Test();
+	pshot->Draw();	               // players shot
+	board->Draw(*player);          // status board
+	Draw_Status();                 // other infos
 	score->Draw();
-
-	if (CheckHitKey(KEY_INPUT_C) != 0 && time % 8 >= 2)
-	{
-		double rnd = GetRand(360) * DX_PI / 180.;
-		int irnd = GetRand(2);
-		DrawRotaGraph(320, 240, 2, 0, gh_test, TRUE, irnd);
-	}
 
 	// TEST-----------------------------------------------------------
 	if (DebugMode::isTest)
 	{
+		// Thunder test
+		/*if (CheckHitKey(KEY_INPUT_C) != 0 && time % 8 >= 2)
+		{
+			double rnd = GetRand(360) * DX_PI / 180.;
+			int irnd = GetRand(2);
+			DrawRotaGraph(320, 240, 2, 0, gh_test, TRUE, irnd);
+		}*/
 	}
 }
 

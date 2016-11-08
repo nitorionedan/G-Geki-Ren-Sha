@@ -237,9 +237,6 @@
     <ClCompile Include="src\Enemys.cpp">
       <Filter>ソース ファイル\Enemy\Zako</Filter>
     </ClCompile>
-    <ClCompile Include="src\SmokeEffect.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\ZakoEnemy.cpp">
       <Filter>ソース ファイル\Enemy\Zako</Filter>
     </ClCompile>
@@ -255,8 +252,17 @@
     <ClCompile Include="src\GameClear.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="src\SmokeEffect.cpp">
+      <Filter>ソース ファイル\Effect</Filter>
+    </ClCompile>
     <ClCompile Include="src\SpecialExplosionEffect.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TestEffect.cpp">
+      <Filter>ソース ファイル\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CycloneEffect.cpp">
+      <Filter>ソース ファイル\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -498,6 +504,12 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\SpecialExplosionEffect.hpp">
+      <Filter>ヘッダー ファイル\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TestEffect.hpp">
+      <Filter>ヘッダー ファイル\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CycloneEffect.hpp">
       <Filter>ヘッダー ファイル\Effect</Filter>
     </ClInclude>
   </ItemGroup>

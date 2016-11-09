@@ -56,12 +56,11 @@ Player::Player()
 	isDead = false;
 	isStart = false;
 	isHit = false;
-//#if defined(_DEBUG) || defined(DEBUG)
-//	superFlag = true;
-//#else
-//	superFlag = false;
-//#endif
+#if defined(_DEBUG) || defined(DEBUG)
+	superFlag = true;
+#else
 	superFlag = false;
+#endif
 	isArm = false;
 	state = ePlayerState::Start;
 }

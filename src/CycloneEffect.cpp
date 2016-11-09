@@ -8,9 +8,11 @@
 
 namespace
 {
+	constexpr int ENERGY_PLAY_TIME = 50;
 	constexpr int PLAY_TIME = 100;
+	constexpr int CREATE_INTERVAL = 30;
 	constexpr double ADD_RADIAN = 0.2;
-	constexpr double FIRST_DISTANCE = 140;
+	constexpr double FIRST_DISTANCE = 200;
 
 	/* @brief  Convert degree to radian. */
 	auto DegToRad = [](double degAng) {
@@ -30,6 +32,9 @@ int CycloneEffect::s_playNum = 0;
 CycloneEffect::CycloneEffect()
 {
 	gh_energy = LoadGraph(MyFile::Gr::FIRE);
+	time = 0;
+	isPlay = false;
+	pos = Vector2D::ZERO;
 }
 
 
@@ -41,11 +46,33 @@ CycloneEffect::~CycloneEffect()
 
 void CycloneEffect::Update()
 {
+	if (isPlay) {
+		++time;
+	}
+
 	/* time count up */
 	for (auto& i : m_tParam) {
 		++i.time;
 	}
 	
+	/* Create the cyclone. */
+	if (isPlay)
+	{
+		if (time % CREATE_INTERVAL == 1)
+		{
+			for (int i = 0; i < 3; ++i) {
+				Create(pos.x, pos.y, DegToRad(120 + (i * 120)));
+			}
+		}
+
+		if (time % CREATE_INTERVAL == 13)
+		{
+			for (int i = 0; i < 3; ++i) {
+				Create(pos.x, pos.y, DegToRad(120 + (i * 120)));
+			}
+		}
+	}
+
 	/* Add the objects radian. */
 	std::for_each(std::begin(m_tParam), std::end(m_tParam),
 		[](tParam& param) { param.radAng += ADD_RADIAN; });
@@ -55,15 +82,23 @@ void CycloneEffect::Update()
 		[](tParam& param) { param.exrate -= param.dis_exrate; });
 
 	/* Move the objects. */
+	//std::for_each(std::begin(m_tParam), std::end(m_tParam),
+	//	[](tParam& param) { param.distance -= param.dis_distance; });
 	std::for_each(std::begin(m_tParam), std::end(m_tParam),
-		[](tParam& param) { param.distance -= param.dis_distance; });
+		[](tParam& param) { param.distance *= 0.999; });
 
 	/* Delete the finised obect. */
 	m_tParam.erase(std::remove_if(std::begin(m_tParam), std::end(m_tParam),
 		[](const tParam& param)->bool {
-			return param.time >= PLAY_TIME;
-		}),
-	std::end(m_tParam));
+			return param.time >= ENERGY_PLAY_TIME;
+		}), std::end(m_tParam));
+
+	/* Check time up. */
+	if (time >= PLAY_TIME)
+	{
+		isPlay = false;
+		time = 0;
+	}
 }
 
 
@@ -87,9 +122,16 @@ void CycloneEffect::Draw()
 }
 
 
-void CycloneEffect::PlayAnime(double x, double y) {
-	++s_playNum;
-	Create(x, y, DegToRad(90));
+void CycloneEffect::PlayAnime(double x, double y) 
+{
+	if (isPlay) {
+		return;
+	}
+
+	//++s_playNum;
+
+	isPlay = true;
+	pos.SetVec(x, y);
 }
 
 
@@ -99,11 +141,11 @@ void CycloneEffect::Create(double x, double y, double radian)
 	tmp.time = 0;
 	tmp.exrate = 2;
 	tmp.distance = FIRST_DISTANCE;
-	tmp.radAng = 0;
+	tmp.radAng = radian;
 	tmp.isPlay = true;
 	tmp.pos.SetVec(x, y);
-	tmp.dis_exrate = tmp.exrate / PLAY_TIME;
-	tmp.dis_distance = tmp.distance / PLAY_TIME;
+	tmp.dis_exrate = tmp.exrate / ENERGY_PLAY_TIME;
+	tmp.dis_distance = tmp.distance / ENERGY_PLAY_TIME;
 
 	m_tParam.emplace_back(tmp);
 }

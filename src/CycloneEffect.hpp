@@ -38,5 +38,8 @@ private:
 	static int s_playNum; // Num of play
 
 	std::vector <tParam> m_tParam;
+	Vector2D pos;
 	int gh_energy;
+	int time;
+	bool isPlay;
 };

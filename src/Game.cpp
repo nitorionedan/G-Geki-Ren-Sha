@@ -152,8 +152,8 @@ void Game::Update()
 	if (DebugMode::isTest)
 	{
 
-		if (Keyboard::Instance()->isPush(Input::KeyCode.Z)) {
-			effector->PlayCyclone(320, 240);
+		if (Keyboard::Instance()->isPush(Input::KeyCode.X)) {
+			effector->PlayCyclone(player->GetPos().x, player->GetPos().y);
 		}
 
 		if (Keyboard::Instance()->isDown(KEY_INPUT_Q) && Keyboard::Instance()->isDown(KEY_INPUT_W))

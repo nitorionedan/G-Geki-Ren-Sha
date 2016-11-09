@@ -70,14 +70,16 @@ PieceEffect::PieceEffect()
 
 PieceEffect::~PieceEffect()
 {
-	for (int i = 0; i < 10; i++)	delete piece[i];
+	for (int i = 0; i < 10; i++)
+		delete piece[i];
 	delete[] piece;
 }
 
 
 void PieceEffect::Update()
 {
-	for (int i = 0; i < 10; i++)	piece[i]->Update();
+	for (int i = 0; i < 10; i++)
+		piece[i]->Update();
 }
 
 
@@ -91,7 +93,8 @@ void PieceEffect::Draw()
 	default: break;
 	}
 
-	for (int i = 0; i < 10; i++)	piece[i]->Draw();
+	for (int i = 0; i < 10; i++)
+		piece[i]->Draw();
 
 	SetDrawBright(252, 255, 255);
 }
@@ -99,8 +102,8 @@ void PieceEffect::Draw()
 
 void PieceEffect::PlayAnime(const double & PosX, const double & PosY, const double & ANGLE, eSpread_t kind_)
 {
-	double rand_spin;
-	int rand_type;
+	double rand_spin; // Random spin
+	int rand_type;    // Type of random.
 	kind = kind_;
 
 	switch (kind_)

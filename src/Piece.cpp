@@ -113,8 +113,8 @@ void Piece::Draw()
 {
 	for (int i = 0; i < PIECE_ALL_NUM; i++)
 	{
-		if (isPlay[i] == false) continue;
-
+		if (isPlay[i] == false)
+			continue;
 		Draw_Piece(i);
 	}
 }
@@ -166,7 +166,7 @@ void Piece::Draw_Piece(const int & i)
 		{
 			if (c_play[i]->Remainder(16) == (j * 2) || c_play[i]->Remainder(16) == (j * 2) + 1)
 			{
-				DrawRotaGraph(pos[i].x, pos[i].y, 1.0, angle[i], gh_small1[j], true);
+				DrawRotaGraph(pos[i].x, pos[i].y, 1.3, angle[i], gh_small1[j], true);
 				break;
 			}
 		}break;
@@ -175,7 +175,7 @@ void Piece::Draw_Piece(const int & i)
 		{
 			if (c_play[i]->Remainder(10) == (j * 2) || c_play[i]->Remainder(10) == (j * 2) + 1)
 			{
-				DrawRotaGraph(pos[i].x, pos[i].y, 2.0, angle[i], gh_small6[j], true);
+				DrawRotaGraph(pos[i].x, pos[i].y, 2, angle[i], gh_small6[j], true);
 				break;
 			}
 		}break;
@@ -184,7 +184,7 @@ void Piece::Draw_Piece(const int & i)
 		{
 			if (c_play[i]->Remainder(8) == (j * 2) || c_play[i]->Remainder(8) == (j * 2) + 1)
 			{
-				DrawRotaGraph(pos[i].x, pos[i].y, 2.0, angle[i], gh_small5[j], true);
+				DrawRotaGraph(pos[i].x, pos[i].y, 2, angle[i], gh_small5[j], true);
 				break;
 			}
 		}break;
@@ -193,7 +193,7 @@ void Piece::Draw_Piece(const int & i)
 		{
 			if (c_play[i]->Remainder(16) == (j * 2) || c_play[i]->Remainder(16) == (j * 2) + 1)
 			{
-				DrawRotaGraph(pos[i].x, pos[i].y, 2.0, angle[i], gh_smalls[ rand[i] ], true);
+				DrawRotaGraph(pos[i].x, pos[i].y, 2, angle[i], gh_smalls[ rand[i] ], true);
 				break;
 			}
 		}break;
@@ -202,7 +202,7 @@ void Piece::Draw_Piece(const int & i)
 		{
 			if (c_play[i]->Remainder(16) == (j * 2) || c_play[i]->Remainder(16) == (j * 2) + 1)
 			{
-				DrawRotaGraph(pos[i].x, pos[i].y, 2.0, angle[i], gh_big1[j], true);
+				DrawRotaGraph(pos[i].x, pos[i].y, 2, angle[i], gh_big1[j], true);
 				break;
 			}
 		}break;
@@ -211,7 +211,7 @@ void Piece::Draw_Piece(const int & i)
 		{
 			if (c_play[i]->Remainder(28) == (j * 2) || c_play[i]->Remainder(28) == (j * 2) + 1)
 			{
-				DrawRotaGraph(pos[i].x, pos[i].y, 2.0, angle[i], gh_big2[j], true);
+				DrawRotaGraph(pos[i].x, pos[i].y, 2, angle[i], gh_big2[j], true);
 				break;
 			}
 		}break;
@@ -220,7 +220,7 @@ void Piece::Draw_Piece(const int & i)
 		{
 			if (c_play[i]->Remainder(12) == (j * 2) || c_play[i]->Remainder(12) == (j * 2) + 1)
 			{
-				DrawRotaGraph(pos[i].x, pos[i].y, 2.0, angle[i], gh_big3[j], true);
+				DrawRotaGraph(pos[i].x, pos[i].y, 2, angle[i], gh_big3[j], true);
 				break;
 			}
 		}break;
@@ -229,7 +229,7 @@ void Piece::Draw_Piece(const int & i)
 		{
 			if (c_play[i]->Remainder(28) == (j * 2) || c_play[i]->Remainder(28) == (j * 2) + 1)
 			{
-				DrawRotaGraph(pos[i].x, pos[i].y, 2.0, angle[i], gh_big5[j], true);
+				DrawRotaGraph(pos[i].x, pos[i].y, 2, angle[i], gh_big5[j], true);
 				break;
 			}
 		}break;
@@ -238,13 +238,13 @@ void Piece::Draw_Piece(const int & i)
 		{
 			if (c_play[i]->Remainder(16) == (j * 2) || c_play[i]->Remainder(16) == (j * 2) + 1)
 			{
-				DrawRotaGraph(pos[i].x, pos[i].y, 2.0, angle[i], gh_bigs[ rand[i] ], true);
+				DrawRotaGraph(pos[i].x, pos[i].y, 2, angle[i], gh_bigs[ rand[i] ], true);
 				break;
 			}
 		}break;
 	case ePiece_Special:
-		if(	rand[i] >= 4)	DrawRotaGraph(pos[i].x, pos[i].y, 2.0, angle[i], gh_kit, true);
-		if (rand[i] <= 3)	DrawRotaGraph(pos[i].x, pos[i].y, 2.0, angle[i], gh_burger, true);
+		if(	rand[i] >= 4)	DrawRotaGraph(pos[i].x, pos[i].y, 2, angle[i], gh_kit, true);
+		if (rand[i] <= 3)	DrawRotaGraph(pos[i].x, pos[i].y, 2, angle[i], gh_burger, true);
 		break;
 	}
 	SetDrawBright(255, 255, 255);

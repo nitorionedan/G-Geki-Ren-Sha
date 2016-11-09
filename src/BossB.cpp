@@ -426,10 +426,10 @@ void BossB::Update_Normal()
 	c_move_y += 0.04;
 
 	/* parts move */
-	body_leftWing->pos  = Vector2D::GetVec(body_head->pos.x, body_head->pos.y + (std::sin(c_move) * 15));
-	body_rightWing->pos = Vector2D::GetVec(body_head->pos.x, body_head->pos.y + (std::sin(c_move) * 15));
+	body_leftWing->pos  = Vector2D::GetVec(body_head->pos.x,           body_head->pos.y + (std::sin(c_move) * 15));
+	body_rightWing->pos = Vector2D::GetVec(body_head->pos.x,           body_head->pos.y + (std::sin(c_move) * 15));
 	body_tail00->pos    = Vector2D::GetVec(body_head->pos.x + 3,       body_head->pos.y + TAIL00_POS_Y + (std::sin(c_move + 0.3) * 15));
-	body_tail01->pos    = Vector2D::GetVec(body_head->pos.x + 3,       body_head->pos.y + TAIL01_POS_Y + (std::sin(c_move + 0.6) * 15));
+	body_tail01->pos    = Vector2D::GetVec(body_head->pos.x + 3,       body_head->pos.y + TAIL01_POS_Y + (std::sin(c_move + 0.3) * 23));
 	body_gun00->pos     = Vector2D::GetVec(body_head->pos.x + 3,       body_head->pos.y);
 	pos_backWing        = Vector2D::GetVec(body_head->pos.x,           body_head->pos.y - 50);
 	body_gun00->pos     = Vector2D::GetVec(body_head->pos.x + GUN00_X, body_head->pos.y + GUN00_Y + (std::sin(c_move) * 15));
@@ -654,11 +654,21 @@ bool BossB::Body::HitCheckToPlayer()
 	if (isExist == false)
 		return false;
 
+	Vector2D adjust;
+
 	bool isHit;
 	if (part == ePart::leftWing)
-		isHit = IPlayer::HitCheckCircl(hitRange - ADJUST_RANGE_POS, pos);
+	{
+		adjust = pos;
+		adjust.y -= ADJUST_RANGE_POS;
+		isHit = IPlayer::HitCheckCircl(hitRange, pos);
+	}
 	else if (part == ePart::rightWing)
-		isHit = IPlayer::HitCheckCircl(hitRange + ADJUST_RANGE_POS, pos);
+	{
+		adjust = pos;
+		adjust.y += ADJUST_RANGE_POS;
+		isHit = IPlayer::HitCheckCircl(hitRange, pos);
+	}
 	else
 		isHit = IPlayer::HitCheckCircl(hitRange, pos);
 	return isHit;

@@ -8,11 +8,12 @@
 
 namespace
 {
-	constexpr int ENERGY_PLAY_TIME = 50;
-	constexpr int PLAY_TIME = 100;
-	constexpr int CREATE_INTERVAL = 30;
-	constexpr double ADD_RADIAN = 0.2;
-	constexpr double FIRST_DISTANCE = 200;
+	constexpr int    ENERGY_PLAY_TIME = 50;
+	constexpr int    PLAY_TIME        = 100;
+	constexpr int    CREATE_INTERVAL  = 10;
+	constexpr double ADD_RADIAN       = 0.1;
+	constexpr double FIRST_DISTANCE   = 350;
+	constexpr double DISTANCE_EASING = 0.98;
 
 	/* @brief  Convert degree to radian. */
 	auto DegToRad = [](double degAng) {
@@ -65,7 +66,7 @@ void CycloneEffect::Update()
 			}
 		}
 
-		if (time % CREATE_INTERVAL == 13)
+		if (time % CREATE_INTERVAL == 3)
 		{
 			for (int i = 0; i < 3; ++i) {
 				Create(pos.x, pos.y, DegToRad(120 + (i * 120)));
@@ -85,7 +86,7 @@ void CycloneEffect::Update()
 	//std::for_each(std::begin(m_tParam), std::end(m_tParam),
 	//	[](tParam& param) { param.distance -= param.dis_distance; });
 	std::for_each(std::begin(m_tParam), std::end(m_tParam),
-		[](tParam& param) { param.distance *= 0.999; });
+		[](tParam& param) { param.distance *= DISTANCE_EASING; });
 
 	/* Delete the finised obect. */
 	m_tParam.erase(std::remove_if(std::begin(m_tParam), std::end(m_tParam),
